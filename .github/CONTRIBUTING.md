@@ -39,7 +39,6 @@ Thank you for considering contributing! Here are a few guidelines to follow:
 
 
 ### Step 1: Create Version Tag
-Run these commands:
 ```bash
 # commit changes to CHANGELOG.md
 git add CHANGELOG.md
