@@ -58,7 +58,7 @@ Let GitHub Actions Do the Rest. The workflow (using GitHub Actions) will automat
  ✓ Create a Release page  
  ✓ Upload the files or assets
 
-*(Find your release under "Releases" in your repo sidebar)*
+*(Find the release under "Releases" in the repo sidebar)*
 
 ### Step 3: Update Changes
 Edit `CHANGELOG.md` following this format:
