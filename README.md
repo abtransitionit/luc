@@ -64,9 +64,6 @@ Luc's extensible architecture is built on core design principles.
 | **Plugin-Friendly**       | Go-native package imports               | Extend functionality by importing external libraries as dedicated modules |
 | **Self-Documented Design** | Clear naming, structured help commands, and embedded usage guides | Easier maintenance, faster onboarding, and smoother evolution of the system |  
 
-This keeps the original principles intact while adding **self-documentation** as a first-class design goal.  
-
-Would you like me to refine the description further?
 
 
 ## CI/CD Ready
