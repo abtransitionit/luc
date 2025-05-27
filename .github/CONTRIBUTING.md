@@ -70,7 +70,7 @@ Edit `CHANGELOG.md` following this format:
 - Bug in module Y
 ```
 
-### 🚨 Troubleshooting
+### Troubleshooting
 If the release fails:
 1. Check [Actions tab](https://docs.github.com/assets/cb-33827/images/help/repository/actions-tab.png) for errors  
 2. Verify your tag matches the version in `CHANGELOG.md`  
