@@ -21,3 +21,8 @@ var KindCmd = &cobra.Command{
 		logx.L.Infof("%s", kindSDesc)
 	},
 }
+
+func init() {
+	KindCmd.AddCommand(initCmd)
+	KindCmd.AddCommand(resetCmd)
+}
