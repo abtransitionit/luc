@@ -20,8 +20,13 @@ var testCmd = &cobra.Command{
 	Long:  testLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Info(testSDesc)
+
+		// get input
 		param := args[0]
-		netx.IsVmSshConfigured(param)
+
+		// threat input
+		// netx.IsVmSshConfigured(param)
+		netx.IsSshConfiguredVmSshReachable(param)
 		// if lucnet.IsSshReachable("o1u") {
 		// 	logx.L.Info("SSH reachable")
 		// }
