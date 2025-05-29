@@ -1,0 +1,6 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+
+// KubectlArch     = "linux/amd64" // other : "linux/arm64"
+// HelmArch     = "linux-amd64"
