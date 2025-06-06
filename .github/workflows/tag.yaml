@@ -1,4 +1,5 @@
 # Build a repository TAG
+# - use a VM image capabilities, no container
 name: Tag
 
 on:
@@ -9,7 +10,7 @@ on:
       - completed
 
 jobs:
-  create-tag-on-vm:
+  create-tag-inside-vm:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:                          # variables shared by all steps

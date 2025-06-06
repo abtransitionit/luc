@@ -1,6 +1,6 @@
 # release a go artifact
+# - use a VM image capabilities, no container
 name: Release
-
 
 on:
   workflow_run: # This workflow is triggered when the workflow completes (success or failure). 
@@ -15,18 +15,38 @@ on:
 #       - '*'  # on any new pushed tag (new or force-pushed).
 
 jobs:
-  create-release-on-vm:
+  create-release-from-tag-inside-vm:
+    env:
+      TAG_PATH: ./tag-${{ github.run_id }}
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest     # the VM
-    env:
-      TAG_NAME: ${{ github.ref_name }}   # Tag that triggered the workflow
     steps:
-      - name: Create release for tag ${{ env.TAG_NAME }}    
-        run: |
-          echo "Tag that triggered and used for this release : ${{ env.TAG_NAME }}"
-      - name: Create The Release
-        uses: softprops/action-gh-release@v1  # https://github.com/softprops/action-gh-release
+      - name: Get hard coded "tag-name" variable from previous workflow
+        uses: actions/download-artifact@v4
         with:
-          tag_name: ${{ env.TAG_NAME }}    # tag that triggered the workflow
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: tag-name             # must match the uploaded artifact name
+          path: ${{ env.TAG_PATH }}  # local folder into extract the file - no concurent conflict
+
+      - name: show hard coded "tag-name" value
+        run: cat ${{ env.TAG_PATH }}/tag-name
+
+
+
+
+
+# jobs:
+#   create-release:
+#     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#     runs-on: ubuntu-latest     # the VM
+#     env:
+#       TAG_NAME: ${{ github.ref_name }}   # Tag that triggered the workflow
+#     steps:
+#       - name: Create release for tag ${{ env.TAG_NAME }}    
+#         run: |
+#           echo "Tag that triggered and used for this release : ${{ env.TAG_NAME }}"
+#       - name: Create The Release
+#         uses: softprops/action-gh-release@v1  # https://github.com/softprops/action-gh-release
+#         with:
+#           tag_name: ${{ env.TAG_NAME }}    # tag that triggered the workflow
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
