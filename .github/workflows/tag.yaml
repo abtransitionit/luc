@@ -30,9 +30,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Add var TAG_NAME to the env
+      - name: Define var TAG_NAME and put it in the github env
         id: tagname
-        run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}-${RUN_NUMBER}" >> $GITHUB_ENV
+        # run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}-${RUN_NUMBER}" >> $GITHUB_ENV
+        run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}" >> $GITHUB_ENV
 
       # - name: Create the tag ${{ env.TAG_NAME }}
       #   run: |
