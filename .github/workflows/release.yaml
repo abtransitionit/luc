@@ -1,13 +1,22 @@
 # release a go artifact
 name: Release
 
+
 on:
-  push:
-    tags:
-      - '*'  # on any new pushed tag (new or force-pushed).
+  workflow_run: # This workflow is triggered when the workflow completes (success or failure). 
+    workflows:
+      - Tag   # the name of the workflow (inside the yaml)
+    types:
+      - completed
+
+# on:
+#   push:
+#     tags:
+#       - '*'  # on any new pushed tag (new or force-pushed).
 
 jobs:
-  create-release:
+  create-release-on-vm:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest     # the VM
     env:
       TAG_NAME: ${{ github.ref_name }}   # Tag that triggered the workflow

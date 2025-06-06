@@ -2,7 +2,7 @@
 name: Tag
 
 on:
-  workflow_run: # This workflow is triggered when the "Build" workflow completes (success or failure). 
+  workflow_run: # This workflow is triggered when the workflow completes (success or failure). 
     workflows:
       - Build   # the name of the workflow (inside the yaml)
     types:
