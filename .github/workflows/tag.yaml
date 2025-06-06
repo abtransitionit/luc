@@ -1,0 +1,42 @@
+# Build a repository TAG
+name: Tag
+
+on:
+  workflow_run: # This workflow is triggered when the "Build" workflow completes (success or failure). 
+    workflows:
+      - Build
+    types:
+      - completed
+
+jobs:
+  create-tag-on-vm:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:                    # variables shared by all steps
+      VERSION: v0.0.1       # You can update this manually or generate dynamically later
+      BRANCH_NAME: ${{ github.event.workflow_run.head_branch }}
+      RUN_NUMBER:   ${{ github.event.workflow_run.run_number }}
+      TAG_NAME: ${{ format('{0}-{1}', env.VERSION, env.BRANCH_NAME) }}    
+      
+
+    steps:
+      - name: Checkout the current git repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # fetch full git history, all tags and branches - mandatory when you use some git commands like `git tag`
+
+      - name: Set up Git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create the tag ${{ env.TAG_NAME }}
+        run: |
+          git tag "${{ env.TAG_NAME }}"
+
+
+      - name: Push the tag ${{ env.TAG_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin "${{ env.TAG_NAME }}"

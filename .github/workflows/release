@@ -1,0 +1,22 @@
+# release a go artifact
+name: Release
+
+on:
+  workflow_run: # This workflow is triggered when the "Build" workflow completes (success or failure). 
+    workflows:
+      - Build
+    types:
+      - completed
+
+jobs:          # This job is triggered when the "Build" workflow completes (success) and branch is 'main').  
+  release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'dev' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub Release (draft)
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "dev-${{ github.run_number }}"
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
