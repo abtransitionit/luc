@@ -2,7 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [dev main]
+    branches: 
+      - dev
+      - main
     tags:
       - '*'  # Trigger on any new tag
 
