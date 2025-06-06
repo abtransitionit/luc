@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest  # denote a VM
     container:              # denote a VM container
       image: golang:1.24
+    env:
+      ARTIFACT_NAME: luc  # define variable here
     steps:
       - name: show host config
         run: cat /proc/1/cgroup
@@ -32,16 +34,20 @@ jobs:
       - name: Check Go version
         run: go version
 
-      - name: Checkout code   # clone repository
-        uses: actions/checkout@v4
-        # with:
-        #   name: luc-binary    # upload artifact to manual download
-        #   path: luc
+      - name: Checkout code         # clone current git repository
+        uses: actions/checkout@v4   # https://github.com/actions/checkout
 
       - name: check current folder
         run: pwd ; ls -la
 
-      # - name: Build artifact 
-      #   run: go build -v -buildvcs=false -o luc # workaround since go 1.18+
-      # - name: check binary is built
-      #   run: ls -lh luc
+      - name: Build artifact 
+        run: go build -v -buildvcs=false -o $ARTIFACT_NAME # workaround since go 1.18+
+
+      - name: check binary is built
+        run: ls -lh $ARTIFACT_NAME
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3 # https://github.com/actions/upload-artifact
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-binary-${{ github.run_number }}   # the new name
+          path: $ARTIFACT_NAME                                   # the artifact just build
