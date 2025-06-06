@@ -50,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v4 # https://github.com/actions/upload-artifact
         with:
           name: ${{ env.ARTIFACT_NAME }}-binary-${{ github.run_number }}   # the new name
-          path: $ARTIFACT_NAME                                   # the artifact just build
+          path: ${{ env.ARTIFACT_NAME }}                                   # the artifact just build
