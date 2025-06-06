@@ -47,8 +47,8 @@ jobs:
       - name: check binary is built
         run: ls -lh $ARTIFACT_NAME
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4 # https://github.com/actions/upload-artifact
+      - name: Upload artifact             # in artifact section of the workflow instance
+        uses: actions/upload-artifact@v4  # https://github.com/actions/upload-artifact
         with:
-          name: ${{ env.ARTIFACT_NAME }}-binary-${{ github.run_number }}   # the new name
-          path: ${{ env.ARTIFACT_NAME }}                                   # the artifact just build
+          name: ${{ env.ARTIFACT_NAME }}-binary-${{ github.run_number }}   # the dst artifact name/id
+          path: ${{ env.ARTIFACT_NAME }}                                   # the src artifact

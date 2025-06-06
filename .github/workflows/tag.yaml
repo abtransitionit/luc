@@ -57,6 +57,14 @@ jobs:
         run: |
           git push --force origin "${{ env.TAG_NAME }}"
 
+      - name: Save the tag for next workflow in a file 
+        run: echo "${{ env.TAG_NAME }}" > tag.txt
+      - name: Upload artifact       # in artifact section of the workflow instance
+        uses: actions/upload-artifact@v4
+        with:
+          name: tag-name            # the dst artifact name/id
+          path: tag.txt             # the src artifact
+
       - name: summary     # allow identification in github UI
         run: |
           echo "Branch:   ${{ github.event.workflow_run.head_branch }}"
