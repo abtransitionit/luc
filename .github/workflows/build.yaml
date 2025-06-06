@@ -34,15 +34,14 @@ jobs:
 
       - name: Checkout code   # clone repository
         uses: actions/checkout@v4
-        with:
-          name: luc-binary    # upload artifact to manual download
-          path: luc
+        # with:
+        #   name: luc-binary    # upload artifact to manual download
+        #   path: luc
 
       - name: check current folder
         run: pwd ; ls -la
 
-      - name: Build artifact 
-        run: go build -v -buildvcs=false -o luc # workaround since go 1.18+
-
-      - name: check binary is built
-        run: ls -lh luc
+      # - name: Build artifact 
+      #   run: go build -v -buildvcs=false -o luc # workaround since go 1.18+
+      # - name: check binary is built
+      #   run: ls -lh luc
