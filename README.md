@@ -10,7 +10,7 @@
 
 ## Why LUC
 
-- A single binary (to download or build from source)
+- A single binary (download or build from source)
 - Manage resources for both **local OS** and **remote VMs**  
 - Native support for **Rhel**, **Debian**, and derived distributions. 
 - Unified linux management of:
