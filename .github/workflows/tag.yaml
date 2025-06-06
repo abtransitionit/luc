@@ -34,7 +34,10 @@ jobs:
         id: tagname
         run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}-${RUN_NUMBER}" >> $GITHUB_ENV
 
-      - name: Create the tag ${{ env.TAG_NAME }}
+      # - name: Create the tag ${{ env.TAG_NAME }}
+      #   run: |
+      #     git tag "${{ env.TAG_NAME }}"
+      - name: Create/overwrite a tag ${{ env.TAG_NAME }}
         run: |
           git tag "${{ env.TAG_NAME }}"
 

@@ -2,21 +2,17 @@
 name: Release
 
 on:
-  workflow_run: # This workflow is triggered when the "Build" workflow completes (success or failure). 
-    workflows:
-      - Build
-    types:
-      - completed
+  push:
+    tags:
+      - '*'  # on any new pushed tag (new or force-pushed).
 
-jobs:          # This job is triggered when the "Build" workflow completes (success) and branch is 'main').  
-  release:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'dev' }}
-    runs-on: ubuntu-latest
+jobs:
+  create-release:
+    runs-on: ubuntu-latest     # the VM
     steps:
-      - name: Create GitHub Release (draft)
-        uses: softprops/action-gh-release@v1
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1  # https://github.com/softprops/action-gh-release
         with:
-          tag_name: "dev-${{ github.run_number }}"
-          draft: true
+          tag_name: ${{ github.ref_name }}    # tag that triggered the workflow
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

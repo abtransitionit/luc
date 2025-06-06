@@ -1,0 +1,4 @@
+# The build process
+- Build the artifact
+- Tag the artifact
+  - when build is complete and successfull
