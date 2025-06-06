@@ -1,0 +1,23 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package packagex
+
+import (
+	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/spf13/cobra"
+)
+
+// Description
+var lockSDesc = "lock dnfapt package."
+var lockLDesc = lockSDesc + ` xxx.`
+
+// root Command
+var lockCmd = &cobra.Command{
+	Use:   "lock",
+	Short: lockSDesc,
+	Long:  lockLDesc,
+	Run: func(cmd *cobra.Command, args []string) {
+		logx.L.Debugf(lockSDesc)
+	},
+}

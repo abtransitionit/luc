@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+    branches: [dev main]
+    tags:
+      - '*'  # Trigger on any new tag
+
+jobs:
+  run-in-vm:
+    runs-on: ubuntu-latest # denote a VM
+    steps:
+      - name: display host config
+        run: cat /proc/1/cgroup
+
+      - name: display os config
+        run: cat /etc/os-release
+
+  build-in-container:
+    runs-on: ubuntu-latest  # denote a VM
+    container:              # denote a VM container
+      image: golang:1.24
+    steps:
+      - name: show host config
+        run: cat /proc/1/cgroup
+
+      - name: show os config
+        run: cat /etc/os-release
+
+      - name: Check Go version
+        run: go version
+
+      - name: Checkout code   # clone repository
+        uses: actions/checkout@v4
+        with:
+          name: luc-binary    # upload artifact to manual download
+          path: luc
+
+      - name: check current folder
+        run: pwd ; ls -la
+
+      - name: Build artifact 
+        run: go build -v -buildvcs=false -o luc # workaround since go 1.18+
+
+      - name: check binary is built
+        run: ls -lh luc
+
+      - name: Upload luc binary
+        uses: actions/upload-artifact@v4

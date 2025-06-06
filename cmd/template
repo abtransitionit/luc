@@ -1,0 +1,27 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package cmd
+
+import (
+	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/spf13/cobra"
+)
+
+// Description
+var cmdtplSDesc = "xxx."
+var cmdtplLDesc = cmdtplSDesc + ` xxx.`
+
+// root Command
+var cmdtplCmd = &cobra.Command{
+	Use:   "kbe",
+	Short: cmdtplSDesc,
+	Long:  cmdtplLDesc,
+	Run: func(cmd *cobra.Command, args []string) {
+		logx.L.Infof("kbe called")
+	},
+}
+
+func init() {
+	// cmdtplCmd.AddCommand(cmdtplCmd)
+}
