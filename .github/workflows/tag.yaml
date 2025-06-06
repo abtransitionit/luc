@@ -4,7 +4,7 @@ name: Tag
 on:
   workflow_run: # This workflow is triggered when the "Build" workflow completes (success or failure). 
     workflows:
-      - Build   # the name of the workflow (inseide the yaml)
+      - Build   # the name of the workflow (inside the yaml)
     types:
       - completed
 
@@ -16,7 +16,7 @@ jobs:
       VERSION: v0.0.1       # You can update this manually or generate dynamically later
       BRANCH_NAME: ${{ github.event.workflow_run.head_branch }}
       RUN_NUMBER:   ${{ github.event.workflow_run.run_number }}
-      TAG_NAME: ${{ format('{0}-{1}', env.VERSION, env.BRANCH_NAME) }}    
+      # TAG_NAME: ${{ format('{0}-{1}', env.VERSION, env.BRANCH_NAME) }}    
       
 
     steps:
@@ -29,6 +29,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add var TAG_NAME to the env
+        id: tagname
+        run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}-${RUN_NUMBER}" >> $GITHUB_ENV
 
       - name: Create the tag ${{ env.TAG_NAME }}
         run: |
