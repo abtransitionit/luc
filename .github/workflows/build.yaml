@@ -46,6 +46,3 @@ jobs:
 
       - name: check binary is built
         run: ls -lh luc
-
-      - name: Upload luc binary
-        uses: actions/upload-artifact@v4
