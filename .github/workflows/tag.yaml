@@ -35,19 +35,27 @@ jobs:
         # run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}-${RUN_NUMBER}" >> $GITHUB_ENV
         run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}" >> $GITHUB_ENV
 
-      # - name: Create the tag ${{ env.TAG_NAME }}
+      # - name: Create the tag ${{ env.TAG_NAME }} # fails if tag already exists
       #   run: |
       #     git tag "${{ env.TAG_NAME }}"
-      - name: Create/overwrite a tag ${{ env.TAG_NAME }}
+
+      # - name: Push the tag ${{ env.TAG_NAME }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     git push origin "${{ env.TAG_NAME }}"
+
+
+      - name: Create/update a tag ${{ env.TAG_NAME }} # no tails if tag already exists
         run: |
-          git tag "${{ env.TAG_NAME }}"
+          git tag -f "${{ env.TAG_NAME }}"
 
 
       - name: Push the tag ${{ env.TAG_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git push origin "${{ env.TAG_NAME }}"
+          git push --force origin "${{ env.TAG_NAME }}"
 
       - name: summary     # allow identification in github UI
         run: |
