@@ -13,12 +13,20 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:                          # variables shared by all steps
-      VERSION:      v0.0.1        # TODO: should be generate dynamically
       BRANCH_NAME:  ${{ github.event.workflow_run.head_branch }}
       RUN_NUMBER:   ${{ github.event.workflow_run.run_number }}
       TAG_FILENAME: "tag.txt"
     
     steps:
+      - name: define var VERSION to v0.0.1 and put it in the github env (like other env vars) 
+        id: tagversion
+        run: echo "VERSION=v0.0.1" >> $GITHUB_ENV
+
+      - name: define var TAG_NAME and put it in the github env (like other env vars) 
+        id: tagname
+        # run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}-${RUN_NUMBER}" >> $GITHUB_ENV
+        run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}" >> $GITHUB_ENV
+
       - name: checkout the current git repo
         uses: actions/checkout@v4
         with:
@@ -29,10 +37,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: define var TAG_NAME and put it in the github env (like other env vars) 
-        id: tagname
-        # run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}-${RUN_NUMBER}" >> $GITHUB_ENV
-        run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}" >> $GITHUB_ENV
 
       - name: Create/update a tag ${{ env.TAG_NAME }} # no fails if tag already exists
         run: |
