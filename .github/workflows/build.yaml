@@ -1,5 +1,5 @@
 # Build a go artifact
-name: Build a go artifact
+name: Build
 
 on:
   push:
