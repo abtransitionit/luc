@@ -15,14 +15,16 @@ on:
 #       - '*'  # on any new pushed tag (new or force-pushed).
 
 jobs:
-  create-release-from-tag-inside-vm:
+  create-release-from-tag:
     env:
-      TAG_PATH: ./tag-${{ github.run_id }}        # local folder 
+      # TAG_PATH: ./tag-${{ github.run_id }}        # local folder 
+      TAG_PATH: ./tag        # local folder 
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest     # the VM
     steps:
       - name: download artifact into a local folder from previous workflow
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: tag-name             # must match the uploaded artifact name
           path: ${{ env.TAG_PATH }}  # local folder into extract the file - no concurent conflict
@@ -33,6 +35,11 @@ jobs:
       # - name: show hard coded "tag-name" value
       #   run: cat ${{ env.TAG_PATH }}/tag-name
 
+      - name: summary     # allow identification in github UI
+        run: |
+          echo "Branch:   ${{ github.event.workflow_run.head_branch }}"
+          echo "Commit:   ${{ github.event.workflow_run.head_sha }}"
+          echo "Tag path: ${{ env.TAG_PATH }}"
 
 
 
