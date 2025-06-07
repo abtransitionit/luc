@@ -27,8 +27,6 @@ jobs:
         with:
           path: ${{ env.TAG_PATH }}   # local folder into extract the file - no concurent conflict
           # name: tag-name            # must match the uploaded artifact name
-          run-id: ${{ github.event.workflow_run.id }}
-          repository: ${{ github.repository }}
       - name: ls folder
         run: ls -laR ${{ env.TAG_PATH }}
         # run: ls -l ${{ env.TAG_PATH }}
