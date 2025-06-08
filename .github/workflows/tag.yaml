@@ -10,7 +10,6 @@ on:
 
 jobs:
   create-tag-inside-vm:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:                          # variables shared by all steps
       BRANCH_NAME:  ${{ github.event.workflow_run.head_branch }}
