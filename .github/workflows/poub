@@ -1,3 +1,8 @@
+      - name: Check Tagged commit is checked out commit 
+        run: |
+          echo "Commit of dependency workflow: ${{ github.event.workflow_run.head_sha }}"
+          echo "checked out commit:            ${{ github.sha }}"
+          // check it is the same
 
 
       - name: check current folder

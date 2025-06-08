@@ -52,16 +52,16 @@ jobs:
       - name: Checkout git repo     # clone current git repository
         uses: actions/checkout@v4   # https://github.com/actions/checkout
 
-      - name: Check Tagged commit is checked out commit 
+      - name: Check Tagged commit is current checked out commit 
+        env:
+          TCommit: ${{ github.event.workflow_run.head_sha }}  # Tag commit
+          BCommit: ${{ github.sha }}                          # Build checked out commit
         run: |
-          CTag=${{ github.event.workflow_run.head_sha }}
-          BTag=${{ github.sha }}
-          echo "Commit of dependency workflow: ${{ CTag }}"
-          echo "checked out commit:            ${{ BTag }}"
-          if [ "${{ CTag }}" != "${{ BTag }}" ]; then
+          echo "Commit of dependency workflow: ${{ TCommit }}"
+          echo "checked out commit:            ${{ BCommit }}"
+          if [ "${TCommit}" != "${{BCommit}}" ]; then
             echo "❌ Commit mismatch!"
             exit 1
           else
             echo "✅ Commit verified with success"
           fi
-          
