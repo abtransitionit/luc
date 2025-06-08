@@ -38,3 +38,8 @@ jobs:
           git tag -f "${{ env.TAG_NAME }}" || { echo "Tagging failed"; exit 1; }
           git push --force origin "${{ env.TAG_NAME }}"  || { echo "Tag push failed"; exit 2; }
           echo "Tag $TAG_NAME pushed successfully"
+
+      - name: Display commit after tagging - ${{ github.sha }}
+        run: |
+          echo "Associated tags:"
+          git tag --points-at HEAD

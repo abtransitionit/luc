@@ -1,4 +1,49 @@
 
+
+      - name: check current folder
+        run: pwd ; ls -la
+
+      - name: Build the artifact 
+        run: go build -v -buildvcs=false -o ${{ env.ARTIFACT_BASE_NAME }} # workaround since go 1.18+
+
+      - name: check binary is built
+        run: ls -lh ${{ env.ARTIFACT_BASE_NAME }}
+
+      - name: Upload artifact             # in artifact section of the workflow instance
+        uses: actions/upload-artifact@v4  # https://github.com/actions/upload-artifact
+        with:
+          name: ${{ env.ARTIFACT_BASE_NAME }}-${{ steps.githubenv.outputs.GOOS }}-${{ steps.githubenv.outputs.GOARCH }}  # e.g. "luc-linux-arm64"   
+          path: ${{ env.ARTIFACT_BASE_NAME }} # the src artifact
+
+
+
+
+  build-other-artifacts:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # This job is triggered when the dependency workflow completes and success
+    runs-on: ubuntu-latest  # denote a VM
+    env:
+      ARTIFACT_NAME: luc-${{ matrix.goos }}-${{ matrix.goarch }}
+    strategy:
+      matrix:
+        goos: [linux, darwin]
+        goarch: [arm64]
+    steps:
+      - name: Checkout git repo     # clone current git repository
+        uses: actions/checkout@v4   # https://github.com/actions/checkout
+
+      - name: Build
+        run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o ${{ env.ARTIFACT_NAME }}
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}
+
+
+
+
+
 env:
   CURRENT_BRANCH: ${{ github.ref_name }}  # For pushes (e.g., 'main')
   # OR for pull requests:
@@ -79,3 +124,64 @@ env:
 #   with:
 #     path: ${{ env.TAG_PATH }}   # local folder into extract the file - no concurent conflict
 #     # name: tag-name            # must match the uploaded artifact name
+
+
+
+
+
+
+# Using Github API in Github actions
+
+
+# Build a go artifact
+# - use a VM container image capabilities
+name: Build
+
+on:
+  workflow_run: # This workflow is triggered when the workflow completes (success or failure). 
+    workflows:
+      - Tag     # the name of the workflow to completes (inside the yaml)
+    types:
+      - completed
+
+jobs:
+  vm-info:
+    runs-on: ubuntu-latest # denote a VM
+    steps:
+      - name: display host config
+        run: cat /proc/1/cgroup
+
+      - name: display os config
+        run: cat /etc/os-release
+
+      - name: Check Go version
+        run: go version
+
+  container-info:
+    runs-on: ubuntu-latest # denote a VM
+    container:              # denote a VM container
+      image: golang:1.24
+    steps:
+      - name: display host config
+        run: cat /proc/1/cgroup
+
+      - name: display os config
+        run: cat /etc/os-release
+
+  build-artifact-inside-container:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # This job is triggered when the dependency workflow completes and success
+    runs-on: ubuntu-latest  # denote a VM
+    container:              # denote a VM container
+      image: golang:1.24
+    env:
+      ARTIFACT_BASE_NAME: luc  # define variable here
+    steps:
+      - name: define vars GOOS AND GOARCH
+        id: githubenv
+        run: |
+          echo "GOOS=$(go env GOOS)"     >> $GITHUB_OUTPUT
+          echo "GOARCH=$(go env GOARCH)" >> $GITHUB_OUTPUT
+
+      - name: Checkout git repo     # clone current git repository
+        uses: actions/checkout@v4   # https://github.com/actions/checkout
+

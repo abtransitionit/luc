@@ -1,0 +1,61 @@
+# Build a go artifact
+# - use a VM container image capabilities
+# - as it is triggered by tag.yaml, it automatically checkout the repo associated to that TAG
+# - To be sure just display the commit
+name: Build
+
+on:
+  workflow_run: # This workflow is triggered when the workflow completes (success or failure). 
+    workflows:
+      - Tag     # the name of the workflow to completes (inside the yaml)
+    types:
+      - completed
+
+jobs:
+  vm-info:
+    runs-on: ubuntu-latest # denote a VM
+    steps:
+      - name: display host config
+        run: cat /proc/1/cgroup
+
+      - name: display os config
+        run: cat /etc/os-release
+
+      - name: Check Go version
+        run: go version
+
+  container-info:
+    runs-on: ubuntu-latest # denote a VM
+    container:              # denote a VM container
+      image: golang:1.24
+    steps:
+      - name: display host config
+        run: cat /proc/1/cgroup
+
+      - name: display os config
+        run: cat /etc/os-release
+
+  build-artifact-inside-container:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # This job is triggered when the dependency workflow completes and success
+    runs-on: ubuntu-latest  # denote a VM
+    container:              # denote a VM container
+      image: golang:1.24
+    env:
+      ARTIFACT_BASE_NAME: luc  # define variable here
+    steps:
+      - name: define vars GOOS AND GOARCH
+        id: githubenv
+        run: |
+          echo "GOOS=$(go env GOOS)"     >> $GITHUB_OUTPUT
+          echo "GOARCH=$(go env GOARCH)" >> $GITHUB_OUTPUT
+
+      - name: Checkout git repo     # clone current git repository
+        uses: actions/checkout@v4   # https://github.com/actions/checkout
+
+      - name: Display checked out commit - ${{ github.sha }}
+        run: |
+          echo "Associated tags:"
+          git tag --points-at HEAD
+
+      - name: Display commit of dependency workflow - ${{ github.event.workflow_run.head_sha }}
+        run: echo "Associated commit - ${{ github.event.workflow_run.head_sha }}"
