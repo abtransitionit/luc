@@ -12,7 +12,7 @@ jobs:
   create-tag-inside-vm:
     runs-on: ubuntu-latest
     env:                          # variables shared by all steps
-      BRANCH_NAME:  ${{ github.event.workflow_run.head_branch }}
+      BRANCH_NAME:  ${{ github.ref_name }}
       RUN_NUMBER:   ${{ github.event.workflow_run.run_number }}
       TAG_FILEPATH: "./.github/tag.auto.txt"  # a repo folder
       VERSION     : "v0.0.1"
