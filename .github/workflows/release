@@ -17,22 +17,13 @@ on:
 jobs:
   create-release-from-tag:
     env:
-      TAG_PATH: ./tag-${{ github.run_id }}        # local folder 
-      # TAG_PATH: ./tag        # local folder 
+      TAG_FILEPATH: "./.github/tag.auto.txt"
+      # TAG_FILEPATH: ./tag-${{ github.run_id }}        # local folder 
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest     # the VM
     steps:
-      - name: download artifact into a local folder from previous workflow
-        uses: actions/download-artifact@v4
-        with:
-          path: ${{ env.TAG_PATH }}   # local folder into extract the file - no concurent conflict
-          # name: tag-name            # must match the uploaded artifact name
-      - name: ls folder
-        run: ls -laR ${{ env.TAG_PATH }}
-        # run: ls -l ${{ env.TAG_PATH }}
-
-      # - name: show hard coded "tag-name" value
-      #   run: cat ${{ env.TAG_PATH }}/tag-name
+      - name: get the tag name
+        run: |
 
       - name: summary     # allow identification in github UI
         run: |
@@ -59,3 +50,11 @@ jobs:
 #           tag_name: ${{ env.TAG_NAME }}    # tag that triggered the workflow
 #         env:
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# TAG_FILEPATH: ./tag-${{ github.run_id }}
+
+      # - name: download artifact into a local folder from previous workflow
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     path: ${{ env.TAG_PATH }}   # local folder into extract the file - no concurent conflict
+      #     # name: tag-name            # must match the uploaded artifact name
