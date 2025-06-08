@@ -29,7 +29,7 @@ jobs:
       - name: Create The Release with tag ${{ env.TAG_NAME }}
         uses: softprops/action-gh-release@v1  # https://github.com/softprops/action-gh-release
         with:
-          tag_name: ${{ env.TAG_NAME }}    # tag that triggered the workflow
+          tag_name: ${{ env.TAG_NAME }}     # tag that triggered the workflow
           files:     luc                    # the artifact from Bild workflow
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
