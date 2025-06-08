@@ -20,7 +20,7 @@ jobs:
       - name: display os config
         run: cat /etc/os-release
 
-  run-inside-container:
+  build-inside-container:
     runs-on: ubuntu-latest  # denote a VM
     container:              # denote a VM container
       image: golang:1.24
@@ -59,3 +59,22 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_BASE_NAME }}-${{ steps.githubenv.outputs.GOOS }}-${{ steps.githubenv.outputs.GOARCH }}  # e.g. "luc-linux-arm64"   
           path: ${{ env.ARTIFACT_BASE_NAME }} # the src artifact
+
+  build-other-artifact:
+    runs-on: ubuntu-latest  # denote a VM
+    env:
+      ARTIFACT_BASE_NAME: luc  # define variable here
+    strategy:
+      matrix:
+        goos: [linux, darwin]
+        goarch: [arm64]
+    steps:
+      - name: Build
+        env:
+          ARTIFACT_NAME: ${{ env.ARTIFACT_BASE_NAME }}-${{ matrix.goos }}-${{ matrix.goarch }}
+        run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o ${{ env.ARTIFACT_NAME }}
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}
