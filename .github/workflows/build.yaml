@@ -57,9 +57,9 @@ jobs:
           TCommit: ${{ github.event.workflow_run.head_sha }}  # Tag commit
           BCommit: ${{ github.sha }}                          # Build checked out commit
         run: |
-          echo "Commit of dependency workflow: ${{ TCommit }}"
-          echo "checked out commit:            ${{ BCommit }}"
-          if [ "${TCommit}" != "${{BCommit}}" ]; then
+          echo "Commit of dependency workflow: ${TCommit}"
+          echo "checked out commit:            ${BCommit}"
+          if [ "${TCommit}" != "${BCommit}" ]; then
             echo "❌ Commit mismatch!"
             exit 1
           else
