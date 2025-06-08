@@ -19,10 +19,6 @@ jobs:
       VERSION     : "v0.0.1"
     
     steps:
-      - name: define var TAG_NAME           # and put it in the github env
-        id: tagname
-        run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}" >> $GITHUB_ENV
-
       - name: checkout repo
         uses: actions/checkout@v4
         with:
@@ -37,6 +33,9 @@ jobs:
       - name: create and pusht the TAG  ${{ env.TAG_NAME }} # no fails if tag already exists
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME:     ${{ env.VERSION }}-${{ env.BRANCH_NAME }}
         run: |
-          git tag -f "${{ env.TAG_NAME }}"
-          git push --force origin "${{ env.TAG_NAME }}" 
+          echo "will create and push the tag : ${{ env.TAG_NAME }}"
+          git tag -f "${{ env.TAG_NAME }}" || { echo "Tagging failed"; exit 1; }
+          git push --force origin "${{ env.TAG_NAME }}"  || { echo "Tag push failed"; exit 2; }
+          echo "Tag $TAG_NAME pushed successfully"

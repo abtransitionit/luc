@@ -1,3 +1,9 @@
+      - name: define var TAG_NAME           # and put it in the github env
+        id: tagname
+        run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}" >> $GITHUB_ENV
+
+
+
       - name: Save the tag in a file in the the repo     # for sharing with another workflow
         run: |
           echo "${{ env.TAG_NAME }}" >> ${{ env.TAG_FILEPATH }}
