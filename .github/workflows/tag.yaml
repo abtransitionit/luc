@@ -16,7 +16,7 @@ jobs:
     env:                          # variables shared by all steps
       BRANCH_NAME:  ${{ github.event.workflow_run.head_branch }}
       RUN_NUMBER:   ${{ github.event.workflow_run.run_number }}
-      TAG_FILENAME: "tag.txt"
+      TAG_FILENAME: "tag.auto.txt"
     
     steps:
       - name: define var VERSION to v0.0.1 # and put it in the github env (like other env vars) 
@@ -51,7 +51,7 @@ jobs:
 
       - name: Save the tag in the repo     # for being available in the next workflow
         run: |
-          echo "${{ env.TAG_NAME }}" >> ./github/${{ env.TAG_FILENAME }}
+          echo "${{ env.TAG_NAME }}" >> ./.github/${{ env.TAG_FILENAME }}
           git add .github/tag.txt              # Stages the change
           git commit -m "Update tag"           # Commits the new content
           git push                             # Pushes the updated file          
