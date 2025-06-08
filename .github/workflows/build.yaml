@@ -52,10 +52,8 @@ jobs:
       - name: Checkout git repo     # clone current git repository
         uses: actions/checkout@v4   # https://github.com/actions/checkout
 
-      - name: Display checked out commit - ${{ github.sha }}
-        run: |
-          echo "Associated tags:"
-          git tag --points-at HEAD
-
       - name: Display commit of dependency workflow - ${{ github.event.workflow_run.head_sha }}
-        run: echo "Associated commit - ${{ github.event.workflow_run.head_sha }}"
+        run: echo
+      - name: Display checked out commit - ${{ github.sha }}
+        run: echo
+
