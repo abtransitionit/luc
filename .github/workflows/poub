@@ -1,3 +1,12 @@
+
+      - name: Build the artifact
+        env:
+          ARTIFACT_NAME: ${{ ARTIFACT_BASE_NAME }}-${{ matrix.goos }}-${{ matrix.goarch }}
+        run: go build -v -buildvcs=false -o ${{ env.ARTIFACT_BASE_NAME }} # workaround since go 1.18+
+        run: GOOS=$(go env GOOS) GOARCH=$(go env GOOS) go build -o ${{ env.ARTIFACT_NAME }}
+
+
+
       - name: Check Tagged commit is checked out commit 
         run: |
           echo "Commit of dependency workflow: ${{ github.event.workflow_run.head_sha }}"

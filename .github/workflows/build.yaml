@@ -52,7 +52,7 @@ jobs:
       - name: Checkout git repo     # clone current git repository
         uses: actions/checkout@v4   # https://github.com/actions/checkout
 
-      - name: Check Tagged commit is current checked out commit 
+      - name: Check Tagged commit is current checked out commit # normally obvious but in concurent build may occurs
         env:
           TCommit: ${{ github.event.workflow_run.head_sha }}  # Tag commit
           BCommit: ${{ github.sha }}                          # Build checked out commit
@@ -65,3 +65,16 @@ jobs:
           else
             echo "✅ Commit verified with success"
           fi
+
+      - name: Build the artifact 
+        env:
+          ARTIFACT_NAME: ${{ env.ARTIFACT_BASE_NAME }}-${{ steps.githubenv.outputs.GOOS }}-${{ steps.githubenv.outputs.GOARCH }} # e.g. "luc-linux-arm64"   
+        run: go build -v -buildvcs=false -o ${{ ARTIFACT_BASE_NAME }} # (buildvcs) workaround since go 1.18+
+
+      - name: Upload artifact             # in artifact section of the workflow instance
+        env:
+          ARTIFACT_NAME: ${{ env.ARTIFACT_BASE_NAME }}-${{ steps.githubenv.outputs.GOOS }}-${{ steps.githubenv.outputs.GOARCH }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }} # the dst artifact
+          path: ${{ env.ARTIFACT_NAME }} # the src artifact
