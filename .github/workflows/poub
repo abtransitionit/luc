@@ -1,0 +1,50 @@
+
+      # - name: Create the tag ${{ env.TAG_NAME }} # fails if tag already exists
+      #   run: |
+      #     git tag "${{ env.TAG_NAME }}"
+
+      # - name: Push the tag ${{ env.TAG_NAME }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     git push origin "${{ env.TAG_NAME }}"
+
+      # - name: Upload file as artifact section of the workflow instance
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: tag-name                  # the dst artifact name/id - zip the file
+      #     path: ${{ env.TAG_FILENAME }}   # the src artifact
+
+
+
+# on:
+#   push:
+#     tags:
+#       - '*'  # on any new pushed tag (new or force-pushed).
+
+
+
+# jobs:
+#   create-release:
+#     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#     runs-on: ubuntu-latest     # the VM
+#     env:
+#       TAG_NAME: ${{ github.ref_name }}   # Tag that triggered the workflow
+#     steps:
+#       - name: Create release for tag ${{ env.TAG_NAME }}    
+#         run: |
+#           echo "Tag that triggered and used for this release : ${{ env.TAG_NAME }}"
+#       - name: Create The Release
+#         uses: softprops/action-gh-release@v1  # https://github.com/softprops/action-gh-release
+#         with:
+#           tag_name: ${{ env.TAG_NAME }}    # tag that triggered the workflow
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# TAG_FILEPATH: ./tag-${{ github.run_id }}
+
+      # - name: download artifact into a local folder from previous workflow
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     path: ${{ env.TAG_PATH }}   # local folder into extract the file - no concurent conflict
+      #     # name: tag-name            # must match the uploaded artifact name
