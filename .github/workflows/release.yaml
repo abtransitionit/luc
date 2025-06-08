@@ -26,7 +26,7 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_branch }} # get the branch that was tagged
 
-      - name: get/read the tag name # and put it in the github env
+      - name: get the tag name # and put it in the github env
         run: |
           TAG_NAME=$(cat "${{ env.TAG_FILEPATH }}" | tail -n 1)
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
