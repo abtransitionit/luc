@@ -1,7 +1,5 @@
 # Build a go artifact
-# - use a VM container image capabilities
 # - as it is triggered by tag.yaml, it automatically checkout the repo associated to that TAG
-# - To be sure just display the commit
 name: Build
 
 on:
@@ -12,30 +10,7 @@ on:
       - completed
 
 jobs:
-  vm-info:
-    runs-on: ubuntu-latest # denote a VM
-    steps:
-      - name: display host config
-        run: cat /proc/1/cgroup
-
-      - name: display os config
-        run: cat /etc/os-release
-
-      - name: Check Go version
-        run: go version
-
-  container-info:
-    runs-on: ubuntu-latest # denote a VM
-    container:              # denote a VM container
-      image: golang:1.24
-    steps:
-      - name: display host config
-        run: cat /proc/1/cgroup
-
-      - name: display os config
-        run: cat /etc/os-release
-
-  build-artifact-inside-container:
+  build-principal-artifact-inside-container: # define custom go version
     if: ${{ github.event.workflow_run.conclusion == 'success' }} # This job is triggered when the dependency workflow completes and success
     runs-on: ubuntu-latest  # denote a VM
     container:              # denote a VM container
@@ -66,7 +41,7 @@ jobs:
             echo "✅ Commit verified with success"
           fi
 
-      - name: Build the artifact 
+      - name: Build the principal artifact # into the container
         env:
           ARTIFACT_NAME: ${{ env.ARTIFACT_BASE_NAME }}-${{ steps.githubenv.outputs.GOOS }}-${{ steps.githubenv.outputs.GOARCH }} # e.g. "luc-linux-arm64"   
         run: go build -v -buildvcs=false -o ${ARTIFACT_NAME} # (buildvcs) workaround since go 1.18+
@@ -78,3 +53,25 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_NAME }} # the dst artifact
           path: ${{ env.ARTIFACT_NAME }} # the src artifact
+
+  build-other-plaform-artifacts:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # This job is triggered when the dependency workflow completes and success
+    runs-on: ubuntu-latest  # denote a VM
+    env:
+      ARTIFACT_NAME: luc-${{ matrix.goos }}-${{ matrix.goarch }}
+    strategy:
+      matrix:   # generate a set of tuples
+        goos: [linux, darwin]
+        goarch: [arm64]
+    steps:      # on run for each tuple
+      - name: Checkout git repo     # clone current git repository
+        uses: actions/checkout@v4   # https://github.com/actions/checkout
+
+      - name: Build
+        run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o ${{ env.ARTIFACT_NAME }}
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}

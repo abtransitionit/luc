@@ -27,12 +27,6 @@ jobs:
     env:
       ARTIFACT_BASE_NAME: luc  # define variable here
     steps:
-      - name: show host config
-        run: cat /proc/1/cgroup
-
-      - name: show os config
-        run: cat /etc/os-release
-
       - name: Check Go version
         run: go version
 
@@ -60,24 +54,3 @@ jobs:
           name: ${{ env.ARTIFACT_BASE_NAME }}-${{ steps.githubenv.outputs.GOOS }}-${{ steps.githubenv.outputs.GOARCH }}  # e.g. "luc-linux-arm64"   
           path: ${{ env.ARTIFACT_BASE_NAME }} # the src artifact
 
-  build-other-artifacts:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # This job is triggered when the dependency workflow completes and success
-    runs-on: ubuntu-latest  # denote a VM
-    env:
-      ARTIFACT_NAME: luc-${{ matrix.goos }}-${{ matrix.goarch }}
-    strategy:
-      matrix:
-        goos: [linux, darwin]
-        goarch: [arm64]
-    steps:
-      - name: Checkout git repo     # clone current git repository
-        uses: actions/checkout@v4   # https://github.com/actions/checkout
-
-      - name: Build
-        run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o ${{ env.ARTIFACT_NAME }}
-
-      - name: Upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ env.ARTIFACT_NAME }}

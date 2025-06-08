@@ -32,3 +32,5 @@ jobs:
       - name: display os config
         run: cat /etc/os-release
 
+      - name: Check Go version
+        run: go version
