@@ -69,7 +69,7 @@ jobs:
       - name: Build the artifact 
         env:
           ARTIFACT_NAME: ${{ env.ARTIFACT_BASE_NAME }}-${{ steps.githubenv.outputs.GOOS }}-${{ steps.githubenv.outputs.GOARCH }} # e.g. "luc-linux-arm64"   
-        run: go build -v -buildvcs=false -o ${{ ARTIFACT_BASE_NAME }} # (buildvcs) workaround since go 1.18+
+        run: go build -v -buildvcs=false -o ${ARTIFACT_BASE_NAME} # (buildvcs) workaround since go 1.18+
 
       - name: Upload artifact             # in artifact section of the workflow instance
         env:
