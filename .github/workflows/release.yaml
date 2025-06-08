@@ -15,9 +15,11 @@ jobs:
       TAG_FILEPATH: "./.github/tag.auto.txt"
     runs-on: ubuntu-latest     # the VM
     steps:    
-      - name: checkout the current git repo
+      - name: checkout the current git repo with tags
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0  # Fetch all history (required for tags)
+          fetch-tags: true  # Explicitly fetch tags
       - name: Get latest tag
         id: gettag
         run: |
