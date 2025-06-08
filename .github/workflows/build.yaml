@@ -25,7 +25,7 @@ jobs:
     container:              # denote a VM container
       image: golang:1.24
     env:
-      ARTIFACT_NAME: luc  # define variable here
+      ARTIFACT_BASE_NAME: luc  # define variable here
     steps:
       - name: show host config
         run: cat /proc/1/cgroup
@@ -36,6 +36,12 @@ jobs:
       - name: Check Go version
         run: go version
 
+      - name: Define GOOS AND GOARCH envars
+        id: githubenv
+        run: |
+          echo "GOOS=$(go env GOOS)"     >> $GITHUB_OUTPUT
+          echo "GOARCH=$(go env GOARCH)" >> $GITHUB_OUTPUT
+
       - name: Checkout code         # clone current git repository
         uses: actions/checkout@v4   # https://github.com/actions/checkout
 
@@ -43,13 +49,13 @@ jobs:
         run: pwd ; ls -la
 
       - name: Build the artifact 
-        run: go build -v -buildvcs=false -o $ARTIFACT_NAME # workaround since go 1.18+
+        run: go build -v -buildvcs=false -o ${{ env.ARTIFACT_BASE_NAME }} # workaround since go 1.18+
 
       - name: check binary is built
-        run: ls -lh $ARTIFACT_NAME
+        run: ls -lh ${{ env.ARTIFACT_BASE_NAME }}
 
       - name: Upload artifact             # in artifact section of the workflow instance
         uses: actions/upload-artifact@v4  # https://github.com/actions/upload-artifact
         with:
-          name: ${{ env.ARTIFACT_NAME }}-binary-${{ github.run_number }}   # the dst artifact name/id
-          path: ${{ env.ARTIFACT_NAME }}                                   # the src artifact
+          name: ${{ env.ARTIFACT_BASE_NAME }}-${{ steps.githubenv.outputs.GOOS }}-${{ steps.githubenv.outputs.GOARCH }}  # e.g. "luc-linux-arm64"   
+          path: ${{ env.ARTIFACT_BASE_NAME }} # the src artifact
