@@ -56,12 +56,6 @@ jobs:
           git commit -m "Update tag"           # Commits the new content
           git push                             # Pushes the updated file          
 
-      - name: Upload file as artifact section of the workflow instance
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.TAG_FILENAME }}   # the dst artifact name/id - zip the file
-          path: ./                        # the src artifact folder
-
       - name: summary     # allow identification in github UI
         run: |
           echo "Branch:   ${{ github.event.workflow_run.head_branch }}"
