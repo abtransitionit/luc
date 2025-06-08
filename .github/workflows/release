@@ -5,7 +5,7 @@ name: Release
 on:
   workflow_run: # This workflow is triggered when the workflow completes (success or failure). 
     workflows:
-      - Tag   # the name of the workflow (inside the yaml)
+      - Build   # the name of the workflow (inside the yaml)
     types:
       - completed
 

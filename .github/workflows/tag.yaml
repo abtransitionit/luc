@@ -1,0 +1,42 @@
+# Add a TAG to a repository
+# - use a VM image capabilities, no container
+name: Tag
+
+on:
+  push:
+    branches: 
+      - dev
+      - main
+
+jobs:
+  create-tag-inside-vm:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:                          # variables shared by all steps
+      BRANCH_NAME:  ${{ github.event.workflow_run.head_branch }}
+      RUN_NUMBER:   ${{ github.event.workflow_run.run_number }}
+      TAG_FILEPATH: "./.github/tag.auto.txt"  # a repo folder
+      VERSION     : "v0.0.1"
+    
+    steps:
+      - name: define var TAG_NAME           # and put it in the github env
+        id: tagname
+        run: echo "TAG_NAME=${VERSION}-${BRANCH_NAME}" >> $GITHUB_ENV
+
+      - name: checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # fetch full git history - mandatory when using some git commands like `git tag`
+
+      - name: configure Git
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+
+      - name: create and pusht the TAG  ${{ env.TAG_NAME }} # no fails if tag already exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git tag -f "${{ env.TAG_NAME }}"
+          git push --force origin "${{ env.TAG_NAME }}" 
