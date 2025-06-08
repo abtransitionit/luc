@@ -1,0 +1,34 @@
+# Get infos on the Github Runner: VM and container
+name: Info
+
+on:
+  workflow_run: # This workflow is triggered when the workflow completes (success or failure). 
+    workflows:
+      - Tag     # the name of the workflow to completes (inside the yaml)
+    types:
+      - completed
+
+jobs:
+  vm-info:
+    runs-on: ubuntu-latest # denote a VM
+    steps:
+      - name: display host config
+        run: cat /proc/1/cgroup
+
+      - name: display os config
+        run: cat /etc/os-release
+
+      - name: Check Go version
+        run: go version
+
+  container-info:
+    runs-on: ubuntu-latest # denote a VM
+    container:              # denote a VM container
+      image: golang:1.24
+    steps:
+      - name: display host config
+        run: cat /proc/1/cgroup
+
+      - name: display os config
+        run: cat /etc/os-release
+
