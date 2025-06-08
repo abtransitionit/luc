@@ -64,5 +64,4 @@ jobs:
             exit 1
           else
             echo "✅ Commit verified with success"
-            exit 1
           fi
