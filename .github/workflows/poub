@@ -1,3 +1,15 @@
+# after
+# Use GitHub API to download artifact  
+#    gh run download $RUN_ID --artifact=my-data  
+#  env:  
+#    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+
 run: |
     curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
          https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ steps.get_run_id.outputs.run_id }}/artifacts > artifacts.json

@@ -40,13 +40,5 @@ jobs:
       - name: List artifacts to attach to this release
         env:
             GH_TOKEN: ${{ github.token }}      
-        run: gh run view ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }} --json artifacts --jq '.artifacts[].name'
+        run: gh run artifacts --run-id ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}
 
-# after
-# Use GitHub API to download artifact  
-#    gh run download $RUN_ID --artifact=my-data  
-#  env:  
-#    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
