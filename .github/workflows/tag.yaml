@@ -16,7 +16,7 @@ jobs:
     env:                          # variables shared by all steps
       BRANCH_NAME:  ${{ github.event.workflow_run.head_branch }}
       RUN_NUMBER:   ${{ github.event.workflow_run.run_number }}
-      TAG_FILEPATH: "./.githubtag.auto.txt"
+      TAG_FILEPATH: "./.github/tag.auto.txt"
     
     steps:
       - name: define var VERSION to v0.0.1 # and put it in the github env (like other env vars) 
@@ -56,7 +56,7 @@ jobs:
           git commit -m "Update tag auto"      # Commits the new content
           git push                             # Pushes the updated file          
 
-      - name: summary     # allow identification in github UI
+      - name: summary     # allow to attach this wrokflow instance to the caller
         run: |
           echo "Branch:   ${{ github.event.workflow_run.head_branch }}"
           echo "Commit:   ${{ github.event.workflow_run.head_sha }}"
