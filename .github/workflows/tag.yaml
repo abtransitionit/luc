@@ -18,7 +18,7 @@ jobs:
       VERSION     : "v0.0.1"
     
     steps:
-      - name: checkout repo
+      - name: checkout the current git repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0          # fetch full git history - mandatory when using some git commands like `git tag`

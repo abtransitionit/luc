@@ -24,8 +24,8 @@ jobs:
           echo "GOOS=$(go env GOOS)"     >> $GITHUB_OUTPUT
           echo "GOARCH=$(go env GOARCH)" >> $GITHUB_OUTPUT
 
-      - name: Checkout git repo     # clone current git repository
-        uses: actions/checkout@v4   # https://github.com/actions/checkout
+      - name: checkout the current git repo
+        uses: actions/checkout@v4
 
       - name: Check Tagged commit is current checked out commit # normally obvious but in concurent build may occurs
         env:

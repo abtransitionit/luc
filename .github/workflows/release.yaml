@@ -1,5 +1,4 @@
-# release a go artifact
-# - use a VM image capabilities, no container
+# create a release after artifact are built
 name: Release
 
 on:
@@ -10,34 +9,19 @@ on:
       - completed
 
 jobs:
-  create-release-from-tag:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  create-release-after-build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}  # build is on success
     env:
       TAG_FILEPATH: "./.github/tag.auto.txt"
     runs-on: ubuntu-latest     # the VM
-    steps:
+    steps:    
       - name: checkout the current git repo
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }} # get the branch that was tagged
 
-      - name: get the tag name # and put it in the github env
+      - name: Get latest tag
+        id: gettag
         run: |
-          TAG_NAME=$(cat "${{ env.TAG_FILEPATH }}" | tail -n 1)
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          run: echo "TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
-      - name: Create The Release with tag ${{ env.TAG_NAME }}
-        uses: softprops/action-gh-release@v1  # https://github.com/softprops/action-gh-release
-        with:
-          tag_name: ${{ env.TAG_NAME }}     # tag that triggered the workflow
-          files:     luc                    # the artifact from Bild workflow
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-      - name: summary     # allow identification in github UI
-        run: |
-          echo "Branch:   ${{ github.event.workflow_run.head_branch }}"
-          echo "Commit:   ${{ github.event.workflow_run.head_sha }}"
-          echo "Tag filepath: ${{ env.TAG_FILEPATH }}"
-          echo "Tag name:     ${{ env.TAG_NAME }}"
+      - name: show latest tag - ${{ steps.gettag.outputs.TAG }}
+        run: echo
