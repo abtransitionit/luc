@@ -42,7 +42,7 @@ jobs:
           echo "GOOS=$(go env GOOS)"     >> $GITHUB_OUTPUT
           echo "GOARCH=$(go env GOARCH)" >> $GITHUB_OUTPUT
 
-      - name: Checkout code         # clone current git repository
+      - name: Checkout git repo     # clone current git repository
         uses: actions/checkout@v4   # https://github.com/actions/checkout
 
       - name: check current folder
@@ -69,6 +69,9 @@ jobs:
         goos: [linux, darwin]
         goarch: [arm64]
     steps:
+      - name: Checkout git repo     # clone current git repository
+        uses: actions/checkout@v4   # https://github.com/actions/checkout
+
       - name: Build
         env:
           ARTIFACT_NAME: ${{ env.ARTIFACT_BASE_NAME }}-${{ matrix.goos }}-${{ matrix.goarch }}
