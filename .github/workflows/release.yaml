@@ -38,6 +38,8 @@ jobs:
         run: echo
 
       - name: List artifacts to attach to this release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh run view ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }} --json artifacts --jq '.artifacts[].name'
 
 # after
