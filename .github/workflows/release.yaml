@@ -15,15 +15,27 @@ jobs:
       TAG_FILEPATH: "./.github/tag.auto.txt"
     runs-on: ubuntu-latest     # the VM
     steps:    
-      - name: checkout the current git repo with tags
+
+      - name: checkout the current git repo # with tags in it
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history (required for tags)
-          fetch-tags: true  # Explicitly fetch tags
-      - name: Get latest tag
+          fetch-depth: 0    # Fetch all history (required for tags)
+          fetch-tags: true  # Explicit fetch tags
+
+      - name: Get the latest TAG # that normally triggered this workflow
         id: gettag
         run: |
-          echo "TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+          echo "TAG_NAME=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
-      - name: show latest tag - ${{ steps.gettag.outputs.TAG }}
+      - name: show latest tag - ${{ steps.gettag.outputs.TAG_NAME }}
         run: echo
+
+      - name: Get ID of the caller workflow instance
+        id: getworkflowid
+        env:
+          WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
+        run: echo
+
+      - name: show caller workflow id - ${{ steps.getworkflowid.outputs.WORKFLOW_ID }}
+        run: echo
+

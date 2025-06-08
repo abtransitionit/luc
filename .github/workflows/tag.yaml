@@ -29,7 +29,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
 
-      - name: create and pusht the TAG  ${{ env.TAG_NAME }} # no fails if tag already exists
+      - name: create and push the TAG  ${{ env.TAG_NAME }} # no fails if tag already exists
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_NAME:     ${{ env.VERSION }}-${{ env.BRANCH_NAME }}
