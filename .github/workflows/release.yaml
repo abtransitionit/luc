@@ -33,7 +33,7 @@ jobs:
       - name: Get the workflow ID that trigger this workflow (instance)
         id: get_wf_id
         env:
-          WORKFLOW_ID_01: ${{ github.event.workflow_ruXn.workflow_id }}
+          WORKFLOW_ID_01: ${{ github.event.workflow_run.workflow_id }}
           WORKFLOW_ID_02: ${{ github.event.workflow_run.id }}
         run: echo "WORKFLOW_ID=${WORKFLOW_ID}" >> $GITHUB_OUTPUT
 
