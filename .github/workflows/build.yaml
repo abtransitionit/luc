@@ -63,7 +63,7 @@ jobs:
   build-other-artifact:
     runs-on: ubuntu-latest  # denote a VM
     env:
-      ARTIFACT_BASE_NAME: luc  # define variable here
+      ARTIFACT_NAME: luc-${{ matrix.goos }}-${{ matrix.goarch }}
     strategy:
       matrix:
         goos: [linux, darwin]
@@ -73,9 +73,8 @@ jobs:
         uses: actions/checkout@v4   # https://github.com/actions/checkout
 
       - name: Build
-        env:
-          ARTIFACT_NAME: ${{ env.ARTIFACT_BASE_NAME }}-${{ matrix.goos }}-${{ matrix.goarch }}
         run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o ${{ env.ARTIFACT_NAME }}
+
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
