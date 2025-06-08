@@ -1,3 +1,26 @@
+- name: Fetch Workflow A's Artifact
+  run: |
+    gh run download ${{ github.event.workflow_run.id }} --dir=downloaded-artifacts
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+gh run download $RUN_ID --artifact="artifact-name"
+
+
+- name: Download Workflow A's Artifact  
+  run: |  
+    # Get Workflow A's run ID (if triggered by it)  
+    RUN_ID=${{ github.event.workflow_run.id }}  
+
+    # Use GitHub API to download artifact  
+    gh run download $RUN_ID --artifact=my-data  
+  env:  
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+
+
+
+
 
       - name: Build the artifact
         env:

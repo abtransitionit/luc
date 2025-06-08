@@ -30,14 +30,18 @@ jobs:
       - name: show latest tag - ${{ steps.get_tag.outputs.TAG_NAME }}
         run: echo
 
-      - name: Get ID of the triggering workflow (instance)
+      - name: Get the workflow ID that trigger this workflow (instance)
         id: get_wf_id
         env:
-          WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
+          WORKFLOW_ID_01: ${{ github.event.workflow_ruXn.workflow_id }}
+          WORKFLOW_ID_02: ${{ github.event.workflow_run.id }}
         run: echo "WORKFLOW_ID=${WORKFLOW_ID}" >> $GITHUB_OUTPUT
 
-      - name: show caller workflow id - ${{ steps.get_wf_id.outputs.WORKFLOW_ID }}
+      - name: show caller workflow id - ${{ steps.get_wf_id.outputs.WORKFLOW_ID_01 }} - ${{ steps.get_wf_id.outputs.WORKFLOW_ID_02 }}
         run: echo
+
+      - name: List artifacts to attach to this release
+        run: gh --version
 
 # after
 # Use GitHub API to download artifact  
