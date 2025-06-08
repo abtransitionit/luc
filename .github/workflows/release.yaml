@@ -21,7 +21,7 @@ jobs:
       - name: Get latest tag
         id: gettag
         run: |
-          run: echo "TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+          echo "TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
       - name: show latest tag - ${{ steps.gettag.outputs.TAG }}
         run: echo
