@@ -120,14 +120,6 @@ Use **Infra-as-CLI**: Replace complex scripts management and version with a simp
 
 # Getting Started  
 
----
-
-# Contributing  
-
-We welcome contributions! Before participating, please review:  
-- **[Code of Conduct](.github/CODE_OF_CONDUCT.md)** – Our community guidelines.  
-- **[Contributing Guide](.github/CONTRIBUTING.md)** – How to submit issues, PRs, and more.  
-
 ----
 
 # Release History & Changelog  
@@ -138,5 +130,56 @@ Track version updates and changes:
 
 ---
 
-Here's a professional section you can add to your README to highlight Go compliance with `pkg` and `internal` folders:
+# The Build Process
+
+This project implements a full CI/CD workflow, designed with best practices in mind:
+
+- Uses **GitHub Actions** to fully automate the **build**, **tag** and **release** lifecycle.
+- Employs a **modular pipeline architecture** that emphasizes easy maintenance, scalability, and clear separation of concerns.
+* Promotes **faster debugging**, **high-quality delivery**, and **reusability** of components across multiple projects.
+
+## The Pipeline
+
+The CI/CD pipeline is divided into **three independent stages**, each defined in a separate workflow file:
+
+1. **Build**
+
+   * Triggered on every push to `main` or `dev`, and on new tags.
+   * Uses a **containerized Go environment** (`golang:1.24`) to build the binary artifact.
+   * The resulting binary is uploaded as a GitHub artifact, named with the workflow run number.
+
+2. **Tag**
+
+   * Automatically triggered **after a successful build** via `workflow_run`.
+   * Dynamically creates a Git tag (e.g., `v0.0.1-main`) using branch and versioning logic.
+   * Commits the generated tag into the repository to make it available for downstream workflows.
+
+3. **Release**
+
+   * Automatically triggered **after a successful tag**.
+   * Reads the latest tag from the repo and uses it to create a GitHub Release.
+   * Uses [`softprops/action-gh-release`](https://github.com/softprops/action-gh-release) to automate release publishing.
+
+## Highlights
+
+| Feature                  | Description                                                                           |
+| ------------------------ | ------------------------------------------------------------------------------------- |
+| **CI/CD Best Practices** | Clean separation of concerns, modular workflows, and immutable builds.                |
+| **Reproducibility**      | Every release is tagged and built from scratch in a clean environment.                |
+| **Automation-First**     | Fully automated from code push to GitHub Release—no manual intervention.              |
+| **Real-World DevOps**    | Leverages `workflow_run`, conditional logic, dynamic tagging, and artifact promotion. |
+
+
+---
+
+
+# The Deployment Process
+
+---
+
+# Contributing  
+
+We welcome contributions! Before participating, please review:  
+- **[Code of Conduct](.github/CODE_OF_CONDUCT.md)** – Our community guidelines.  
+- **[Contributing Guide](.github/CONTRIBUTING.md)** – How to submit issues, PRs, and more.  
 
