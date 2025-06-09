@@ -9,7 +9,7 @@ on:
       - completed
 
 jobs:
-  create-release-after-build:
+  create-release:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}  # build is on success
     env:
       TAG_FILEPATH: "./.github/tag.auto.txt"
@@ -37,15 +37,12 @@ jobs:
           WORKFLOW_INSTANCE_ID: ${{ github.event.workflow_run.id }}
         run: echo
 
-      # - name: List artifacts to attach to this release
-      #   env:
-      #       GH_TOKEN: ${{ github.token }}      
-      #   run: gh run list
-
-      - name: download artifact
+      - name: download artifact into a folder
         env:
-            GH_TOKEN: ${{ github.token }}      
-        run: gh run download ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }} --dir /tmp/
+            GH_TOKEN:     ${{ github.token }}      
+            FOLDER_PATH:  ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}
+        run: gh run download ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }} --dir ${{ env.FOLDER_PATH }}
 
       - name: ls downloaded artifact
-        run: ls /tmp/
+        run: |
+          ls -ial ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}

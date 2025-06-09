@@ -1,3 +1,11 @@
+
+
+# - name: List artifacts to attach to this release
+#   env:
+#       GH_TOKEN: ${{ github.token }}      
+#   run: gh run list
+
+
 # after
 # Use GitHub API to download artifact  
 #    gh run download $RUN_ID --artifact=my-data  
