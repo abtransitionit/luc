@@ -88,7 +88,7 @@ jobs:
 
       - name: Prepare release notes dynamically
         run: |
-          sed "s|\${{ env.TAG_NAME }}${TAG_NAME}|g" ${RELEASE_NOTE_TPL_PATH} > ${RELEASE_NOTE_PATH}
+          sed "s|\$TAG_NAME|${TAG_NAME}|g" ${RELEASE_NOTE_TPL_PATH} > ${RELEASE_NOTE_PATH}
 
       - name: add the release notes - DO NOT CREATE A RELEASE, JUST UPDATE IT 
         env:

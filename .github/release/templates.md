@@ -6,7 +6,7 @@
 
 ---
 # 🚀 Features
-- Initial release of artifacts for `${{ env.TAG_NAME }}`
+- Initial release of artifacts for `$TAG_NAME`
 
 ---
 
