@@ -62,7 +62,6 @@ jobs:
         with:
           tag_name: ${{ env.TAG_NAME }}     # tag that triggered the workflow
           files: ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}/**
-          # body_path: ${{ env.RELEASE_NOTE_PATH }}
 
   add-release-notes:
     needs: create-release
@@ -89,7 +88,7 @@ jobs:
 
       - name: Prepare release notes dynamically
         run: |
-          sed "s|\${TAG_NAME}|${TAG_NAME}|g" ${RELEASE_NOTE_TPL_PATH} > ${RELEASE_NOTE_PATH}
+          sed "s|\${{ env.TAG_NAME }}${TAG_NAME}|g" ${RELEASE_NOTE_TPL_PATH} > ${RELEASE_NOTE_PATH}
 
       - name: add the release notes - DO NOT CREATE A RELEASE, JUST UPDATE IT 
         env:
