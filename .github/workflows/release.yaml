@@ -11,8 +11,6 @@ on:
 jobs:
   create-release:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}  # build is on success
-    env:
-      TAG_FILEPATH: "./.github/tag.auto.txt"
     runs-on: ubuntu-latest     # the VM
     steps:    
 
@@ -25,15 +23,15 @@ jobs:
       - name: Get the latest TAG # that normally triggered this workflow
         id: get_tag
         run: |
-          echo "TAG_NAME=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+          echo "TAG_NAME=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
-      - name: show latest tag - ${{ steps.get_tag.outputs.TAG_NAME }}
+      - name: show latest tag - ${{ env.TAG_NAME }}
         run: echo
 
       - name: Get the workflow (instance) info that trigger this workflow (instance)
         id: get_wf_instance_info
         env:
-          WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
+          WORKFLOW_ID:          ${{ github.event.workflow_run.workflow_id }}
           WORKFLOW_INSTANCE_ID: ${{ github.event.workflow_run.id }}
         run: |
           echo "WORKFLOW_ID=${WORKFLOW_ID}"                   >> $GITHUB_OUTPUT
@@ -45,7 +43,15 @@ jobs:
             FOLDER_PATH:  ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}
         run: gh run download ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }} --dir ${{ env.FOLDER_PATH }}
 
-      - name: ls downloaded artifact
+      - name: show downloaded artifacts
         run: |
           ls -ialh ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}
           ls -ialh ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}/*
+
+      - name: create the release with tag ${{ env.TAG_NAME }} and upload artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2  # https://github.com/softprops/action-gh-release
+        with:
+          tag_name: ${{ env.TAG_NAME }}     # tag that triggered the workflow
+          files: ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}/**
