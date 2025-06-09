@@ -10,6 +10,8 @@ on:
 
 jobs:
   create-release:
+    env:
+      RELEASE_NOTE_PATH: ./.github/release/templates.md
     if: ${{ github.event.workflow_run.conclusion == 'success' }}  # build is on success
     runs-on: ubuntu-latest     # the VM
     steps:    
@@ -55,3 +57,5 @@ jobs:
         with:
           tag_name: ${{ env.TAG_NAME }}     # tag that triggered the workflow
           files: ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}/**
+          body_path: ${{ env.RELEASE_NOTE_PATH }}
+
