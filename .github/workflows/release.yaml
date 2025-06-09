@@ -10,7 +10,6 @@ on:
 
 jobs:
   create-release:
-    needs: create-release
     if: ${{ github.event.workflow_run.conclusion == 'success' }}  # build is on success
     runs-on: ubuntu-latest     # the VM
     steps:    
@@ -66,6 +65,7 @@ jobs:
           # body_path: ${{ env.RELEASE_NOTE_PATH }}
 
   add-release-notes:
+    needs: create-release
     if: ${{ github.event.workflow_run.conclusion == 'success' }}  # build is on success
     env:
       RELEASE_NOTE_TPL_PATH: ./.github/release/templates.md
