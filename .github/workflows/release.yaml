@@ -47,4 +47,5 @@ jobs:
 
       - name: ls downloaded artifact
         run: |
-          ls -ial ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}
+          ls -ialh ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}
+          ls -ialh ${{ steps.get_wf_instance_info.outputs.WORKFLOW_INSTANCE_ID }}/*
