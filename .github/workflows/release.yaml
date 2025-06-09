@@ -72,6 +72,12 @@ jobs:
       RELEASE_NOTE_PATH:     ./RELEASE.md
     runs-on: ubuntu-latest     # the VM
     steps:    
+      - name: checkout the current git repo # with tags in it
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # Fetch all history (required for tags)
+          fetch-tags: true  # Explicit fetch tags
+
       - name: download artifact containing the release tag
         uses: actions/download-artifact@v4
         with:
