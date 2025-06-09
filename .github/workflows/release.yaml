@@ -35,7 +35,9 @@ jobs:
         env:
           WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
           WORKFLOW_INSTANCE_ID: ${{ github.event.workflow_run.id }}
-        run: echo
+        run: |
+          echo "WORKFLOW_ID=${WORKFLOW_ID}"                   >> $GITHUB_OUTPUT
+          echo "WORKFLOW_INSTANCE_ID=${WORKFLOW_INSTANCE_ID}" >> $GITHUB_OUTPUT 
 
       - name: download artifact into a folder
         env:
