@@ -9,7 +9,7 @@ import (
 
 const ServiceDescription = "configure Nodes OS services."
 
-func service() error {
+func service(arg ...string) error {
 	logx.L.Info(ServiceDescription)
 	// Actual implementation would go here
 	return nil

@@ -9,7 +9,7 @@ import (
 
 const CplaneDescription = "initialize the CPlane."
 
-func cplane() error {
+func cplane(arg ...string) error {
 	logx.L.Info(CplaneDescription)
 	// Actual implementation would go here
 	return nil

@@ -4,7 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package cli
 
 import (
-	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/internal/gocli"
+	"github.com/abtransitionit/luc/pkg/deploy"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +18,5 @@ var sdkCmd = &cobra.Command{
 	Use:   "sdk",
 	Short: sdkSDesc,
 	Long:  sdkLDesc,
-	Run: func(cmd *cobra.Command, args []string) {
-		logx.L.Debugf("%s", sdkSDesc)
-	},
+	Run:   deploy.SharedRun(gocli.Phases, sdkSDesc),
 }

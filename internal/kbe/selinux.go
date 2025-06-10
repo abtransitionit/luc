@@ -9,7 +9,7 @@ import (
 
 const SelinuxDescription = "configure selinux to permissive mode on Rhel/Fedora nodes"
 
-func selinux() error {
+func selinux(arg ...string) error {
 	logx.L.Info(SelinuxDescription)
 	// Actual implementation would go here
 	return nil

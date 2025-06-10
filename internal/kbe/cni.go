@@ -9,7 +9,7 @@ import (
 
 const CniDescription = "provision CNI plugin"
 
-func cni() error {
+func cni(arg ...string) error {
 	logx.L.Info(CniDescription)
 	// Actual implementation would go here
 	return nil

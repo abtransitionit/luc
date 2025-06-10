@@ -9,6 +9,32 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// # Purpose
+//
+// Provides shared functionality for executing different "phases" of a process.
+// Support for the following features:
+//   - Listing available phases (--list flag)
+//   - Batch running all phases (--runall flag)
+//   - Running a single phase
+//   - User confirmation for batch operations
+//   - Consistent logging and error handling
+//
+// # Parameters
+//
+//   - phases:    Slice defining available phases and their functions
+//   - initSDesc: Short description to log at execution start
+//
+// # Error handling
+//
+//   - Validates argument count (exactly 1 required for single phase)
+//   - Validates phase existence
+//   - Terminates execution on phase failure with error logging
+//
+// # Example usage
+//
+//	cmd := &cobra.Command{
+//	    Run: SharedRun(phases, "Process initialization"),
+//	}
 func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
 	return func(cmd *cobra.Command, args []string) {
 		logx.L.Info(initSDesc)
@@ -64,8 +90,9 @@ func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) 
 			logx.L.Debugf("❌ several or no argument provided. only 1 argument is required: the phase name.")
 			return
 		}
+		cmdName := cmd.Name()
 		phaseName := args[0]
-		logx.L.Debugf("phase name provided as argument: '%s'", phaseName)
+		logx.L.Debugf("cmd '%s' provide phase name '%s' as argument", cmdName, phaseName)
 
 		// play the code of the phase provided as argument
 		for _, phase := range phases {
@@ -89,7 +116,25 @@ func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) 
 
 var forceFlag bool
 
-// SetupCommonFlags configures flags that are shared across commands
+// # Purpose
+//
+// Shared function that is intended to be reused across different commands.
+// Sets up common command-line flags for commands using Cobra.
+//
+// It adds the following flags to the given Cobra command:
+//   - --force, -f: A boolean flag to bypass confirmation prompts (default: false).
+//   - --list,  -l: A boolean flag to list all available phases (default: false).
+//   - --runall, -r: A boolean flag to run all phases sequentially in batch mode (default: false).
+//
+// # Parameters
+//
+//	cmd *cobra.Command: The Cobra command to which these shared flags should be added.
+//
+// # Example usage
+//
+//	func init() {
+//	    deploy.SharedInit(myCommand)
+//	}
 func SharedInit(cmd *cobra.Command) {
 	cmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation")
 	cmd.Flags().BoolP("list", "l", false, "List all available phases")

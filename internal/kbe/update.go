@@ -9,7 +9,7 @@ import (
 
 const UpdateDescription = "upgrade all VMs/Nodes OS packages and packages repositories to version latest."
 
-func update() error {
+func update(arg ...string) error {
 	logx.L.Info(UpdateDescription)
 	// Actual implementation would go here
 	return nil

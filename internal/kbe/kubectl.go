@@ -9,7 +9,7 @@ import (
 
 const KubectlDescription = "provision the Kubectl CLI"
 
-func kubectl() error {
+func kubectl(arg ...string) error {
 	logx.L.Info(KubectlDescription)
 	// Actual implementation would go here
 	return nil

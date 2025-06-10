@@ -37,6 +37,14 @@ var cliConfigMap = map[string]CLIConfig{
 		GitUrl:  "https://github.com/spf13/cobra-cli",
 		UrlType: "go",
 	},
+	"luc": {
+		Name:    "luc",
+		Tag:     "0.0.1",
+		Url:     "xxx",
+		DocUrl:  "https://cobra.dev",
+		GitUrl:  "https://github.com/abtransitionit/$NAME/releases/download/v$TAG-main/$NAME-$OS-$ARCH",
+		UrlType: "tgz",
+	},
 	"containerd": {
 		Name:    "containerd",
 		Tag:     "2.1.1",
@@ -112,7 +120,7 @@ var cliConfigMap = map[string]CLIConfig{
 }
 
 // retrieves a specific property of a CLI from the configuration map.
-
+//
 // # Parameters:
 //   - log: a *zap.SugaredLogger used for debug logging.
 //   - name: the CLI name to look up in cliConfigMap.
@@ -168,7 +176,7 @@ func GetCliProperty(log *zap.SugaredLogger, name string, property string) (strin
 	return value, nil
 }
 
-// GetCliUrl returns the resolved download URL of a CLI tool
+// returns the resolved download URL of a CLI tool
 // by replacing placeholders in the configured URL.
 //
 // Supported placeholders:

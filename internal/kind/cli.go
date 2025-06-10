@@ -9,7 +9,7 @@ import (
 
 const CliDescription = "provision needed CLI"
 
-func cli() error {
+func cli(arg ...string) error {
 	logx.L.Info(CliDescription)
 	// Actual implementation would go here
 	return nil

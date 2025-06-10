@@ -9,7 +9,7 @@ import (
 
 const SshDescription = "check all VMs/Nodes are SSH reachable"
 
-func ssh() error {
+func ssh(arg ...string) error {
 	logx.L.Info(SshDescription)
 	// Actual implementation would go here
 	return nil

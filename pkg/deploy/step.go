@@ -5,10 +5,10 @@ package deploy
 
 import "fmt"
 
-// represents a single step in a deployment process.
+// denotes/represents a "STEP" in a deployment, provisioning process.
 type Phase struct {
 	Name        string
-	Func        func() error // Func is the function that performs the action for this phase.
+	Func        func(arg ...string) error // go function, code, that perfomrs actions and accepts 0..N arguments
 	Description string
 	// ExecuteFunc func(ctx context.Context) error // Reserved for future contextual execution.
 }
@@ -37,7 +37,7 @@ type Deployment struct {
 //
 //	import "github.com/abtransitionit/luc/pkg/deploy"
 //	p := deploy.SetPhase("check", checkFunc, "Check system health before deployment")
-func SetPhase(name string, fn func() error, desc string) Phase {
+func SetPhase(name string, fn func(cmd ...string) error, desc string) Phase {
 	return Phase{Name: name, Func: fn, Description: desc}
 }
 

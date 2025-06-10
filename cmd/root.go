@@ -6,10 +6,10 @@ package cmd
 import (
 	"os"
 
+	"github.com/abtransitionit/luc/cmd/cli"
 	"github.com/abtransitionit/luc/cmd/kbe"
 	"github.com/abtransitionit/luc/cmd/kind"
 	"github.com/abtransitionit/luc/cmd/local"
-	"github.com/abtransitionit/luc/cmd/local/app/gox/cli"
 	"github.com/spf13/cobra"
 )
 

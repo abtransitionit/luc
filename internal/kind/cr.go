@@ -9,7 +9,7 @@ import (
 
 const CrDescription = "provision the Container Runtime: containerd"
 
-func cr() error {
+func cr(arg ...string) error {
 	logx.L.Info(CrDescription)
 	// Actual implementation would go here
 	return nil
