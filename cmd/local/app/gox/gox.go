@@ -4,7 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package gox
 
 import (
-	"github.com/abtransitionit/luc/cmd/local/app/gox/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +19,6 @@ var GoCmd = &cobra.Command{
 }
 
 func init() {
-	GoCmd.AddCommand(cli.CliCmd)
 	GoCmd.AddCommand(buildCmd)
 	GoCmd.AddCommand(runCmd)
 	GoCmd.AddCommand(toolCmd)
