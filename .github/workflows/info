@@ -1,4 +1,5 @@
-# Get infos on the Github Runner: VM and container
+# purpose: show infos about the Github Runner used (VM and container)
+# trigger: after workflow "Tag" completes with success
 name: Info
 
 on:

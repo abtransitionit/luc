@@ -1,5 +1,5 @@
-# Build a go artifact
-# - as it is triggered by tag.yaml, it automatically checkout the repo associated to that TAG
+# purpose: build artifacts for several platform
+# trigger: after workflow "Tag" completes with success
 name: Build
 
 on:
@@ -56,8 +56,7 @@ jobs:
           path: ${{ steps.buildprincipal.outputs.ARTIFACT_NAME }} # the src artifact
 
   build-other-plaform-artifacts:
-    if: false  # disables the job for test
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }} # This job is triggered when the dependency workflow completes and success
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # This job is triggered when the dependency workflow completes and success
     runs-on: ubuntu-latest  # denote a VM
     env:
       ARTIFACT_NAME: luc-${{ matrix.goos }}-${{ matrix.goarch }}

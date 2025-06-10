@@ -1,15 +1,14 @@
-# Add a TAG to a repository
-# - use a VM image capabilities, no container
+# purpose: Add a TAG to a repository
+# trigger: push on branch: main
 name: Tag
 
 on:
   push:
     branches: 
       - dev
-      - main
 
 jobs:
-  create-tag-inside-vm:
+  create-tag:
     runs-on: ubuntu-latest
     env:                          # variables shared by all steps
       BRANCH_NAME:  ${{ github.ref_name }}
