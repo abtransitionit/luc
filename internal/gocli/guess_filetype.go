@@ -46,9 +46,9 @@ func GuessFileType(in <-chan PipelineData, out chan<- PipelineData) {
 			case isGzip:
 				data.ArtifactType = string(config.UrlTgz)
 			case isExe:
-				data.ArtifactType = string(config.UrlFile) // or UrlXxx or custom?
+				data.ArtifactType = string(config.UrlExe)
 			default:
-				data.ArtifactType = string(config.UrlXxx) // fallback/default
+				data.ArtifactType = string(config.UrlXxx)
 			}
 
 			logx.L.Infof("Artifact File type is '%s'", data.ArtifactType)

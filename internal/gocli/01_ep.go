@@ -30,6 +30,7 @@ func ep(arg ...string) (string, error) {
 	chArtifactPath := make(chan PipelineData)
 	chCurlUrl := make(chan PipelineData)
 	chGuessFileType := make(chan PipelineData)
+	chSaveFile := make(chan PipelineData)
 
 	// Start each pipeline step
 	CliName(chCliName, cliName)
@@ -39,9 +40,10 @@ func ep(arg ...string) (string, error) {
 	ArtifactPath(chArtifactName, chArtifactPath)
 	CurlUrl(chArtifactPath, chCurlUrl)
 	GuessFileType(chCurlUrl, chGuessFileType)
+	SaveFile(chGuessFileType, chSaveFile)
 
 	// Read final result
-	for data := range chGuessFileType {
+	for data := range chSaveFile {
 		if data.Err != nil {
 			logx.L.Debugf("❌ Error: %s", data.Err)
 		}

@@ -167,15 +167,25 @@ func ListTgzContentInMemory(data []byte) error {
 	return nil
 }
 
+// func IsGzippedMemoryContent(data []byte) (bool, error) {
+// 	if len(data) < 2 {
+// 		return false, fmt.Errorf("maybe not a gzipped file")
+// 	}
+// 	if data[0] != 0x1F || data[1] != 0x8B {
+// 		return false, fmt.Errorf("Surely a gzipped file")
+// 	}
+// 	return true, nil
+// }
+
 // check if data culred in memory is a valid gzip tar
 func IsGzippedMemoryContent(data []byte) (bool, error) {
 	if len(data) < 2 {
-		return false, fmt.Errorf("maybe not a gzipped file")
+		return false, fmt.Errorf("data too short to determine gzip header")
 	}
-	if data[0] != 0x1F || data[1] != 0x8B {
-		return false, fmt.Errorf("Surely a gzipped file")
+	if data[0] == 0x1F && data[1] == 0x8B {
+		return true, nil
 	}
-	return true, nil
+	return false, nil // not gzipped, but not an error
 }
 
 func IsMemoryContentAnExe(data []byte) (bool, error) {

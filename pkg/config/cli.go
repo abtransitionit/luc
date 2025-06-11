@@ -22,7 +22,7 @@ const (
 type UrlType string
 
 const (
-	UrlFile UrlType = "file"
+	UrlExe  UrlType = "exe"
 	UrlTgz  UrlType = "tgz"
 	UrlTgzn UrlType = "tgzn" // tgz with no extension
 	UrlGit  UrlType = "git"
@@ -55,7 +55,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/abtransitionit/$NAME/releases/download/v$TAG-main/$NAME-$OS-$ARCH",
 		DocUrl:  "https://github.com/abtransitionit/luc",
 		GitUrl:  "https://github.com/abtransitionit/luc",
-		UrlType: UrlFile,
+		UrlType: UrlExe,
 	},
 	"containerd": {
 		Name:    "containerd",
@@ -79,7 +79,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://$NAME.sigs.k8s.io/dl/$TAG/$NAME-$OS-$ARCH",
 		DocUrl:  "https://kind.sigs.k8s.io/",
 		GitUrl:  "https://github.com/kubernetes-sigs/kind",
-		UrlType: UrlFile,
+		UrlType: UrlExe,
 	},
 	"kubebuilder": {
 		Name:    "kubebuilder",
@@ -95,7 +95,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://dl.k8s.io/release/$TAG/bin/$OS/$ARCH/$NAME",
 		DocUrl:  "https://kubernetes.io/docs/reference/kubectl/",
 		GitUrl:  "https://github.com/kubernetes/kubectl",
-		UrlType: UrlFile,
+		UrlType: UrlExe,
 	},
 	"nerdctl": {
 		Name:    "nerdctl",
@@ -261,7 +261,7 @@ func GetCliUrl(log *zap.SugaredLogger, cliName string, osArch ...string) (string
 //   - (false, nil) → if the UrlType is NOTOK (considered not CURLable)
 func (u UrlType) IsCurlable() (bool, error) {
 	switch u {
-	case UrlFile, UrlTgz, UrlTgzn:
+	case UrlExe, UrlTgz, UrlTgzn:
 		return true, nil
 	default:
 		return false, nil
