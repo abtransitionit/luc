@@ -10,17 +10,17 @@ import (
 )
 
 // Description
-var runcSDesc = "download tgz and install the CLI."
-var runcLDesc = runcSDesc + ` xxx.`
+var lucSDesc = "download tgz and install the CLI."
+var lucLDesc = lucSDesc + ` xxx.`
 
 // root Command
-var runcCmd = &cobra.Command{
-	Use:   "runc",
-	Short: runcSDesc,
-	Long:  runcLDesc,
-	Run:   deploy.SharedRun(gocli.Phases, runcSDesc),
+var lucCmd = &cobra.Command{
+	Use:   "luc",
+	Short: lucSDesc,
+	Long:  lucLDesc,
+	Run:   deploy.SharedRun(gocli.Phases, lucSDesc),
 }
 
 func init() {
-	deploy.SharedInit(runcCmd)
+	deploy.SharedInit(lucCmd)
 }

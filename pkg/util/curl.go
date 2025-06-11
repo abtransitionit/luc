@@ -14,13 +14,13 @@ import (
 	"go.uber.org/zap"
 )
 
-// downloads a file in memory from a public URL and returns its contents.
+// # Purpose
 //
-// This function
+//   - Downloads a file form a public URL into memory and returns it as a byte slice.
 //   - performs an HTTP GET request.
 //
 // Parameters:
-//   - url: The HTTP/HTTPS URL of the file to download. Must be a valid URL.
+//   - url: The HTTPS URL of the file to download. Must be a valid URL.
 //
 // Returns:
 //   - []byte : the downloaded file on suuccee (nil on failure)
@@ -30,9 +30,9 @@ import (
 //
 //   - ([]byte, nil): On success
 //   - (nil, error) : On failure
-//   - Network errors
-//   - Non-200 HTTP status codes
-//   - Response body reading errors
+//     -- Network errors
+//     -- Non-200 HTTP status codes
+//     -- Response body reading errors
 //
 // Example usage:
 //

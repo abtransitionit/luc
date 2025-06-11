@@ -20,3 +20,7 @@ var containerdCmd = &cobra.Command{
 	Long:  containerdLDesc,
 	Run:   deploy.SharedRun(gocli.Phases, containerdSDesc),
 }
+
+func init() {
+	deploy.SharedInit(containerdCmd)
+}

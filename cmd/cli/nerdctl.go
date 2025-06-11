@@ -20,3 +20,7 @@ var nerdctlCmd = &cobra.Command{
 	Long:  nerdctlLDesc,
 	Run:   deploy.SharedRun(gocli.Phases, nerdctlSDesc),
 }
+
+func init() {
+	deploy.SharedInit(nerdctlCmd)
+}

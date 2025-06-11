@@ -20,3 +20,7 @@ var kubectlCmd = &cobra.Command{
 	Long:  kubectlLDesc,
 	Run:   deploy.SharedRun(gocli.Phases, kubectlSDesc),
 }
+
+func init() {
+	deploy.SharedInit(kubectlCmd)
+}

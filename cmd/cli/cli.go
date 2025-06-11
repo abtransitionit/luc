@@ -35,6 +35,7 @@ func init() {
 	CliCmd.AddCommand(kindCmd)
 	CliCmd.AddCommand(kubebuilderCmd)
 	CliCmd.AddCommand(kubectlCmd)
+	CliCmd.AddCommand(lucCmd)
 	CliCmd.AddCommand(nerdctlCmd)
 	CliCmd.AddCommand(rootlesskitCmd)
 	CliCmd.AddCommand(runcCmd)

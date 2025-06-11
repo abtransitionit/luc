@@ -20,3 +20,7 @@ var sdkCmd = &cobra.Command{
 	Long:  sdkLDesc,
 	Run:   deploy.SharedRun(gocli.Phases, sdkSDesc),
 }
+
+func init() {
+	deploy.SharedInit(sdkCmd)
+}

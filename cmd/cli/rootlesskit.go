@@ -20,3 +20,7 @@ var rootlesskitCmd = &cobra.Command{
 	Long:  rootlesskitLDesc,
 	Run:   deploy.SharedRun(gocli.Phases, rootlesskitSDesc),
 }
+
+func init() {
+	deploy.SharedInit(rootlesskitCmd)
+}

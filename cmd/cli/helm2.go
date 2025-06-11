@@ -20,3 +20,7 @@ var helm2Cmd = &cobra.Command{
 	Long:  helm2LDesc,
 	Run:   deploy.SharedRun(gocli.Phases, helm2SDesc),
 }
+
+func init() {
+	deploy.SharedInit(helm2Cmd)
+}

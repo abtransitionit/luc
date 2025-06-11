@@ -19,13 +19,25 @@ const (
 	NerdctlCliName = "nerdctl" // contaiNERD ConTroL
 )
 
+type UrlType string
+
+const (
+	UrlFile UrlType = "file"
+	UrlTgz  UrlType = "tgz"
+	UrlTgzn UrlType = "tgzn" // tgz with no extension
+	UrlGit  UrlType = "git"
+	UrlGo   UrlType = "go"
+	UrlXxx  UrlType = "xxx"
+	// etc.
+)
+
 type CLIConfig struct {
 	Name    string
 	Tag     string
 	Url     string
 	DocUrl  string
 	GitUrl  string
-	UrlType string
+	UrlType UrlType
 }
 
 var cliConfigMap = map[string]CLIConfig{
@@ -35,15 +47,15 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "github.com/spf13/$NAME-cli@$TAG",
 		DocUrl:  "https://cobra.dev",
 		GitUrl:  "https://github.com/spf13/cobra-cli",
-		UrlType: "go",
+		UrlType: UrlGo,
 	},
 	"luc": {
 		Name:    "luc",
 		Tag:     "0.0.1",
-		Url:     "xxx",
-		DocUrl:  "https://cobra.dev",
-		GitUrl:  "https://github.com/abtransitionit/$NAME/releases/download/v$TAG-main/$NAME-$OS-$ARCH",
-		UrlType: "tgz",
+		Url:     "https://github.com/abtransitionit/$NAME/releases/download/v$TAG-main/$NAME-$OS-$ARCH",
+		DocUrl:  "https://github.com/abtransitionit/luc",
+		GitUrl:  "https://github.com/abtransitionit/luc",
+		UrlType: UrlTgzn,
 	},
 	"containerd": {
 		Name:    "containerd",
@@ -51,7 +63,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/$NAME/$NAME/releases/download/v$TAG/$NAME-$TAG-$OS-$ARCH.tar.gz",
 		DocUrl:  "https://github.com/containerd/nerdctl/blob/main/docs/command-reference.md",
 		GitUrl:  "https://github.com/containerd/nerdctl",
-		UrlType: "tgz",
+		UrlType: UrlTgz,
 	},
 	"helm": {
 		Name:    "helm",
@@ -59,7 +71,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/helm/helm.git",
 		DocUrl:  "https://helm.sh/",
 		GitUrl:  "https://github.com/helm/helm",
-		UrlType: "git",
+		UrlType: UrlGit,
 	},
 	"kind": {
 		Name:    "kind",
@@ -67,7 +79,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://$NAME.sigs.k8s.io/dl/$TAG/$NAME-$OS-$ARCH",
 		DocUrl:  "https://kind.sigs.k8s.io/",
 		GitUrl:  "https://github.com/kubernetes-sigs/kind",
-		UrlType: "file",
+		UrlType: UrlFile,
 	},
 	"kubebuilder": {
 		Name:    "kubebuilder",
@@ -75,7 +87,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/kubernetes-sigs/kubebuilder.git",
 		DocUrl:  "https://kubebuilder.io",
 		GitUrl:  "https://github.com/kubernetes-sigs/kubebuilder",
-		UrlType: "git",
+		UrlType: UrlGit,
 	},
 	"kubectl": {
 		Name:    "kubectl",
@@ -83,7 +95,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://dl.k8s.io/release/$TAG/bin/$OS/$ARCH/$NAME",
 		DocUrl:  "https://kubernetes.io/docs/reference/kubectl/",
 		GitUrl:  "https://github.com/kubernetes/kubectl",
-		UrlType: "file",
+		UrlType: UrlFile,
 	},
 	"nerdctl": {
 		Name:    "nerdctl",
@@ -91,7 +103,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/containerd/$NAME/releases/download/v$TAG/nerdctl-$TAG-$OS-$ARCH.tar.gz",
 		DocUrl:  "https://github.com/containerd/nerdctl/blob/main/docs/command-reference.md",
 		GitUrl:  "https://github.com/containerd/nerdctl",
-		UrlType: "tgz",
+		UrlType: UrlTgz,
 	},
 	"rootlesskit": {
 		Name:    "rootlesskit",
@@ -99,7 +111,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/$NAME/$NAME/releases/download/v$TAG/$NAME-$TAG-$OS-$ARCH.tar.gz",
 		DocUrl:  "https://github.com/containerd/nerdctl/blob/main/docs/command-reference.md",
 		GitUrl:  "https://github.com/rootless-containers/rootlesskit",
-		UrlType: "tgz",
+		UrlType: UrlTgz,
 	},
 	"runc": {
 		Name:    "runc",
@@ -107,7 +119,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/opencontainers/$NAME/releases/download/v$TAG/$NAME.$ARCH",
 		DocUrl:  "https://github.com/opencontainers/runc/tree/main",
 		GitUrl:  "https://github.com/opencontainers/runc",
-		UrlType: "xxx",
+		UrlType: UrlXxx,
 	},
 	"sonobuoy": {
 		Name:    "sonobuoy",
@@ -115,8 +127,14 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/vmware-tanzu/sonobuoy.git",
 		DocUrl:  "https://sonobuoy.io/docs/main/",
 		GitUrl:  "https://github.com/vmware-tanzu/sonobuoy",
-		UrlType: "git",
+		UrlType: UrlGit,
 	},
+}
+
+// returns the private MAP
+func GetCLIConfig(cliName string) (CLIConfig, bool) {
+	c, ok := cliConfigMap[cliName]
+	return c, ok
 }
 
 // retrieves a specific property of a CLI from the configuration map.
@@ -167,7 +185,7 @@ func GetCliProperty(log *zap.SugaredLogger, name string, property string) (strin
 		log.Debugf("❌ use GetCliUrl instead")
 		return errorx.StringError("", "", errors.New("use GetCliUrl instead"))
 	case "urltype":
-		value = cliConf.UrlType
+		value = string(cliConf.UrlType)
 	default:
 		msg := fmt.Sprintf("property '%s' not found", property)
 		log.Debugf("❌ %s", msg)
@@ -195,14 +213,16 @@ func GetCliProperty(log *zap.SugaredLogger, name string, property string) (strin
 //
 // Example usage:
 //
-//	url,_ := GetCliUrl("kubectl", "linux", "amd64")
-//	url,_ := GetCliUrl("helm") // OS and Arch auto-detected
-func GetCliUrl(log *zap.SugaredLogger, name string, osArch ...string) (string, error) {
-	cliConf, exists := cliConfigMap[name]
+//	url,_ := config.GetCliUrl("kubectl", "linux", "amd64")
+//	url,_ := config.GetCliUrl("helm") // OS and Arch auto-detected
+//	url,_ := config.GetCliUrl(logx.L, "helm") // OS and Arch auto-detected
+
+func GetCliUrl(log *zap.SugaredLogger, cliName string, osArch ...string) (string, error) {
+	cliConf, exists := cliConfigMap[cliName]
 	if !exists {
-		msg := fmt.Sprintf("CLI (%s) not found in map", name)
+		msg := fmt.Sprintf("CLI (%s) not found in map", cliName)
 		log.Debugf("❌ %s", msg)
-		return errorx.StringError("found element (%s) in map", name, errors.New(""))
+		return errorx.StringError("found element (%s) in map", cliName, errors.New(""))
 	}
 
 	// Detect OS and ARCH if not provided
@@ -242,6 +262,24 @@ func GetCliUrl(log *zap.SugaredLogger, name string, osArch ...string) (string, e
 	return url, nil
 }
 
+// Checks if a CLI:URL is CURLable based on its property UrlType.
+//
+// # Returns
+//   - bool: true if the UrlType is curlable ("file" or "tgz"), false otherwise
+//   - error: always nil in the current implementation
+//
+// # Possible returns
+//   - (true, nil)  → if the UrlType is OK    (considered CURLable)
+//   - (false, nil) → if the UrlType is NOTOK (considered not CURLable)
+func (u UrlType) IsCurlable() (bool, error) {
+	switch u {
+	case UrlFile, UrlTgz, UrlTgzn:
+		return true, nil
+	default:
+		return false, nil
+	}
+}
+
 // prints out information about the map.
 //
 // Example output:
@@ -264,7 +302,7 @@ func DisplayCliCondfigInfo() {
 	// list all Url types
 	types := map[string]bool{}
 	for _, conf := range cliConfigMap {
-		types[conf.UrlType] = true
+		types[string(conf.UrlType)] = true
 	}
 	fmt.Printf("\n\nList of url type: ")
 	for t := range types {

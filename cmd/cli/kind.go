@@ -20,3 +20,7 @@ var kindCmd = &cobra.Command{
 	Long:  kindLDesc,
 	Run:   deploy.SharedRun(gocli.Phases, kindSDesc),
 }
+
+func init() {
+	deploy.SharedInit(kindCmd)
+}

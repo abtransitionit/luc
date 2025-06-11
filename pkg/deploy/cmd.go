@@ -40,8 +40,6 @@ import (
 //	}
 func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
 	return func(cmd *cobra.Command, args []string) {
-		logx.L.Info(initSDesc)
-
 		// handle --list flag before checking arguments
 		if handled, err := handleListFlag(cmd, phases); handled {
 			if err != nil {
@@ -69,9 +67,10 @@ func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) 
 		}
 
 		// handle single phase run
+		// logx.L.Info(initSDesc)
 		if handled, err := handleSinglePhase(cmd, args[0], phases); handled {
 			if err != nil {
-				logx.L.Error(err)
+				return
 			}
 			return
 		}
@@ -85,6 +84,7 @@ func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) 
 //   - (false, nil) if the flag is not set.
 func handleListFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
 	if cmd.Flags().Changed("list") {
+		logx.L.Debugf("cmd '%s' description is : %s", cmd.Name(), cmd.Short)
 		logx.L.Infof("👉 list all phase name")
 		ListPhases(phases)
 		return true, nil
@@ -125,10 +125,10 @@ func handleRunAllFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
 	}
 	// Here, user confirmed or use force flag - Play all the phases
 	for _, phase := range phases {
-		logx.L.Infof("👉 Running phase %s", phase.Name)
+		logx.L.Infof("👉 Running phase '%s'", phase.Name)
 		// handle system FAILURE
 		if _, err := phase.Func(); err != nil {
-			logx.L.Debugf("❌ Phase %s failed: %v", phase.Name, err)
+			logx.L.Debugf("❌ Phase '%s' failed: %v", phase.Name, err)
 			return true, fmt.Errorf("phase %s failed: %w", phase.Name, err)
 		}
 		// handle applogic SUCCESS
@@ -145,12 +145,13 @@ func handleRunAllFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
 //   - (true, error) if the matching phase failed during execution
 func handleSinglePhase(cmd *cobra.Command, phaseName string, phases []Phase) (bool, error) {
 	cmdName := cmd.Name()
+	logx.L.Debugf("cmd '%s' description is : %s", cmdName, cmd.Short)
 	logx.L.Debugf("cmd '%s' provided phase name '%s' as argument", cmdName, phaseName)
 
 	// play the code of the single phase provided as argument
 	for _, phase := range phases {
 		if phase.Name == phaseName {
-			logx.L.Infof("👉 Running phase: %s", phase.Name)
+			logx.L.Infof("👉 Running phase: '%s', that '%s'", phase.Name, phase.Description)
 			if _, err := phase.Func(cmdName); err != nil {
 				// handle system FAILURE
 				logx.L.Debugf("❌ Phase %s failed: %v", phase.Name, err)

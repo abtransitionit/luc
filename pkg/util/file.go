@@ -5,8 +5,12 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package util
 
 import (
+	"archive/tar"
+	"bytes"
+	"compress/gzip"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 
@@ -122,4 +126,29 @@ func SaveToFile(log *zap.SugaredLogger, path string, data []byte) (string, error
 	kbWritten := float64(bytesWritten) / 1024.0
 	log.Infof("✅ file (%s) created succesfully from memory data", absPath)
 	return fmt.Sprintf("%s (%.0f KB)", absPath, kbWritten), nil
+}
+
+func ListTgzInMemory(data []byte) error {
+	gzReader, err := gzip.NewReader(bytes.NewReader(data))
+	if err != nil {
+		return err
+	}
+	defer gzReader.Close()
+
+	tarReader := tar.NewReader(gzReader)
+
+	for {
+		hdr, err := tarReader.Next()
+		if err == io.EOF {
+			break // done
+		}
+		if err != nil {
+			return err
+		}
+
+		// Print name and size (like ls -lh)
+		fmt.Printf("%-50s %10d bytes\n", hdr.Name, hdr.Size)
+	}
+
+	return nil
 }

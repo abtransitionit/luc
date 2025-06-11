@@ -20,3 +20,7 @@ var sonobuoyCmd = &cobra.Command{
 	Long:  sonobuoyLDesc,
 	Run:   deploy.SharedRun(gocli.Phases, sonobuoySDesc),
 }
+
+func init() {
+	deploy.SharedInit(sonobuoyCmd)
+}

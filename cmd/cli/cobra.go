@@ -10,7 +10,7 @@ import (
 )
 
 // Description
-var cobraSDesc = "Install the cli cobra-cli."
+var cobraSDesc = "Install the binary cli cobra-cli from official github."
 var cobraLDesc = cobraSDesc + ` xxx.`
 
 // root Command
