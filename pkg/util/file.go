@@ -128,7 +128,7 @@ func SaveToFile(log *zap.SugaredLogger, path string, data []byte) (string, error
 	return fmt.Sprintf("%s (%.0f KB)", absPath, kbWritten), nil
 }
 
-func ListTgzInMemory(data []byte) error {
+func ListTgzContentInMemory(data []byte) error {
 	gzReader, err := gzip.NewReader(bytes.NewReader(data))
 	if err != nil {
 		return err
@@ -147,8 +147,47 @@ func ListTgzInMemory(data []byte) error {
 		}
 
 		// Print name and size (like ls -lh)
-		fmt.Printf("%-50s %10d bytes\n", hdr.Name, hdr.Size)
+		// fmt.Printf("%-50s %10d bytes\n", hdr.Name, hdr.Size)
+		fmt.Printf("%-50s %10d kB\n", hdr.Name, (hdr.Size+1023)/1024)
 	}
 
 	return nil
+}
+
+// check if data culred in memory is a valid gzip tar
+func IsGzippedMemoryContent(data []byte) (bool, error) {
+	if len(data) < 2 {
+		return false, fmt.Errorf("maybe not a gzipped file")
+	}
+	if data[0] != 0x1F || data[1] != 0x8B {
+		return false, fmt.Errorf("Surely a gzipped file")
+	}
+	return true, nil
+}
+
+func IsMemoryContentAnExe(data []byte) (bool, error) {
+	if len(data) < 4 {
+		return false, fmt.Errorf("data too short to determine executable")
+	}
+
+	// Check ELF (Linux)
+	if data[0] == 0x7F && data[1] == 'E' && data[2] == 'L' && data[3] == 'F' {
+		return true, nil
+	}
+
+	// Check Windows PE (MZ)
+	if data[0] == 'M' && data[1] == 'Z' {
+		return true, nil
+	}
+
+	// Check Mach-O (multiple signatures)
+	machO1 := []byte{0xCF, 0xFA, 0xED, 0xFE}
+	machO2 := []byte{0xFE, 0xED, 0xFA, 0xCF}
+	machO3 := []byte{0xCA, 0xFE, 0xBA, 0xBE}
+
+	if bytes.HasPrefix(data, machO1) || bytes.HasPrefix(data, machO2) || bytes.HasPrefix(data, machO3) {
+		return true, nil
+	}
+
+	return false, fmt.Errorf("unknown executable format")
 }

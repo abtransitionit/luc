@@ -55,7 +55,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/abtransitionit/$NAME/releases/download/v$TAG-main/$NAME-$OS-$ARCH",
 		DocUrl:  "https://github.com/abtransitionit/luc",
 		GitUrl:  "https://github.com/abtransitionit/luc",
-		UrlType: UrlTgzn,
+		UrlType: UrlFile,
 	},
 	"containerd": {
 		Name:    "containerd",
@@ -274,6 +274,15 @@ func GetCliUrl(log *zap.SugaredLogger, cliName string, osArch ...string) (string
 func (u UrlType) IsCurlable() (bool, error) {
 	switch u {
 	case UrlFile, UrlTgz, UrlTgzn:
+		return true, nil
+	default:
+		return false, nil
+	}
+}
+
+func (u UrlType) IsGitable() (bool, error) {
+	switch u {
+	case UrlGit:
 		return true, nil
 	default:
 		return false, nil

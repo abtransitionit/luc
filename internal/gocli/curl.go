@@ -31,6 +31,7 @@ const CurlDescription = "curl the artifact from a CLI in the ConfigMap."
 //   - (false, nil)  if the file is not successfully downloaded
 //   - (true, error) if the file fails to download
 func curl(arg ...string) (string, error) {
+
 	// check arguments
 	if len(arg) == 0 {
 		logx.L.Debugf("❌ No argument provided", arg)
@@ -46,15 +47,19 @@ func curl(arg ...string) (string, error) {
 	// Does config exist ?
 	cli, ok := config.GetCLIConfig(cliName)
 	if !ok {
-		logx.L.Debugf("❌ CLI '%s' not found in the ConfigMap", cliName)
-		return "", errors.New("")
+		msg := "CLI not found in the CliConfigMap"
+		logx.L.Debugf("❌ %s. impacted CLI: %s", msg, cliName)
+		return "", errors.New(msg)
 	}
+
 	// is the URL Curlable ?
-	curlable, err := cli.UrlType.IsCurlable()
-	if err != nil || !curlable {
-		logx.L.Debugf("❌ URL type '%s' is not curlable for CLI '%s'", cli.UrlType, cliName)
-		return "", errors.New("URL type not curlable")
+	yes, err := cli.UrlType.IsCurlable()
+	if err != nil || !yes {
+		msg := "the URL type of the CLI is not curlable"
+		logx.L.Debugf("❌ %s. impacted CLI: %s", msg, cliName)
+		return "", errors.New(msg)
 	}
+
 	// Get the URL
 	cliUrl, _ := config.GetCliUrl(logx.L, cliName, "linux", "amd64") // OS and Arch auto-detected
 
@@ -67,8 +72,41 @@ func curl(arg ...string) (string, error) {
 		return "", err
 	}
 
+	// Guess the curl content
+	isGzip, _ := util.IsGzippedMemoryContent(fileInMemory)
+	isExe, _ := util.IsMemoryContentAnExe(fileInMemory)
+
+	switch {
+	case isGzip:
+		logx.L.Debug("the curled content in memory is guessed as a gzipped file")
+
+	case isExe:
+		logx.L.Debug("the curled content in memory is guessed as an executable")
+		return "", errors.New("the curled content in memory is not a gzipped file")
+
+	default:
+		logx.L.Debug("the curled content in memory is not guessed as a gzipped file, nor an executable")
+		logx.L.Debugf("the curled content in memory is not guessed as an executable")
+		return "", errors.New("the curled content in memory is not a gzipped file")
+	}
+
+	yes, err = util.IsGzippedMemoryContent(fileInMemory)
+	if err != nil || !yes {
+		logx.L.Debugf("the curled content in memory is not guessed as a gzipped file")
+
+		ok, err := util.IsMemoryContentAnExe(fileInMemory)
+		if !ok {
+			logx.L.Debugf("the curled content in memory is not guessed as an executable: %v", err)
+		} else {
+			logx.L.Debug("the curled content in memory is guessed as an executable")
+		}
+		return "", errors.New("the curled content in memory is not guessed as a gzipped file")
+	}
+
+	logx.L.Debug("the curled content in memory is guessed as a gzipped file")
+
 	// ls contents
-	err = util.ListTgzInMemory(fileInMemory)
+	err = util.ListTgzContentInMemory(fileInMemory)
 	if err != nil {
 		return "", err
 	}

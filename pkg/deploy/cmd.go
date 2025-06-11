@@ -154,7 +154,7 @@ func handleSinglePhase(cmd *cobra.Command, phaseName string, phases []Phase) (bo
 			logx.L.Infof("👉 Running phase: '%s', that '%s'", phase.Name, phase.Description)
 			if _, err := phase.Func(cmdName); err != nil {
 				// handle system FAILURE
-				logx.L.Debugf("❌ Phase %s failed: %v", phase.Name, err)
+				logx.L.Debugf("❌ Phase '%s' failed: %v", phase.Name, err)
 				return true, err
 			}
 			// handle applogic SUCCESS
