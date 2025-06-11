@@ -4,13 +4,22 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package gocli
 
 import (
+	"errors"
+
+	"github.com/abtransitionit/luc/pkg/errorx"
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
 const CurlDescription = "curl the artifact."
 
-func curl(arg ...string) error {
-	logx.L.Info(CurlDescription)
+func curl(arg ...string) (string error) {
+	if len(arg) == 0 {
+		logx.L.Debugf("❌ No argument provided", arg)
+		return errorx.StringError("No argument provided", arg, errors.New(""))
+	}
+	logx.L.Infof("%s : %s", CurlDescription, arg[0])
+
+	logx.L.Infof(CurlDescription)
 	logx.L.Infof("nb arg passed: '%d'", len(arg))
 	// logx.L.Info("want to download the artifact of '%s'", arg[0])
 	return nil
