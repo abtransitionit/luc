@@ -9,8 +9,8 @@ import (
 
 const SecureDescription = "secure the cluster"
 
-func secure(arg ...string) error {
+func secure(arg ...string) (string, error) {
 	logx.L.Info(SecureDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

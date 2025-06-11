@@ -9,8 +9,8 @@ import (
 
 const SysctlDescription = "configure OS kernel modules and parameters."
 
-func sysctl(arg ...string) error {
+func sysctl(arg ...string) (string, error) {
 	logx.L.Info(SysctlDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

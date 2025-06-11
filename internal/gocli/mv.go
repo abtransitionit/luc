@@ -11,7 +11,7 @@ import (
 
 const MvDescription = "move the binary to final destination."
 
-func mv(arg ...string) error {
+func mv(arg ...string) (string, error) {
 	logx.L.Info(MvDescription)
 	location := "/usr/local/bin/luc"
 	version := "0.0.1"
@@ -20,5 +20,5 @@ func mv(arg ...string) error {
 	fmt.Printf("🔹 CLI is available at %s (version: %s)\n", location, version)
 	fmt.Printf("🔹 Visit the official docs: %s\n", doc)
 	fmt.Printf("🔹 Visit the official git: %s\n", git)
-	return nil
+	return "", nil
 }

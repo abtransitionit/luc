@@ -9,8 +9,8 @@ import (
 
 const WorkerDescription = "initialize the Workers."
 
-func worker(arg ...string) error {
+func worker(arg ...string) (string, error) {
 	logx.L.Info(WorkerDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

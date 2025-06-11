@@ -9,8 +9,8 @@ import (
 
 const UpdateDescription = "upgrade The Kind VM OS packages and packages repositories to version latest."
 
-func update(arg ...string) error {
+func update(arg ...string) (string, error) {
 	logx.L.Info(UpdateDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

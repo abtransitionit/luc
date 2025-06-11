@@ -9,8 +9,8 @@ import (
 
 const CustomDescription = "apply organisation custom configuration via Manifest (ie. YAML K8s [tracked/gitted] configuration file)"
 
-func custom(arg ...string) error {
+func custom(arg ...string) (string, error) {
 	logx.L.Info(CustomDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

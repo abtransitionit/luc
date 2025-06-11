@@ -9,8 +9,8 @@ import (
 
 const CpLucDescription = "copy CLI LUC to all VMs"
 
-func cpluc(arg ...string) error {
+func cpluc(arg ...string) (string, error) {
 	logx.L.Info(CpLucDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

@@ -9,8 +9,8 @@ import (
 
 const CliDescription = "provision needed CLI"
 
-func cli(arg ...string) error {
+func cli(arg ...string) (string, error) {
 	logx.L.Info(CliDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

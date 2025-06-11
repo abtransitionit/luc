@@ -9,8 +9,8 @@ import (
 
 const CheckDescription = "check basic metrics before starting deployment"
 
-func check(arg ...string) error {
+func check(arg ...string) (string, error) {
 	logx.L.Info(CheckDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

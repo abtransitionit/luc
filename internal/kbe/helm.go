@@ -9,8 +9,8 @@ import (
 
 const HelmDescription = "provision the Helm client CLI"
 
-func helm(arg ...string) error {
+func helm(arg ...string) (string, error) {
 	logx.L.Info(HelmDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

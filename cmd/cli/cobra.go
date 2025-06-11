@@ -15,7 +15,7 @@ var cobraLDesc = cobraSDesc + ` xxx.`
 
 // root Command
 var cobraCmd = &cobra.Command{
-	Use:   "cobra",
+	Use:   "cobra [phase name]",
 	Short: cobraSDesc,
 	Long:  cobraLDesc,
 	Run:   deploy.SharedRun(gocli.Phases, cobraSDesc),

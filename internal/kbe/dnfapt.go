@@ -9,8 +9,8 @@ import (
 
 const DnfaptDescription = "provision dnfapt repositories and packages."
 
-func dnfapt(arg ...string) error {
+func dnfapt(arg ...string) (string, error) {
 	logx.L.Info(DnfaptDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

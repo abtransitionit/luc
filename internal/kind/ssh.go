@@ -9,8 +9,8 @@ import (
 
 const SshDescription = "check the Kind VM is SSH reachable"
 
-func ssh(arg ...string) error {
+func ssh(arg ...string) (string, error) {
 	logx.L.Info(SshDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }

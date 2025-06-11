@@ -9,8 +9,8 @@ import (
 
 const HealthDescription = "check the Kind cluster health"
 
-func health(arg ...string) error {
+func health(arg ...string) (string, error) {
 	logx.L.Info(HealthDescription)
 	// Actual implementation would go here
-	return nil
+	return "", nil
 }
