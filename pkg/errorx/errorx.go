@@ -91,7 +91,7 @@ func StringError(objectAction string, objectId string, err error) (string, error
 //
 // Note: Function intentionally only returns and does not include logging. Caller should handle logging if needed based on their context
 func ByteError(objectAction string, objectId string, err error) ([]byte, error) {
-	return nil, fmt.Errorf("❌ Errror : failed to  %s : %s > %w",
+	return nil, fmt.Errorf("failed to  %s : %s > %w",
 		objectAction,
 		objectId,
 		err,

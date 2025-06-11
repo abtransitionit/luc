@@ -240,18 +240,6 @@ func GetCliUrl(log *zap.SugaredLogger, cliName string, osArch ...string) (string
 	osType = strings.ToLower(osType)
 	archType = strings.ToLower(archType)
 
-	// replacements := map[string]string{
-	// 	"$NAME": cliConf.Name,
-	// 	"$TAG":  cliConf.Tag,
-	// 	"$OS":   osType,
-	// 	"$ARCH": osArch,
-	// }
-
-	// url := cliConf.Url
-	// for placeholder, value := range replacements {
-	// 	url = strings.ReplaceAll(url, placeholder, value)
-	// }
-
 	// Replace placeholders in URL
 	url := cliConf.Url
 	url = strings.ReplaceAll(url, "$NAME", cliConf.Name)

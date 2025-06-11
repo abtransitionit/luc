@@ -128,6 +128,21 @@ func SaveToFile(log *zap.SugaredLogger, path string, data []byte) (string, error
 	return fmt.Sprintf("%s (%.0f KB)", absPath, kbWritten), nil
 }
 
+// # Purpose
+//
+//   - Lists the content of tgz file that is in memory.
+//   - Size is in kB
+//
+// # Example Usage
+//
+// _ := util.ListTgzContentInMemory(fileInMemory)
+//
+// # Usage
+//
+//	err = util.ListTgzContentInMemory(fileInMemory)
+//	if err != nil {
+//		return "", err
+//	}
 func ListTgzContentInMemory(data []byte) error {
 	gzReader, err := gzip.NewReader(bytes.NewReader(data))
 	if err != nil {
@@ -146,8 +161,6 @@ func ListTgzContentInMemory(data []byte) error {
 			return err
 		}
 
-		// Print name and size (like ls -lh)
-		// fmt.Printf("%-50s %10d bytes\n", hdr.Name, hdr.Size)
 		fmt.Printf("%-50s %10d kB\n", hdr.Name, (hdr.Size+1023)/1024)
 	}
 
