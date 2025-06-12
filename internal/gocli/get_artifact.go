@@ -13,7 +13,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func GetArtefact(in <-chan PipelineData, out chan<- PipelineData) {
+func GetArtifact(in <-chan PipelineData, out chan<- PipelineData) {
 	go func() {
 		// close channel
 		defer close(out)
@@ -81,11 +81,11 @@ func helperGitClone(data PipelineData) PipelineData {
 		data.Err = fmt.Errorf("git URL is empty")
 		return data
 	}
-
+	// log before action
 	logx.L.Debugf("git cloning artifact from '%s'", data.Config.Url)
 
 	// Create a temporary directory for the git clone
-	tmpDir, err := os.MkdirTemp("", "artifact-git-*")
+	tmpDir, err := os.MkdirTemp("", data.Config.Name+"-git-*")
 	if err != nil {
 		data.Err = fmt.Errorf("failed to create temp directory: %w", err)
 		return data
@@ -106,7 +106,7 @@ func helperGitClone(data PipelineData) PipelineData {
 		return data
 	}
 
-	// log information
+	// log after action
 	logx.L.Infof("✅ Git repository successfully cloned to: %s", data.FofTmpPath)
 
 	return data

@@ -35,10 +35,13 @@ func UnTgzFile(in <-chan PipelineData, out chan<- PipelineData) {
 
 func helperUnzip(data PipelineData) PipelineData {
 
-	// manage decompression based on CLI config UrlType
+	// manage decompression (based on UrlType)
 	switch data.Config.UrlType {
 	case config.UrlExe, config.UrlGo, config.UrlGit, config.UrlXxx:
 		logx.L.Debugf("File type '%s' does not need decompression", data.Config.UrlType)
+
+		// define property
+		data.FofTmpPath = data.ArtifactPath
 
 	case config.UrlTgz, config.UrlTgzn:
 		logx.L.Infof("Decompressing '%s' (type: %s)", data.ArtifactPath, data.Config.UrlType)

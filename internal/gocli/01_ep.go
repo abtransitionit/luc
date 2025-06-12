@@ -32,6 +32,7 @@ func ep(arg ...string) (string, error) {
 	chGuessFileType := make(chan PipelineData)
 	chSaveFile := make(chan PipelineData)
 	chUnTgzFile := make(chan PipelineData)
+	chMvFof := make(chan PipelineData)
 
 	// Start each pipeline step
 	CliName(chCliName, cliName)
@@ -39,13 +40,14 @@ func ep(arg ...string) (string, error) {
 	SpecificUrl(chGenericUrl, chSpecificUrl)
 	ArtifactName(chSpecificUrl, chArtifactName)
 	ArtifactPath(chArtifactName, chArtifactPath)
-	GetArtefact(chArtifactPath, chGetArtefact)
+	GetArtifact(chArtifactPath, chGetArtefact)
 	GuessFileType(chGetArtefact, chGuessFileType)
 	SaveFile(chGuessFileType, chSaveFile)
 	UnTgzFile(chSaveFile, chUnTgzFile)
+	MvFof(chUnTgzFile, chMvFof)
 
 	// Read final result
-	for data := range chUnTgzFile {
+	for data := range chMvFof {
 		if data.Err != nil {
 			logx.L.Debugf("❌ Error: %s", data.Err)
 			return "", data.Err
