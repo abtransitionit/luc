@@ -7,11 +7,13 @@ package config
 import (
 	"errors"
 	"fmt"
+	"os"
 	"runtime"
 	"strings"
 
 	"github.com/abtransitionit/luc/pkg/errorx"
 	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"go.uber.org/zap"
 )
 
@@ -306,4 +308,26 @@ func DisplayCliCondfigInfo() {
 		fmt.Printf(" %s ", t)
 	}
 	fmt.Println("\n")
+}
+
+func DisplayConfigMap() {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+
+	// Simple header
+	t.AppendHeader(table.Row{"Tool", "Version", "Type", "Doc", "Git"})
+
+	// Add rows
+	for name, cfg := range cliConfigMap {
+		t.AppendRow(table.Row{
+			name,
+			cfg.Tag,
+			cfg.UrlType,
+			cfg.DocUrl,
+			cfg.GitUrl,
+		})
+	}
+
+	// Render with default style
+	t.Render()
 }

@@ -18,7 +18,12 @@ var CliCmd = &cobra.Command{
 	Short: cliSDesc,
 	Long:  cliLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		// display if flag = --list
+		// handle flag = --display
+		if cmd.Flag("display").Value.String() == "true" {
+			config.DisplayConfigMap()
+			return
+		}
+		// handle flag = --list
 		if cmd.Flag("list").Value.String() == "true" {
 			config.DisplayCliCondfigInfo()
 			return
@@ -43,5 +48,6 @@ func init() {
 	CliCmd.AddCommand(sonobuoyCmd)
 	//
 	CliCmd.Flags().BoolP("list", "l", false, "List CLI configurations")
+	CliCmd.Flags().BoolP("display", "d", false, "Display CLI config map")
 
 }
