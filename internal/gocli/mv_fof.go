@@ -8,6 +8,7 @@ import (
 
 	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
 )
 
 // Move File or folder to final destination
@@ -28,7 +29,14 @@ func MvFof(in <-chan PipelineData, out chan<- PipelineData) {
 			case config.UrlExe:
 				dstFolder := "/usr/local/bin"
 				dstPath := path.Join(dstFolder, data.Config.Name)
-				logx.L.Infof("Moving '%s' to '%s'", data.FofTmpPath, dstPath)
+				logx.L.Debugf("Moving '%s' to '%s'", data.FofTmpPath, dstPath)
+				success, err := util.MvFile(data.FofTmpPath, dstPath, 0755, true)
+				if err != nil {
+					logx.L.Debugf("❌ Failed to move file: %s", err)
+				}
+				if success {
+					logx.L.Infof("✅ File moved successfully to '%s'", dstPath)
+				}
 
 			default:
 				// log information

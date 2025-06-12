@@ -242,3 +242,98 @@ func UntargzFile(srcTgzPath string, destFolder string) error {
 
 	return nil
 }
+
+// # Purpose
+//
+// # Moves a single file from srcPath to dstPath
+//
+// It performs the following checks and operations:
+//
+//   - Validates that both srcPath and dstPath are absolute paths.
+//   - Verifies that the source file exists and is a regular file.
+//   - Ensures that the parent directory of the destination path exists and is a directory.
+//   - This includes allowing the destination directory to be the root ("/").
+//   - Performs the move using os.Rename, which can also be used to rename the file.
+//
+// # Parameters
+//   - srcPath: absolute path to the source file.
+//   - dstPath: absolute path to the destination file location (can include a rename).
+//
+// Returns:
+//   - success: true if the move operation succeeded, false otherwise.
+//   - err: a detailed error if any of the validation or move steps fail.
+//
+// Example:
+//
+//	success, err := MvFile("/tmp/foo.txt", "/var/log/foo-renamed.txt")
+//	if err != nil {
+//	    log.Fatal(err)
+//	}
+//	if success {
+//	    fmt.Println("File moved successfully.")
+//	}
+func MvFile(srcPath, dstPath string, permission os.FileMode, isSudo bool) (bool, error) {
+	// check srcPath is absolute
+	if !filepath.IsAbs(srcPath) {
+		return false, errors.New("source path must be absolute")
+	}
+
+	// check dstPath is absolute
+	if !filepath.IsAbs(dstPath) {
+		return false, errors.New("destination path must be absolute")
+	}
+
+	// check source file exists and is a regular file
+	srcInfo, err := os.Stat(srcPath)
+	if err != nil {
+		return false, fmt.Errorf("source file error: %w", err)
+	}
+	if !srcInfo.Mode().IsRegular() {
+		return false, errors.New("source is not a regular file")
+	}
+
+	// Set permissions on source file before moving
+	if err := os.Chmod(srcPath, permission); err != nil {
+		return false, fmt.Errorf("failed to set source file permissions: %w", err)
+	}
+
+	// check the parent directory of dstPath exists and is a directory
+	dstDir := filepath.Dir(dstPath)
+	dstInfo, err := os.Stat(dstDir)
+	if err != nil {
+		return false, fmt.Errorf("destination directory does not exist: %w", err)
+	}
+	if !dstInfo.IsDir() {
+		return false, fmt.Errorf("destination parent path is not a directory: %s", dstDir)
+	}
+
+	// Perform the move as sudo
+	if isSudo {
+		if err := helperMvSudo(srcPath, dstPath); err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	// Perform the move as normal user
+	if err := os.Rename(srcPath, dstPath); err != nil {
+		return false, fmt.Errorf("failed to move file: %w", err)
+	}
+
+	return true, nil
+}
+
+// Helper function to move a file as sudo user from srcPath to dstPath
+//
+// It returns an error if the command fails or produces output.
+//
+// Note:
+//   - Requires sudo permissions configured appropriately.
+//   - May prompt for password unless passwordless sudo is set up.
+func helperMvSudo(srcPath, dstPath string) error {
+	cmd := exec.Command("sudo", "mv", srcPath, dstPath)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("sudo mv failed: %v, output: %s", err, string(output))
+	}
+	return nil
+}

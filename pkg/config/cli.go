@@ -13,7 +13,7 @@ import (
 
 	"github.com/abtransitionit/luc/pkg/errorx"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/table"
 	"go.uber.org/zap"
 )
 
@@ -331,3 +331,35 @@ func DisplayConfigMap() {
 	// Render with default style
 	t.Render()
 }
+
+// func DisplayConfigMap() {
+// 	app := tview.NewApplication()
+// 	table := tview.NewTable()
+
+// 	// Header
+// 	headers := []string{"Tool", "Version", "Type", "Doc", "Git"}
+// 	for i, h := range headers {
+// 		table.SetCell(0, i, tview.NewTableCell(h).SetAttributes(tcell.AttrBold))
+// 	}
+
+// 	// Rows
+// 	row := 1
+// 	for name, cfg := range cliConfigMap {
+// 		values := []string{
+// 			name,
+// 			cfg.Tag,
+// 			string(cfg.UrlType), // If UrlType is a custom type, ensure it implements fmt.Stringer
+// 			cfg.DocUrl,
+// 			cfg.GitUrl,
+// 		}
+// 		for col, val := range values {
+// 			table.SetCell(row, col, tview.NewTableCell(val))
+// 		}
+// 		row++
+// 	}
+
+// 	// Display fullscreen
+// 	if err := app.SetRoot(table, true).EnableMouse(true).Run(); err != nil {
+// 		panic(err)
+// 	}
+// }

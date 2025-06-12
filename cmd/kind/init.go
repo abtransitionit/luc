@@ -4,7 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kind
 
 import (
-	"github.com/abtransitionit/luc/internal/kind"
+	"github.com/abtransitionit/luc/internal/phase/kind"
 	"github.com/abtransitionit/luc/pkg/deploy"
 	"github.com/spf13/cobra"
 )
