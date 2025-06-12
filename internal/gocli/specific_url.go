@@ -15,24 +15,26 @@ func SpecificUrl(in <-chan PipelineData, out chan<- PipelineData) {
 		// close channel
 		defer close(out)
 
-		// get config for this CLI - Did something gets wrong earlier
 		for data := range in {
+			// propagate error if any
 			if data.Err != nil {
 				// send data to next step
 				out <- data
 				// Keep reading data from channel
 				continue
 			}
-			// placeholders are replaced
+
+			// replace placeholders
 			url := data.GenericUrl
 			url = strings.ReplaceAll(url, "$NAME", data.Config.Name)
 			url = strings.ReplaceAll(url, "$TAG", data.Config.Tag)
 			url = strings.ReplaceAll(url, "$OS", runtime.GOOS)
 			url = strings.ReplaceAll(url, "$ARCH", runtime.GOARCH)
 
+			// define this property
 			data.SpecificUrl = url
 
-			// logx.L.Infow("Specific URL generated: '%s'", data.SpecificUrl)
+			// log information
 			logx.L.Infof("Specific URL generated: '%s'", data.SpecificUrl)
 
 			// send data to next step
@@ -42,3 +44,4 @@ func SpecificUrl(in <-chan PipelineData, out chan<- PipelineData) {
 }
 
 // logx.L.Infow("Specific URL generated", "cli", data.Config.Name, "specificUrl", data.SpecificUrl)
+// logx.L.Infow("Specific URL generated: '%s'", data.SpecificUrl)

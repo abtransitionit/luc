@@ -7,5 +7,5 @@ package gocli
 import "github.com/abtransitionit/luc/pkg/deploy"
 
 var Phases = []deploy.Phase{
-	deploy.SetPhase("ep", ep, EpDescription),
+	deploy.SetPhase("install", ep, EpDescription),
 }

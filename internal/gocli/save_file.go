@@ -15,8 +15,8 @@ func SaveFile(in <-chan PipelineData, out chan<- PipelineData) {
 		// close channel
 		defer close(out)
 
-		// get config for this CLI - Did something gets wrong earlier
 		for data := range in {
+			// propagate error if any
 			if data.Err != nil {
 				// send data to next step
 				out <- data
@@ -24,7 +24,7 @@ func SaveFile(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			// Save the file from memory
+			// Save the file from memory into host FS
 			_, err := util.SaveToFile(logx.L, data.ArtifactPath, data.MemoryFile)
 			if err != nil {
 				data.Err = fmt.Errorf("failed to save file: %w", err)
@@ -32,7 +32,8 @@ func SaveFile(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			logx.L.Infof("File saved to '%s'", data.ArtifactPath)
+			// log information
+			logx.L.Debugf("File saved to '%s'", data.ArtifactPath)
 
 			// send data to next step
 			out <- data

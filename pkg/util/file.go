@@ -12,7 +12,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/abtransitionit/luc/pkg/errorx"
 	"go.uber.org/zap"
@@ -213,4 +215,30 @@ func IsMemoryContentAnExe(data []byte) (bool, error) {
 	}
 
 	return false, fmt.Errorf("unknown executable format")
+}
+
+func UntargzFile(srcTgzPath string, destFolder string) error {
+	// Check destination is an absolute path
+	if !strings.HasPrefix(destFolder, "/") {
+		return errors.New("destination directory must be an absolute path starting with '/'")
+	}
+	// Check srcTgzPath is an absolute path
+	if !strings.HasPrefix(srcTgzPath, "/") {
+		return errors.New("srcTgzPath must be an absolute path starting with '/'")
+	}
+
+	// Check destination directory exists
+	if err := os.MkdirAll(destFolder, 0755); err != nil {
+		return err
+	}
+
+	// Prepare the command: tar -C destFolder -xzf tgzPath
+	cmd := exec.Command("tar", "-C", destFolder, "-xzf", srcTgzPath)
+
+	// Run the command and wait for it to finish
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	return nil
 }

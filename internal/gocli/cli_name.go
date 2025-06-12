@@ -10,6 +10,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
+// First/Source step of the pipeline that define the data to be pipelined
 func CliName(out chan<- PipelineData, cliName string) {
 	// define goroutine
 	go func() {
@@ -22,14 +23,17 @@ func CliName(out chan<- PipelineData, cliName string) {
 		// declaradef variable
 		data := PipelineData{}
 
+		// do the job
 		if !ok {
 			data.Err = fmt.Errorf("CLI config not found: %s", cliName)
-			// logx.L.Errorw("CLI config not found", "cli", cliName)
 			logx.L.Debugf("❌ CLI config not found %s", cliName)
 		} else {
+			// define property
 			data.Config = SingleCliConfig
+			// log information
 			logx.L.Infof("Loaded %s CLI config", cliName)
 		}
+
 		// send data to next step
 		out <- data
 	}()
@@ -37,3 +41,4 @@ func CliName(out chan<- PipelineData, cliName string) {
 
 // logx.L.Infow("Loaded CLI config", "cli", cliName, "url", SingleCliConfig.Url)
 // logx.L.Infof("URl is %s", SingleCliConfig.Url)
+// logx.L.Errorw("CLI config not found", "cli", cliName)

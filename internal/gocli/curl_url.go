@@ -21,6 +21,7 @@ func CurlUrl(in <-chan PipelineData, out chan<- PipelineData) {
 				// Keep reading data from channel
 				continue
 			}
+
 			// curl the File into memory
 			memoryFile, err := util.GetPublicFile(logx.L, data.SpecificUrl)
 			if err != nil {
@@ -28,6 +29,7 @@ func CurlUrl(in <-chan PipelineData, out chan<- PipelineData) {
 			} else {
 				// define this property
 				data.MemoryFile = memoryFile
+				// log information
 				logx.L.Infof("File Downloaded into Memory")
 			}
 

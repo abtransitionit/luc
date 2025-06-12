@@ -14,16 +14,19 @@ func ArtifactName(in <-chan PipelineData, out chan<- PipelineData) {
 		// close channel
 		defer close(out)
 
-		// get config for this CLI - Did something gets wrong earlier
 		for data := range in {
+			// propagate error if any
 			if data.Err != nil {
 				// send data to next step
 				out <- data
 				// Keep reading data from channel
 				continue
 			}
+
 			// define this property
 			data.ArtifactName = path.Base(data.SpecificUrl)
+
+			// log information
 			logx.L.Infof("Artifact Name: '%s'", data.ArtifactName)
 
 			// send data to next step

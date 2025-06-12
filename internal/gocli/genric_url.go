@@ -12,16 +12,17 @@ func GenericUrl(in <-chan PipelineData, out chan<- PipelineData) {
 		// close channel
 		defer close(out)
 
-		// get config for this CLI - Did something gets wrong earlier
 		for data := range in {
+			// propagate error if any
 			if data.Err != nil {
 				// send data to next step
 				out <- data
 				// Keep reading data from channel
 				continue
 			}
-			// get this property
+			// define this property
 			data.GenericUrl = data.Config.Url
+			// log information
 			logx.L.Infof("Generic URL : '%s'", data.GenericUrl)
 
 			// send data to next step
