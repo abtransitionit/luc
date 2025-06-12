@@ -6,6 +6,7 @@ package gocli
 import (
 	"fmt"
 
+	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 )
@@ -18,9 +19,24 @@ func SaveFile(in <-chan PipelineData, out chan<- PipelineData) {
 		for data := range in {
 			// propagate error if any
 			if data.Err != nil {
-				// send data to next step
 				out <- data
-				// Keep reading data from channel
+				continue
+			}
+
+			// Check Artifact need to be saved (based on UrlType)
+			switch data.Config.UrlType {
+			case config.UrlExe, config.UrlTgz:
+				// proceed
+			default:
+				logx.L.Debugf("UrlType '%s' does not require saving", data.Config.UrlType)
+				out <- data
+				continue
+			}
+
+			// Check: ensure path is defined
+			if data.ArtifactPath == "" {
+				data.Err = fmt.Errorf("ArtifactPath is empty, cannot save")
+				out <- data
 				continue
 			}
 

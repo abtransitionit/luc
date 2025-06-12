@@ -17,24 +17,20 @@ func ArtifactPath(in <-chan PipelineData, out chan<- PipelineData) {
 		defer close(out)
 
 		for data := range in {
-			// propagate error if any
+			// Step 1: propagate error if any
 			if data.Err != nil {
-				// send data to next step
 				out <- data
-				// Keep reading data from channel
 				continue
 			}
 
-			// define uniquePath
+			// Step 2: define property
 			uniquePath := filepath.Join("/tmp", fmt.Sprintf("%s_%d", data.ArtifactName, time.Now().UnixNano()))
-
-			// define this property
 			data.ArtifactPath = uniquePath
 
 			// log information
 			logx.L.Infof("Artifact Path: '%s'", data.ArtifactPath)
 
-			// send data to next step
+			// Step 3: send result to next pipeline step
 			out <- data
 		}
 	}()

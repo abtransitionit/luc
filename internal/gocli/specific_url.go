@@ -18,9 +18,7 @@ func SpecificUrl(in <-chan PipelineData, out chan<- PipelineData) {
 		for data := range in {
 			// propagate error if any
 			if data.Err != nil {
-				// send data to next step
 				out <- data
-				// Keep reading data from channel
 				continue
 			}
 

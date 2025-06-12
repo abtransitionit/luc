@@ -21,13 +21,11 @@ func UnTgzFile(in <-chan PipelineData, out chan<- PipelineData) {
 		// get config for this CLI - Did something gets wrong earlier
 		for data := range in {
 			if data.Err != nil {
-				// send data to next step
 				out <- data
-				// Keep reading data from channel
 				continue
 			}
 			// Do the work
-			processedData := helperCompress(data)
+			processedData := helperUnzip(data)
 
 			// send data to next step
 			out <- processedData
@@ -35,11 +33,11 @@ func UnTgzFile(in <-chan PipelineData, out chan<- PipelineData) {
 	}()
 }
 
-func helperCompress(data PipelineData) PipelineData {
+func helperUnzip(data PipelineData) PipelineData {
 
 	// manage decompression based on CLI config UrlType
 	switch data.Config.UrlType {
-	case config.UrlExe, config.UrlGo, config.UrlXxx:
+	case config.UrlExe, config.UrlGo, config.UrlGit, config.UrlXxx:
 		logx.L.Debugf("File type '%s' does not need decompression", data.Config.UrlType)
 
 	case config.UrlTgz, config.UrlTgzn:

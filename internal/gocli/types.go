@@ -8,8 +8,8 @@ type PipelineData struct {
 	SpecificUrl  string           // Url after placeholders are replaced
 	MemoryFile   []byte           // In-memory file content	after curl is successful
 	ArtifactName string           // artifact name as it appears in the specific URL
-	ArtifactPath string           // Path to saved artefact on the host FS after it is curled
-	FofTmpPath   string           // file Or folder Path after CLI artefact is decompressed
+	ArtifactPath string           // Path to saved artifact on the host FS after it is curled
+	FofTmpPath   string           // file Or folder Path after CLI artefact is unzip (Tgz, Exe) or git clone (Git)
 	ArtifactType string           // guessed filetype : Exe or Tgz
 	Err          error            // If any step fails
 }

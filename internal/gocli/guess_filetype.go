@@ -17,13 +17,11 @@ func GuessFileType(in <-chan PipelineData, out chan<- PipelineData) {
 		for data := range in {
 			// propagate error if any
 			if data.Err != nil {
-				// send data to next step
 				out <- data
-				// Keep reading data from channel
 				continue
 			}
 
-			// get this property
+			// get property
 			fileInMemory := data.MemoryFile
 
 			// classify the artifact
@@ -32,66 +30,14 @@ func GuessFileType(in <-chan PipelineData, out chan<- PipelineData) {
 			} else if isExe, _ := util.IsMemoryContentAnExe(fileInMemory); isExe {
 				data.ArtifactType = string(config.UrlExe)
 			} else {
-				data.ArtifactType = string(config.UrlXxx)
-				logx.L.Infof("Unknown file type for '%s'; classified as '%s'", data.ArtifactName, data.ArtifactType)
+				logx.L.Debugf("file type for '%s' is not guesssed", data.ArtifactName)
 			}
 
 			// log information
-			logx.L.Infof("Artifact File type is '%s'", data.ArtifactType)
+			logx.L.Debugf("Artifact gueessed File type is '%s'", data.ArtifactType)
 
 			// send data to next step
 			out <- data
 		}
 	}()
 }
-
-// func GuessFileType(in <-chan PipelineData, out chan<- PipelineData) {
-// 	go func() {
-// 		// close channel
-// 		defer close(out)
-
-// 		for data := range in {
-// 			// propagate error if any
-// 			if data.Err != nil {
-// 				// send data to next step
-// 				out <- data
-// 				// Keep reading data from channel
-// 				continue
-// 			}
-
-// 			// get this property
-// 			fileInMemory := data.MemoryFile
-
-// 			// do the job
-// 			isGzip, err := util.IsGzippedMemoryContent(fileInMemory)
-// 			if err != nil {
-// 				data.Err = fmt.Errorf("error checking gzip content: %w", err)
-// 				out <- data
-// 				continue
-// 			}
-
-// 			isExe, err := util.IsMemoryContentAnExe(fileInMemory)
-// 			if err != nil {
-// 				data.Err = fmt.Errorf("error checking exe content: %w", err)
-// 				out <- data
-// 				continue
-// 			}
-
-// 			// define property
-// 			switch {
-// 			case isGzip:
-// 				data.ArtifactType = string(config.UrlTgz)
-// 			case isExe:
-// 				data.ArtifactType = string(config.UrlExe)
-// 			default:
-// 				data.ArtifactType = string(config.UrlXxx)
-// 			}
-
-// 			// log information
-// 			logx.L.Infof("Artifact File type is '%s'", data.ArtifactType)
-
-// 			// send data to next step
-// 			out <- data
-// 		}
-// 	}()
-// }
