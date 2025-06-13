@@ -45,6 +45,7 @@ func init() {
 	CliCmd.AddCommand(rootlesskitCmd)
 	CliCmd.AddCommand(runcCmd)
 	CliCmd.AddCommand(sdkCmd)
+	CliCmd.AddCommand(slirp4netnsCmd)
 	CliCmd.AddCommand(sonobuoyCmd)
 	//
 	CliCmd.Flags().BoolP("list", "l", false, "List CLI configurations")

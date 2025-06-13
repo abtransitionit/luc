@@ -33,6 +33,7 @@ func ep(arg ...string) (string, error) {
 	chSaveFile := make(chan PipelineData)
 	chUnTgzFile := make(chan PipelineData)
 	chMvFof := make(chan PipelineData)
+	chUpdatePath := make(chan PipelineData)
 
 	// Start each pipeline step
 	CliName(chCliName, cliName)
@@ -45,9 +46,10 @@ func ep(arg ...string) (string, error) {
 	SaveFile(chGuessFileType, chSaveFile)
 	UnTgzFile(chSaveFile, chUnTgzFile)
 	MvFof(chUnTgzFile, chMvFof)
+	UpdatePath(chMvFof, chUpdatePath)
 
 	// Read final result
-	for data := range chMvFof {
+	for data := range chUpdatePath {
 		if data.Err != nil {
 			logx.L.Debugf("❌ Error: %s", data.Err)
 			return "", data.Err

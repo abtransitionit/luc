@@ -138,7 +138,7 @@ Track version updates and changes:
 
 This project implements a full CI/CD workflow, designed with best practices in mind:
 
-- Uses **GitHub Actions** to fully automate the **build**, **tag** and **release** lifecycle.
+- Uses **GitHub Actions** to fully automate the **tag**, **build**  and **release** lifecycle.
 - Employs a **modular pipeline architecture** that emphasizes easy maintenance, scalability, and clear separation of concerns.
 * Promotes **faster debugging**, **high-quality delivery**, and **reusability** of components across multiple projects.
 

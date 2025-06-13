@@ -4,7 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kbe
 
 import (
-	"github.com/abtransitionit/luc/internal/kbe"
+	"github.com/abtransitionit/luc/internal/phase/kbe"
 	"github.com/abtransitionit/luc/pkg/deploy"
 	"github.com/spf13/cobra"
 )

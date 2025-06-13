@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package gocli
 
 import (
+	"os/exec"
 	"runtime"
 	"strings"
 
@@ -28,6 +29,7 @@ func SpecificUrl(in <-chan PipelineData, out chan<- PipelineData) {
 			url = strings.ReplaceAll(url, "$TAG", data.Config.Tag)
 			url = strings.ReplaceAll(url, "$OS", runtime.GOOS)
 			url = strings.ReplaceAll(url, "$ARCH", runtime.GOARCH)
+			url = strings.ReplaceAll(url, "$UNAME", getUnameM())
 
 			// define this property
 			data.SpecificUrl = url
@@ -39,6 +41,14 @@ func SpecificUrl(in <-chan PipelineData, out chan<- PipelineData) {
 			out <- data
 		}
 	}()
+}
+
+func getUnameM() string {
+	out, err := exec.Command("uname", "-m").Output()
+	if err != nil {
+		return "unknown"
+	}
+	return strings.TrimSpace(string(out))
 }
 
 // logx.L.Infow("Specific URL generated", "cli", data.Config.Name, "specificUrl", data.SpecificUrl)

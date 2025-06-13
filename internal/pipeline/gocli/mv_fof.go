@@ -26,6 +26,18 @@ func MvFof(in <-chan PipelineData, out chan<- PipelineData) {
 
 			// Step 2: Mv file or folder to final destination (based on UrlType)
 			switch data.Config.UrlType {
+			case config.UrlTgz:
+				dstFolder := "/usr/local/bin"
+				dstPath := path.Join(dstFolder, data.Config.Name)
+				logx.L.Debugf("Moving '%s' to '%s'", data.FofTmpPath, dstPath)
+				success, err := util.MvFolder(data.FofTmpPath, dstPath, 0755, true, true)
+				if err != nil {
+					logx.L.Debugf("❌ Failed to move folder: %s", err)
+				}
+				if success {
+					logx.L.Infof("✅ Folder moved successfully to '%s'", dstPath)
+				}
+
 			case config.UrlExe:
 				dstFolder := "/usr/local/bin"
 				dstPath := path.Join(dstFolder, data.Config.Name)
