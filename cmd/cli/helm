@@ -18,9 +18,9 @@ var helmCmd = &cobra.Command{
 	Use:   "helm",
 	Short: helmSDesc,
 	Long:  helmLDesc,
-	Run:   phase.SharedRun(gocli.Phases, helmSDesc),
+	Run:   phase.CmdRun(gocli.Phases, helmSDesc),
 }
 
 func init() {
-	phase.SharedInit(helmCmd)
+	phase.CmdInit(helmCmd)
 }

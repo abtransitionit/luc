@@ -31,13 +31,13 @@ func SpecificUrl(in <-chan PipelineData, out chan<- PipelineData) {
 			url = strings.ReplaceAll(url, "$ARCH", runtime.GOARCH)
 			url = strings.ReplaceAll(url, "$UNAME", getUnameM())
 
-			// define this property
+			// step 2: define property
 			data.SpecificUrl = url
 
 			// log information
 			logx.L.Infof("Specific URL: '%s'", data.SpecificUrl)
 
-			// send data to next step
+			// step 3: send pipeline var to next pipeline step
 			out <- data
 		}
 	}()

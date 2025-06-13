@@ -36,9 +36,9 @@ import (
 // # Example usage
 //
 //	cmd := &cobra.Command{
-//	    Run: SharedRun(phases, "Process initialization"),
+//	    Run: CmdRun(phases, "Process initialization"),
 //	}
-func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
+func CmdRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
 	return func(cmd *cobra.Command, args []string) {
 
 		// handle flag --show before checking arguments
@@ -87,7 +87,8 @@ func handleShowFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
 	if cmd.Flags().Changed("show") {
 		logx.L.Debugf("cmd '%s' description is : %s", cmd.Name(), cmd.Short)
 		logx.L.Infof("👉 list all phase name")
-		ListPhases(phases)
+		// ListPhases(phases)
+		phase.ShowPhase(phases)
 		return true, nil
 	}
 	return false, nil
@@ -189,9 +190,9 @@ var forceFlag bool
 // # Example usage
 //
 //	func init() {
-//	    phase.SharedInit(myCommand)
+//	    phase.CmdInit(myCommand)
 //	}
-func SharedInit(cmd *cobra.Command) {
+func CmdInit(cmd *cobra.Command) {
 	cmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation")
 	cmd.Flags().BoolP("show", "s", false, "List all available phases")
 	cmd.Flags().BoolP("runall", "r", false, "Run all phases in sequence in batch mode")
@@ -202,8 +203,8 @@ func SharedInit(cmd *cobra.Command) {
 // // handle --list flag before checking arguments
 // if cmd.Flags().Changed("list") {
 // 	logx.L.Infof("👉 list all phase name")
-// 	ListPhases(phases)
-// 	return
+	ListPhases(phases)
+	return
 // }
 
 // // handle --runall flag before checking arguments

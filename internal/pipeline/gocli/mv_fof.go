@@ -24,7 +24,7 @@ func MvFof(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			// Step 2: Mv file or folder to final destination (based on UrlType)
+			// step 2: Move file or folder to final destination (based on UrlType)
 			switch data.Config.UrlType {
 			case config.UrlTgz:
 				dstFolder := "/usr/local/bin"
@@ -59,7 +59,7 @@ func MvFof(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			// Step 3: send result to next pipeline step
+			/// step 3: send pipeline var to next pipeline step
 			out <- data
 		}
 	}()

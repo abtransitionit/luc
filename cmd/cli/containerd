@@ -18,9 +18,9 @@ var containerdCmd = &cobra.Command{
 	Use:   "containerd",
 	Short: containerdSDesc,
 	Long:  containerdLDesc,
-	Run:   phase.SharedRun(gocli.Phases, containerdSDesc),
+	Run:   phase.CmdRun(gocli.Phases, containerdSDesc),
 }
 
 func init() {
-	phase.SharedInit(containerdCmd)
+	phase.CmdInit(containerdCmd)
 }

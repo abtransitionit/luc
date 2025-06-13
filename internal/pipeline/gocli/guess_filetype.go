@@ -24,7 +24,7 @@ func GuessFileType(in <-chan PipelineData, out chan<- PipelineData) {
 			// get property
 			fileInMemory := data.MemoryFile
 
-			// classify the artifact
+			// step 2: classify the artifact
 			if isGzip, _ := util.IsGzippedMemoryContent(fileInMemory); isGzip {
 				data.ArtifactType = string(config.UrlTgz)
 			} else if isExe, _ := util.IsMemoryContentAnExe(fileInMemory); isExe {
@@ -36,7 +36,7 @@ func GuessFileType(in <-chan PipelineData, out chan<- PipelineData) {
 			// log information
 			logx.L.Debugf("Artifact gueessed File type is '%s'", data.ArtifactType)
 
-			// send data to next step
+			// step 3: send pipeline var to next pipeline step
 			out <- data
 		}
 	}()

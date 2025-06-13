@@ -48,7 +48,7 @@ func GetArtifact(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			// Step 3: send result to next pipeline step
+			// step 3: send pipeline var to next pipeline step
 			out <- processedData
 		}
 	}()

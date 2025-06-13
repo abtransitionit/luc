@@ -23,14 +23,14 @@ func ArtifactPath(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			// Step 2: define property
+			// step 2: define property
 			uniquePath := filepath.Join("/tmp", fmt.Sprintf("%s_%d", data.ArtifactName, time.Now().UnixNano()))
 			data.ArtifactPath = uniquePath
 
 			// log information
 			logx.L.Infof("Artifact Path: '%s'", data.ArtifactPath)
 
-			// Step 3: send result to next pipeline step
+			// step 3: send pipeline var to next pipeline step
 			out <- data
 		}
 	}()

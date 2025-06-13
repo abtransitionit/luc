@@ -24,10 +24,10 @@ func UnTgzFile(in <-chan PipelineData, out chan<- PipelineData) {
 				out <- data
 				continue
 			}
-			// Do the work
+			// step 2: Do
 			processedData := helperUnzip(data)
 
-			// send data to next step
+			// step 3: send pipeline var to next pipeline step
 			out <- processedData
 		}
 	}()

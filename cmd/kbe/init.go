@@ -18,9 +18,9 @@ var initCmd = &cobra.Command{
 	Use:   "init [phase name]",
 	Short: initSDesc,
 	Long:  initLDesc,
-	Run:   phase.SharedRun(kbe.Phases, initSDesc),
+	Run:   phase.CmdRun(kbe.Phases, initSDesc),
 }
 
 func init() {
-	phase.SharedInit(initCmd)
+	phase.CmdInit(initCmd)
 }

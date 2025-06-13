@@ -18,9 +18,9 @@ var cobraCmd = &cobra.Command{
 	Use:   "cobra [phase name]",
 	Short: cobraSDesc,
 	Long:  cobraLDesc,
-	Run:   phase.SharedRun(gocli.Phases, cobraSDesc),
+	Run:   phase.CmdRun(gocli.Phases, cobraSDesc),
 }
 
 func init() {
-	phase.SharedInit(cobraCmd)
+	phase.CmdInit(cobraCmd)
 }

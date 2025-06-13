@@ -40,7 +40,7 @@ func CliName(out chan<- PipelineData, cliName string) {
 		// Log information
 		logx.L.Debugf("✅ pipelined data defined")
 
-		// step2: send data to next step
+		// step 2: send pipeline var to next pipeline step
 		out <- data
 	}()
 }

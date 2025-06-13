@@ -10,7 +10,7 @@ import (
 )
 
 // Description
-var provisionSDesc = "deploy a Kind cluster."
+var provisionSDesc = "deploy a Kind cluster on a VM."
 var provisionLDesc = provisionSDesc + ` xxx.`
 
 // provision Command
@@ -18,9 +18,9 @@ var provisionCmd = &cobra.Command{
 	Use:   "provision [phase name]",
 	Short: provisionSDesc,
 	Long:  provisionLDesc,
-	Run:   phase.SharedRun(kind.Phases, provisionSDesc),
+	Run:   phase.CmdRun(kind.Phases, provisionSDesc),
 }
 
 func init() {
-	phase.SharedInit(provisionCmd)
+	phase.CmdInit(provisionCmd)
 }

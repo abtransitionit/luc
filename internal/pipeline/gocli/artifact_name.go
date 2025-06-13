@@ -21,13 +21,13 @@ func ArtifactName(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			// define property
+			// step 2: define property
 			data.ArtifactName = path.Base(data.SpecificUrl)
 
 			// log information
 			logx.L.Infof("Artifact Name: '%s'", data.ArtifactName)
 
-			// send data to next step
+			// step 3: send pipeline var to next pipeline step
 			out <- data
 		}
 	}()

@@ -22,7 +22,7 @@ func UpdatePath(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			// Step 2: Define the PATH to export
+			// step 2: Define the PATH to export
 			switch data.Config.UrlType {
 			case config.UrlTgz, config.UrlExe:
 				rootFolder := "/usr/local/bin"
@@ -41,7 +41,7 @@ func UpdatePath(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			// Step 3: send result to next pipeline step
+			// step 3: send pipeline var to next pipeline step
 			out <- data
 		}
 	}()

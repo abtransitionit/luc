@@ -4,7 +4,14 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 
 package config
 
-// private variable called the CliConfigMap
+// # Purpose
+//
+// - private variable called the CliConfigMap
+//
+// # Notes
+//
+// - map a string to a struct
+// - map a key    to a value that have a type
 var cliConfigMap = map[string]CLIConfig{
 	"cobra": {
 		Name:    "cobra",

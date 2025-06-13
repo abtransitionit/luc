@@ -18,9 +18,9 @@ var sdkCmd = &cobra.Command{
 	Use:   "sdk",
 	Short: sdkSDesc,
 	Long:  sdkLDesc,
-	Run:   phase.SharedRun(gocli.Phases, sdkSDesc),
+	Run:   phase.CmdRun(gocli.Phases, sdkSDesc),
 }
 
 func init() {
-	phase.SharedInit(sdkCmd)
+	phase.CmdInit(sdkCmd)
 }

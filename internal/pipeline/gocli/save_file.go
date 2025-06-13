@@ -51,7 +51,7 @@ func SaveFile(in <-chan PipelineData, out chan<- PipelineData) {
 			// log information
 			logx.L.Debugf("File saved to '%s'", data.ArtifactPath)
 
-			// send data to next step
+			// step 3: send pipeline var to next pipeline step
 			out <- data
 		}
 	}()
