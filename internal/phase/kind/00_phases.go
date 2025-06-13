@@ -4,13 +4,20 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 // internal/kbe/phases.go
 package kind
 
-import "github.com/abtransitionit/luc/pkg/deploy"
+import "github.com/abtransitionit/luc/pkg/phase"
 
-var Phases = []deploy.Phase{
-	deploy.SetPhase("ssh", ssh, SshDescription),
-	deploy.SetPhase("cpluc", cpluc, CpLucDescription),
-	deploy.SetPhase("check", check, CheckDescription),
-	deploy.SetPhase("update", update, UpdateDescription),
-	deploy.SetPhase("cli", cli, CliDescription),
-	deploy.SetPhase("service", service, ServiceDescription),
+var Phases = []phase.Phase{
+	phase.SetPhase("update", update, UpdateDescription),
+	phase.SetPhase("cli", cli, CliDescription),
+	phase.SetPhase("service", service, ServiceDescription),
+	phase.SetPhase("env", env, EnvDescription),
 }
+
+// var Phases = []phase.Phase{
+// 	phase.SetPhase("ssh", ssh, SshDescription),
+// 	phase.SetPhase("cpluc", cpluc, CpLucDescription),
+// 	phase.SetPhase("check", check, CheckDescription),
+// 	phase.SetPhase("update", update, UpdateDescription),
+// 	phase.SetPhase("cli", cli, CliDescription),
+// 	phase.SetPhase("service", service, ServiceDescription),
+// }

@@ -23,7 +23,7 @@ func SaveFile(in <-chan PipelineData, out chan<- PipelineData) {
 				continue
 			}
 
-			// Check Artifact need to be saved (based on UrlType)
+			// check Artifact need to be saved (based on UrlType)
 			switch data.Config.UrlType {
 			case config.UrlExe, config.UrlTgz:
 				// proceed

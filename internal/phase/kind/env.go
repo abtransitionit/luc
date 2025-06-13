@@ -7,10 +7,10 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const CheckDescription = "check basic metrics before starting deployment"
+const EnvDescription = "define needed environment variables."
 
-func check(arg ...string) (string, error) {
-	logx.L.Info(CheckDescription)
+func env(arg ...string) (string, error) {
+	logx.L.Info(EnvDescription)
 	// Actual implementation would go here
 	return "", nil
 }

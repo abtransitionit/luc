@@ -25,8 +25,8 @@ func CliName(out chan<- PipelineData, cliName string) {
 
 		// do the job
 		if !ok {
-			data.Err = fmt.Errorf("CLI config not found: %s", cliName)
-			logx.L.Debugf("❌ CLI config not found %s", cliName)
+			data.Err = fmt.Errorf("CLI not found in CLI config map: %s", cliName)
+			logx.L.Debugf("Error detetected")
 		} else {
 			// define property
 			data.Config = SingleCliConfig

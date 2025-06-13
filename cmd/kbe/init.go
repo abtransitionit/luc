@@ -5,7 +5,7 @@ package kbe
 
 import (
 	"github.com/abtransitionit/luc/internal/phase/kbe"
-	"github.com/abtransitionit/luc/pkg/deploy"
+	"github.com/abtransitionit/luc/pkg/phase"
 	"github.com/spf13/cobra"
 )
 
@@ -18,9 +18,9 @@ var initCmd = &cobra.Command{
 	Use:   "init [phase name]",
 	Short: initSDesc,
 	Long:  initLDesc,
-	Run:   deploy.SharedRun(kbe.Phases, initSDesc),
+	Run:   phase.SharedRun(kbe.Phases, initSDesc),
 }
 
 func init() {
-	deploy.SharedInit(initCmd)
+	phase.SharedInit(initCmd)
 }

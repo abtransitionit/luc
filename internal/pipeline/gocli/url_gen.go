@@ -23,7 +23,7 @@ func GenericUrl(in <-chan PipelineData, out chan<- PipelineData) {
 			// define this property
 			data.GenericUrl = data.Config.Url
 			// log information
-			logx.L.Infof("Generic URL : '%s'", data.GenericUrl)
+			logx.L.Infof("Generic URL: '%s'", data.GenericUrl)
 
 			// Step 3: send result to next pipeline step
 			out <- data

@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package deploy
+package phase
 
 import "fmt"
 
@@ -36,12 +36,12 @@ type Deployment struct {
 // Example usage:
 //
 //	import "github.com/abtransitionit/luc/pkg/deploy"
-//	p := deploy.SetPhase("check", checkFunc, "Check system health before deployment")
+//	p := phase.SetPhase("check", checkFunc, "Check system health before deployment")
 func SetPhase(name string, fn func(cmd ...string) (string, error), desc string) Phase {
 	return Phase{Name: name, Func: fn, Description: desc}
 }
 
-// Assuming deploy.Phase has a Name field or method to get the phase name.
+// Assuming phase.Phase has a Name field or method to get the phase name.
 // If the structure is different, adjust accordingly.
 // func ListPhases(phases []Phase) {
 // 	for i, phase := range phases {

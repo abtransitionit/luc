@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package deploy
+package phase
 
 import (
 	"errors"
@@ -40,6 +40,7 @@ import (
 //	}
 func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
 	return func(cmd *cobra.Command, args []string) {
+
 		// handle --list flag before checking arguments
 		if handled, err := handleListFlag(cmd, phases); handled {
 			if err != nil {
@@ -187,7 +188,7 @@ var forceFlag bool
 // # Example usage
 //
 //	func init() {
-//	    deploy.SharedInit(myCommand)
+//	    phase.SharedInit(myCommand)
 //	}
 func SharedInit(cmd *cobra.Command) {
 	cmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation")

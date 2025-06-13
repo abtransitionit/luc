@@ -9,18 +9,14 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const EpDescription = "produces a CLI name and sends it into a channel."
+const Ep11Description = "produces a CLI name and sends it into a channel."
 
-func ep(arg ...string) (string, error) {
+func Ep11(cliName string) (string, error) {
 	// check argmuents
-	if len(arg) == 0 {
+	if cliName == "" {
 		logx.L.Error("no CLI name provided")
 		return "", fmt.Errorf("no CLI name provided")
 	}
-	// Get the CLI name
-	cliName := arg[0]
-	// cliName := "toto"
-	logx.L.Infof("Received CLI name: %s", cliName)
 
 	// Define the pipeline channels
 	chCliName := make(chan PipelineData)

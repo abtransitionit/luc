@@ -326,12 +326,12 @@ func DisplayCliCondfigInfo() {
 	fmt.Println("\n")
 }
 
-func DisplayConfigMap() {
+func ShowConfigMap() {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 
 	// Simple header
-	t.AppendHeader(table.Row{"Tool", "Version", "Type", "Doc", "Git"})
+	t.AppendHeader(table.Row{"CLI Name", "Version", "Type", "Doc", "Git"})
 
 	// Add rows
 	for name, cfg := range cliConfigMap {
@@ -348,7 +348,7 @@ func DisplayConfigMap() {
 	t.Render()
 }
 
-// func DisplayConfigMap() {
+// func ShowConfigMap() {
 // 	app := tview.NewApplication()
 // 	table := tview.NewTable()
 

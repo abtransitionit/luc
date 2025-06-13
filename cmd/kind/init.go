@@ -5,7 +5,7 @@ package kind
 
 import (
 	"github.com/abtransitionit/luc/internal/phase/kind"
-	"github.com/abtransitionit/luc/pkg/deploy"
+	"github.com/abtransitionit/luc/pkg/phase"
 	"github.com/spf13/cobra"
 )
 
@@ -18,9 +18,9 @@ var initCmd = &cobra.Command{
 	Use:   "init [phase name]",
 	Short: initSDesc,
 	Long:  initLDesc,
-	Run:   deploy.SharedRun(kind.Phases, initSDesc),
+	Run:   phase.SharedRun(kind.Phases, initSDesc),
 }
 
 func init() {
-	deploy.SharedInit(initCmd)
+	phase.SharedInit(initCmd)
 }

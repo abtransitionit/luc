@@ -5,7 +5,7 @@ package cli
 
 import (
 	"github.com/abtransitionit/luc/internal/pipeline/gocli"
-	"github.com/abtransitionit/luc/pkg/deploy"
+	"github.com/abtransitionit/luc/pkg/phase"
 	"github.com/spf13/cobra"
 )
 
@@ -18,9 +18,9 @@ var cobraCmd = &cobra.Command{
 	Use:   "cobra [phase name]",
 	Short: cobraSDesc,
 	Long:  cobraLDesc,
-	Run:   deploy.SharedRun(gocli.Phases, cobraSDesc),
+	Run:   phase.SharedRun(gocli.Phases, cobraSDesc),
 }
 
 func init() {
-	deploy.SharedInit(cobraCmd)
+	phase.SharedInit(cobraCmd)
 }

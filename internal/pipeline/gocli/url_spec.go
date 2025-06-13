@@ -35,7 +35,7 @@ func SpecificUrl(in <-chan PipelineData, out chan<- PipelineData) {
 			data.SpecificUrl = url
 
 			// log information
-			logx.L.Infof("Specific URL generated: '%s'", data.SpecificUrl)
+			logx.L.Infof("Specific URL: '%s'", data.SpecificUrl)
 
 			// send data to next step
 			out <- data

@@ -1,9 +1,13 @@
 # Process
-- install kind, nerdctl, nerdctl, rootlesskit, slirp4netns
+- install gocli: kind, nerdctl, nerdctl, rootlesskit, slirp4netns
+- install dnfapt: uidmap
+- configure service
+  - create file content in memory
+  - save memory content to file
+-   
 - export KIND_EXPERIMENTAL_PROVIDER=nerdctl
 - export path to kind, nerdctl, nerdctl
   - sanitize PATH by eliminating doublons
-- sudo apt-get install -y uidmap
 -  Create an AppArmor Profile Override for rootlesskit
 ```bash
 cat <<EOT | sudo tee "/etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit"

@@ -9,18 +9,14 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const EpDescription = "produces a CLI name and sends it into a channel."
+const Ep2Description = "Use a Shared Data to install a GO CLI using a GO pipeline."
 
-func ep(arg ...string) (string, error) {
+func Ep2(cliName string) (string, error) {
 	// check argmuents
-	if len(arg) == 0 {
+	if cliName == "" {
 		logx.L.Error("no CLI name provided")
 		return "", fmt.Errorf("no CLI name provided")
 	}
-	// Get the CLI name
-	cliName := arg[0]
-	// cliName := "toto"
-	logx.L.Infof("Received CLI name: %s", cliName)
 
 	// Define the pipeline channels
 	chCliName := make(chan PipelineData)
@@ -28,12 +24,12 @@ func ep(arg ...string) (string, error) {
 	chSpecificUrl := make(chan PipelineData)
 	chArtifactName := make(chan PipelineData)
 	chArtifactPath := make(chan PipelineData)
-	chGetArtifact := make(chan PipelineData)
-	chGuessFileType := make(chan PipelineData)
-	chSaveFile := make(chan PipelineData)
-	chUnTgzFile := make(chan PipelineData)
-	chMvFof := make(chan PipelineData)
-	chUpdatePath := make(chan PipelineData)
+	// chGetArtifact := make(chan PipelineData)
+	// chGuessFileType := make(chan PipelineData)
+	// chSaveFile := make(chan PipelineData)
+	// chUnTgzFile := make(chan PipelineData)
+	// chMvFof := make(chan PipelineData)
+	// chUpdatePath := make(chan PipelineData)
 	chEndPipeline := make(chan PipelineData)
 
 	// Start each pipeline step
@@ -42,13 +38,14 @@ func ep(arg ...string) (string, error) {
 	SpecificUrl(chGenericUrl, chSpecificUrl)
 	ArtifactName(chSpecificUrl, chArtifactName)
 	ArtifactPath(chArtifactName, chArtifactPath)
-	GetArtifact(chArtifactPath, chGetArtifact)
-	GuessFileType(chGetArtifact, chGuessFileType)
-	SaveFile(chGuessFileType, chSaveFile)
-	UnTgzFile(chSaveFile, chUnTgzFile)
-	MvFof(chUnTgzFile, chMvFof)
-	UpdatePath(chMvFof, chUpdatePath)
-	EndPipeline(chUpdatePath, chEndPipeline)
+	// GetArtifact(chArtifactPath, chGetArtifact)
+	// GuessFileType(chGetArtifact, chGuessFileType)
+	// SaveFile(chGuessFileType, chSaveFile)
+	// UnTgzFile(chSaveFile, chUnTgzFile)
+	// MvFof(chUnTgzFile, chMvFof)
+	// UpdatePath(chMvFof, chUpdatePath)
+	// EndPipeline(chUpdatePath, chEndPipeline)
+	EndPipeline(chArtifactPath, chEndPipeline)
 
 	// Read final result
 	for data := range chEndPipeline {
