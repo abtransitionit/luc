@@ -152,7 +152,8 @@ func handleSinglePhase(cmd *cobra.Command, phaseName string, phases []Phase) (bo
 	// play the code of the single phase provided as argument
 	for _, phase := range phases {
 		if phase.Name == phaseName {
-			logx.L.Infof("👉 Running phase: '%s', that '%s'", phase.Name, phase.Description)
+			// logx.L.Infof("👉 Running phase: '%s', that '%s'", phase.Name, phase.Description)
+			logx.L.Infof("👉 Running phase: '%s'", phase.Name)
 			if _, err := phase.Func(cmdName); err != nil {
 				// handle system FAILURE
 				logx.L.Debugf("❌ Phase '%s': %v", phase.Name, err)

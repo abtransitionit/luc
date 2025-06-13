@@ -20,10 +20,10 @@ func CliName(out chan<- PipelineData, cliName string) {
 		// get config for this CLI
 		SingleCliConfig, ok := config.GetCLIConfig(cliName)
 
-		// declaradef variable
+		// declare the var that will be pipelined (i.e shared/process by all process of the pipeline)
 		data := PipelineData{}
 
-		// do the job
+		// step1: define the source data
 		if !ok {
 			data.Err = fmt.Errorf("CLI not found in CLI config map: %s", cliName)
 			logx.L.Debugf("Error detetected")
@@ -34,7 +34,7 @@ func CliName(out chan<- PipelineData, cliName string) {
 			logx.L.Infof("Loaded %s CLI config", cliName)
 		}
 
-		// send data to next step
+		// step2: send data to next step
 		out <- data
 	}()
 }
