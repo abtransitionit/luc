@@ -22,7 +22,7 @@ var installCmd = &cobra.Command{
 
 		// handle flag = --show
 		if cmd.Flag("show").Value.String() == "true" {
-			config.ShowConfigMap()
+			config.ShowCliConfigMap()
 			return
 		}
 

@@ -32,7 +32,7 @@ var testCmd = &cobra.Command{
 			// logx.L.Infof("cliName: %s cliUrl: %s ", cliUrl)
 			return
 		}
-		cliUrl, err = config.GetCliUrl(logx.L, "nerdctl", "linux", "amd64")
+		cliUrl, err = config.GetCliSpecificUrl(logx.L, "nerdctl", "linux", "amd64")
 		if err == nil {
 			logx.L.Infof("cliUrl: %s", cliUrl)
 		}

@@ -43,7 +43,7 @@ func helperUnzip(data PipelineData) PipelineData {
 		// define property
 		data.FofTmpPath = data.ArtifactPath
 
-	case config.UrlTgz, config.UrlTgzn:
+	case config.UrlTgz:
 		logx.L.Infof("Decompressing '%s' (type: %s)", data.ArtifactPath, data.Config.UrlType)
 
 		// define uniquePath

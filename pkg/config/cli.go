@@ -12,36 +12,11 @@ import (
 	"strings"
 
 	"github.com/abtransitionit/luc/pkg/errorx"
-	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/jedib0t/go-pretty/table"
 	"go.uber.org/zap"
 )
 
-const (
-	NerdctlCliName = "nerdctl" // contaiNERD ConTroL
-)
-
-type UrlType string
-
-const (
-	UrlExe  UrlType = "exe"
-	UrlTgz  UrlType = "tgz"
-	UrlTgzn UrlType = "tgzn" // tgz with no extension
-	UrlGit  UrlType = "git"
-	UrlGo   UrlType = "go"
-	UrlXxx  UrlType = "xxx"
-	// etc.
-)
-
-type CLIConfig struct {
-	Name    string
-	Tag     string
-	Url     string
-	DocUrl  string
-	GitUrl  string
-	UrlType UrlType
-}
-
+// private variable called the CliConfigMap
 var cliConfigMap = map[string]CLIConfig{
 	"cobra": {
 		Name:    "cobra",
@@ -149,13 +124,34 @@ var cliConfigMap = map[string]CLIConfig{
 	},
 }
 
-// returns the private MAP
-func GetCLIConfig(cliName string) (CLIConfig, bool) {
+// # Purpose
+//
+// - get a CLI's metadata for a given CLI in a CliConfigMap.
+//
+// # Parameters
+//   - cliName: The name of the CLI.
+//
+// # Returns
+// - CLIConfig: A struct containing metadata about the CLI.
+// - bool: A boolean indicating whether the CLI's metadata was found or not.
+//
+// # Example
+//
+//	config, ok := GetCLIConfigMap("cobra")
+//	if !ok {
+//	    log.Fatalf("CLI config not found")
+//	}
+//	fmt.Println("Download URL:", config.Url)
+//
+// # Notes
+//   - The function performs a lookup in a pre-defined internal map of CLI configurations (cliConfigMap).
+//   - If the CLI name does not exist in the map, the returned boolean will be `false` and the CLIConfig will be zero-valued.
+func GetCLIConfigMap(cliName string) (CLIConfig, bool) {
 	c, ok := cliConfigMap[cliName]
 	return c, ok
 }
 
-// retrieves a specific property of a CLI from the configuration map.
+// get a specific property of a CLI in a CliConfigMap
 //
 // # Parameters:
 //   - log: a *zap.SugaredLogger used for debug logging.
@@ -200,8 +196,8 @@ func GetCliProperty(log *zap.SugaredLogger, name string, property string) (strin
 	case "docurl":
 		value = cliConf.DocUrl
 	case "giturl":
-		log.Debugf("❌ use GetCliUrl instead")
-		return errorx.StringError("", "", errors.New("use GetCliUrl instead"))
+		log.Debugf("❌ use GetCliSpecificUrl instead")
+		return errorx.StringError("", "", errors.New("use GetCliSpecificUrl instead"))
 	case "urltype":
 		value = string(cliConf.UrlType)
 	default:
@@ -212,8 +208,7 @@ func GetCliProperty(log *zap.SugaredLogger, name string, property string) (strin
 	return value, nil
 }
 
-// returns the resolved download URL of a CLI tool
-// by replacing placeholders in the configured URL.
+// returns a CLI:Url whith all placeholders replaced
 //
 // Supported placeholders:
 //   - $NAME: replaced by the CLI name (e.g., "kubectl")
@@ -222,20 +217,24 @@ func GetCliProperty(log *zap.SugaredLogger, name string, property string) (strin
 //   - $ARCH: replaced by the provided or detected architecture
 //
 // Parameters:
+//   - log:  a logger
 //   - name: the CLI name (must exist in cliConfigMap)
-//   - osArch (optional): provide up to two values:
-//     osType (e.g., "linux", "darwin", "windows")
-//     archType (e.g., "amd64", "arm64")
+//   - osArch (optional): optional ordered comma separated values of the following
+//   	-- ARCH : (i.e., "linux", "darwin", "windows")
+//   	-- OS   : (i.e., "amd64", "arm64")
 //
-// If osType or archType are not provided, they will be inferred from runtime.
 //
 // Example usage:
 //
-//	url,_ := config.GetCliUrl("kubectl", "linux", "amd64")
-//	url,_ := config.GetCliUrl("helm") // OS and Arch auto-detected
-//	url,_ := config.GetCliUrl(logx.L, "helm") // OS and Arch auto-detected
+//	url,_ := config.GetCliSpecificUrl("kubectl", "linux", "amd64")
+//	url,_ := config.GetCliSpecificUrl("helm") // OS and Arch auto-detected
+//	url,_ := config.GetCliSpecificUrl(logx.L, "helm") // OS and Arch auto-detected
+//
+// Notes:
+//
+// - If ARCH or OS are not provided, they will be get/inferred at runtime.
 
-func GetCliUrl(log *zap.SugaredLogger, cliName string, osArch ...string) (string, error) {
+func GetCliSpecificUrl(log *zap.SugaredLogger, cliName string, osArch ...string) (string, error) {
 	cliConf, exists := cliConfigMap[cliName]
 	if !exists {
 		msg := fmt.Sprintf("CLI (%s) not found in map", cliName)
@@ -268,24 +267,82 @@ func GetCliUrl(log *zap.SugaredLogger, cliName string, osArch ...string) (string
 	return url, nil
 }
 
-// Checks if a CLI:URL is CURLable based on its property UrlType.
+// # Purpose
+//
+// - checks if a CLI:Url is CURLable (based on UrlType).
 //
 // # Returns
-//   - bool: true if the UrlType is curlable ("file" or "tgz"), false otherwise
+//   - bool: true if the UrlType is curlable, false otherwise
 //   - error: always nil in the current implementation
 //
 // # Possible returns
-//   - (true, nil)  → if the UrlType is OK    (considered CURLable)
-//   - (false, nil) → if the UrlType is NOTOK (considered not CURLable)
+//   - (true, nil)  → when the CLI:UrlType is considered OK
+//   - (false, nil) → when the CLI:UrlType is considered NOTOK
+//
+// # Usage examples
+//
+//   // Example 1 (variable-based usage)
+//   var u UrlType = UrlExe
+//   if ok, _ := u.IsCurlable(); ok {
+//       fmt.Println("The URL type is curlable.")
+//   } else {
+//       fmt.Println("The URL type is not curlable.")
+//   }func (u UrlType) IsCurlable() (bool, error) {
+//
+//   // Example 2
+//   ok, _ := UrlExe.IsCurlable()
+//   fmt.Println("UrlExe curlable?", ok) // → true
+//
+//   // Example 3
+//   ok, _ = UrlTgz.IsCurlable()
+//   fmt.Println("UrlTgz curlable?", ok) // → true
+//
+//   // Example 4
+//   ok, _ = UrlGit.IsCurlable()
+//   fmt.Println("UrlGit curlable?", ok) // → false
+
 func (u UrlType) IsCurlable() (bool, error) {
 	switch u {
-	case UrlExe, UrlTgz, UrlTgzn:
+	case UrlExe, UrlTgz:
 		return true, nil
 	default:
 		return false, nil
 	}
 }
 
+// # Purpose
+//
+// - Checks if a CLI:Url is GITable (based on UrlType).
+//
+// # Returns
+//   - bool: true if the UrlType is gitable, false otherwise
+//   - error: always nil in the current implementation
+//
+// # Possible returns
+//   - (true, nil)  → when the CLI:UrlType is considered OK
+//   - (false, nil) → when the CLI:UrlType is considered NOTOK
+//
+// # Usage examples
+//
+//	// Example 1 (variable-based usage)
+//	var u UrlType = UrlGit
+//	if ok, _ := u.IsGitable(); ok {
+//	    fmt.Println("The URL type is gitable.")
+//	} else {
+//	    fmt.Println("The URL type is not gitable.")
+//	}
+//
+//	// Example 2
+//	ok, _ := UrlGit.IsGitable()
+//	fmt.Println("UrlGit gitable?", ok) // → true
+//
+//	// Example 3
+//	ok, _ = UrlExe.IsGitable()
+//	fmt.Println("UrlExe gitable?", ok) // → false
+//
+//	// Example 4
+//	ok, _ = UrlTgz.IsGitable()
+//	fmt.Println("UrlTgz gitable?", ok) // → false
 func (u UrlType) IsGitable() (bool, error) {
 	switch u {
 	case UrlGit:
@@ -295,38 +352,7 @@ func (u UrlType) IsGitable() (bool, error) {
 	}
 }
 
-// prints out information about the map.
-//
-// Example output:
-//
-//	cobra      go github.com/spf13/cobra-cli@latest
-//	containerd tgz https://github.com/containerd/containerd/releases/download/v2.1.1/containerd-2.1.1-linux-amd64.tar.gz
-//
-//	List of url type: go tgz
-//
-// Usage:
-//
-//   - DisplayCliConfigInfo()
-func DisplayCliCondfigInfo() {
-	// list name and url for current platform
-	for cliName, cliConf := range cliConfigMap {
-		url, _ := GetCliUrl(logx.L, cliName)
-		fmt.Printf("%12s %5s %s \n", cliName, cliConf.UrlType, url)
-	}
-
-	// list all Url types
-	types := map[string]bool{}
-	for _, conf := range cliConfigMap {
-		types[string(conf.UrlType)] = true
-	}
-	fmt.Printf("\n\nList of url type: ")
-	for t := range types {
-		fmt.Printf(" %s ", t)
-	}
-	fmt.Println("\n")
-}
-
-func ShowConfigMap() {
+func ShowCliConfigMap() {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 
@@ -347,35 +373,3 @@ func ShowConfigMap() {
 	// Render with default style
 	t.Render()
 }
-
-// func ShowConfigMap() {
-// 	app := tview.NewApplication()
-// 	table := tview.NewTable()
-
-// 	// Header
-// 	headers := []string{"Tool", "Version", "Type", "Doc", "Git"}
-// 	for i, h := range headers {
-// 		table.SetCell(0, i, tview.NewTableCell(h).SetAttributes(tcell.AttrBold))
-// 	}
-
-// 	// Rows
-// 	row := 1
-// 	for name, cfg := range cliConfigMap {
-// 		values := []string{
-// 			name,
-// 			cfg.Tag,
-// 			string(cfg.UrlType), // If UrlType is a custom type, ensure it implements fmt.Stringer
-// 			cfg.DocUrl,
-// 			cfg.GitUrl,
-// 		}
-// 		for col, val := range values {
-// 			table.SetCell(row, col, tview.NewTableCell(val))
-// 		}
-// 		row++
-// 	}
-
-// 	// Display fullscreen
-// 	if err := app.SetRoot(table, true).EnableMouse(true).Run(); err != nil {
-// 		panic(err)
-// 	}
-// }

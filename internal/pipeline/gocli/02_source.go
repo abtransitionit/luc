@@ -18,7 +18,7 @@ func CliName(out chan<- PipelineData, cliName string) {
 		defer close(out)
 
 		// get config for this CLI
-		SingleCliConfig, ok := config.GetCLIConfig(cliName)
+		SingleCliConfig, ok := config.GetCLIConfigMap(cliName)
 
 		// declare the var that will be pipelined (i.e shared/process by all process of the pipeline)
 		data := PipelineData{}

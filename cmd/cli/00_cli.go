@@ -20,7 +20,7 @@ var CliCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// handle flag = --show
 		if cmd.Flag("show").Value.String() == "true" {
-			config.ShowConfigMap()
+			config.ShowCliConfigMap()
 			return
 		}
 		cmd.Help()

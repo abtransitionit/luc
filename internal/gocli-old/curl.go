@@ -48,7 +48,7 @@ func curl(arg ...string) (string, error) {
 	logx.L.Infof("'%s' for CLI '%s'", CurlDescription, cliName)
 
 	// Does config exist ?
-	cli, ok := config.GetCLIConfig(cliName)
+	cli, ok := config.GetCLIConfigMap(cliName)
 	if !ok {
 		msg := "CLI not found in the CliConfigMap"
 		logx.L.Debugf("❌ %s. impacted CLI: %s", msg, cliName)
@@ -64,7 +64,7 @@ func curl(arg ...string) (string, error) {
 	}
 
 	// Get the URL
-	cliUrl, _ := config.GetCliUrl(logx.L, cliName) // OS and Arch auto-detected
+	cliUrl, _ := config.GetCliSpecificUrl(logx.L, cliName) // OS and Arch auto-detected
 	artefactName := path.Base(cliUrl)
 
 	// Print message
