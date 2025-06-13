@@ -42,7 +42,7 @@ func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) 
 	return func(cmd *cobra.Command, args []string) {
 
 		// handle --list flag before checking arguments
-		if handled, err := handleListFlag(cmd, phases); handled {
+		if handled, err := handleShowFlag(cmd, phases); handled {
 			if err != nil {
 				logx.L.Debugf("❌ system failure : %w", err)
 			}
@@ -83,8 +83,8 @@ func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) 
 // Returns:
 //   - (true,  nil) if the flag is set and handled successfully.
 //   - (false, nil) if the flag is not set.
-func handleListFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
-	if cmd.Flags().Changed("list") {
+func handleShowFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
+	if cmd.Flags().Changed("show") {
 		logx.L.Debugf("cmd '%s' description is : %s", cmd.Name(), cmd.Short)
 		logx.L.Infof("👉 list all phase name")
 		ListPhases(phases)
@@ -192,10 +192,10 @@ var forceFlag bool
 //	}
 func SharedInit(cmd *cobra.Command) {
 	cmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation")
-	cmd.Flags().BoolP("list", "l", false, "List all available phases")
+	cmd.Flags().BoolP("show", "s", false, "List all available phases")
 	cmd.Flags().BoolP("runall", "r", false, "Run all phases in sequence in batch mode")
 	// Make them mutually exclusive
-	cmd.MarkFlagsMutuallyExclusive("list", "runall")
+	cmd.MarkFlagsMutuallyExclusive("show", "runall")
 }
 
 // // handle --list flag before checking arguments

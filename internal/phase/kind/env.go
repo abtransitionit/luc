@@ -7,7 +7,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const EnvDescription = "define needed environment variables."
+const EnvDescription = "define and export necessary environment variables."
 
 func env(arg ...string) (string, error) {
 	logx.L.Info(EnvDescription)

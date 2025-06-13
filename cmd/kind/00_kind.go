@@ -29,6 +29,6 @@ var KindCmd = &cobra.Command{
 }
 
 func init() {
-	KindCmd.AddCommand(initCmd)
+	KindCmd.AddCommand(provisionCmd)
 	KindCmd.AddCommand(resetCmd)
 }
