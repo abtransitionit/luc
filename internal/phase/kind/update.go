@@ -12,7 +12,8 @@ const UpdateDescription = "upgrade The Kind VM OS packages and packages reposito
 
 func update(arg ...string) (string, error) {
 	logx.L.Info(UpdateDescription)
-	// launch the pipeline that manage an OS update
+	logx.L.Debug("Launching pipeline that manage OS update")
+	// Launch the pipeline
 	upd.RunPipeline()
 	// on SUCCESS
 	return "", nil

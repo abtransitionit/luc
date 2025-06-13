@@ -21,7 +21,8 @@ func Source(out chan<- PipelineData, cliName string) {
 		// TODO
 
 		// log information
-		logx.L.Infof("pipelined data defined")
+		logx.L.Debugf("defining data to be pipelined")
+		logx.L.Debugf("pipelined data defined")
 
 		// Step 2: send data to next step
 		out <- data

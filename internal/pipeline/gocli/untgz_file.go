@@ -37,7 +37,7 @@ func helperUnzip(data PipelineData) PipelineData {
 
 	// manage decompression (based on UrlType)
 	switch data.Config.UrlType {
-	case config.UrlExe, config.UrlGo, config.UrlGit, config.UrlXxx:
+	case config.UrlExe, config.UrlGo, config.UrlGit, config.UrlOth:
 		logx.L.Debugf("File type '%s' does not need decompression", data.Config.UrlType)
 
 		// define property

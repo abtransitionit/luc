@@ -17,6 +17,9 @@ func CliName(out chan<- PipelineData, cliName string) {
 		// close channel
 		defer close(out)
 
+		// log information
+		logx.L.Debugf("defining data to be pipelined")
+
 		// get config for this CLI
 		SingleCliConfig, ok := config.GetCLIConfigMap(cliName)
 
@@ -33,6 +36,9 @@ func CliName(out chan<- PipelineData, cliName string) {
 			// log information
 			logx.L.Infof("Loaded %s CLI config", cliName)
 		}
+
+		// Log information
+		logx.L.Debugf("✅ pipelined data defined")
 
 		// step2: send data to next step
 		out <- data

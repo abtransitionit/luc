@@ -41,7 +41,7 @@ import (
 func SharedRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
 	return func(cmd *cobra.Command, args []string) {
 
-		// handle --list flag before checking arguments
+		// handle flag --show before checking arguments
 		if handled, err := handleShowFlag(cmd, phases); handled {
 			if err != nil {
 				logx.L.Debugf("❌ system failure : %w", err)
@@ -147,7 +147,7 @@ func handleRunAllFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
 func handleSinglePhase(cmd *cobra.Command, phaseName string, phases []Phase) (bool, error) {
 	cmdName := cmd.Name()
 	logx.L.Debugf("cmd '%s' description is : %s", cmdName, cmd.Short)
-	logx.L.Debugf("cmd '%s' provided phase name '%s' as argument", cmdName, phaseName)
+	logx.L.Debugf("cmd '%s' argument is    : %s", cmdName, phaseName)
 
 	// play the code of the single phase provided as argument
 	for _, phase := range phases {
