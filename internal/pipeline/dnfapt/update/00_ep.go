@@ -7,10 +7,10 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "update os package and repositories to version latest."
+const RunPipelineDescription = "update OS package and repositories to version latest."
 
 func RunPipeline() (string, error) {
-
+	logx.L.Debug(RunPipelineDescription)
 	// Define the pipeline channels
 	chSource := make(chan PipelineData)
 	// chGenericUrl := make(chan PipelineData)

@@ -18,7 +18,8 @@ var provisionCmd = &cobra.Command{
 	Use:   "provision [phase name]",
 	Short: provisionSDesc,
 	Long:  provisionLDesc,
-	Run:   phase.CmdRun(kind.Phases, provisionSDesc),
+	// define the set of phases for this cmd
+	Run: phase.CmdRun(kind.Phases, provisionSDesc),
 }
 
 func init() {

@@ -18,16 +18,16 @@ func UnTgzFile(in <-chan PipelineData, out chan<- PipelineData) {
 		// close channel
 		defer close(out)
 
-		// get config for this CLI - Did something gets wrong earlier
 		for data := range in {
+			// Step2: is there a previous error ? if yes propagate it
 			if data.Err != nil {
 				out <- data
 				continue
 			}
-			// step 2: Do
+			// step 3: do
 			processedData := helperUnzip(data)
 
-			// step 3: send pipeline var to next pipeline step
+			// step 4: send pipeline var to next pipeline step
 			out <- processedData
 		}
 	}()

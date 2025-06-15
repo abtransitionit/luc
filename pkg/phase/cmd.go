@@ -87,8 +87,8 @@ func handleShowFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
 	if cmd.Flags().Changed("show") {
 		logx.L.Debugf("cmd '%s' description is : %s", cmd.Name(), cmd.Short)
 		logx.L.Infof("👉 list all phase name")
-		// ListPhases(phases)
-		phase.ShowPhase(phases)
+		ListPhases(phases)
+		// phase.ShowPhase(phases)
 		return true, nil
 	}
 	return false, nil
@@ -203,8 +203,8 @@ func CmdInit(cmd *cobra.Command) {
 // // handle --list flag before checking arguments
 // if cmd.Flags().Changed("list") {
 // 	logx.L.Infof("👉 list all phase name")
-	ListPhases(phases)
-	return
+// ListPhases(phases)
+// return
 // }
 
 // // handle --runall flag before checking arguments
