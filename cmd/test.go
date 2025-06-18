@@ -67,7 +67,7 @@ var testCmd = &cobra.Command{
 			return
 		}
 		// save memory data as file
-		_, err = util.SaveToFile(logx.L, "/tmp/toto", fileInMemory)
+		_, err = util.SaveToFile("/tmp/toto", fileInMemory)
 		if err != nil {
 			return
 		}

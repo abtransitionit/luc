@@ -24,7 +24,7 @@ func lastStep(in <-chan PipelineData) error {
 	for data := range in {
 		// if an error exits
 		if data.Err != nil {
-			logx.L.Debugf("Pipeline error [%s]: %v", data.Config.Name, data.Err)
+			logx.L.Debugf("[%s] Pipeline error : %v", data.Config.Name, data.Err)
 			continue
 		}
 		// if no error exits : log information - one per structure

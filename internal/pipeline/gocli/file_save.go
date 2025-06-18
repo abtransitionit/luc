@@ -39,7 +39,7 @@ func FileSave(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 
 		// Save the file from memory into host FS
-		_, err := util.SaveToFile(logx.L, data.ArtifactPath, data.MemoryFile)
+		_, err := util.SaveToFile(data.ArtifactPath, data.MemoryFile)
 		if err != nil {
 			data.Err = fmt.Errorf("failed to save file for cli (%s): %w", data.Config.Name, err)
 			logx.L.Debugf("❌ Error detected 2")

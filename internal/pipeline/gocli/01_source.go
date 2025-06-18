@@ -39,7 +39,7 @@ func source(out chan<- PipelineData, cliNameList ...string) {
 			// add this property to the pipelined data
 			data.Config = CliConfig
 			// log information
-			logx.L.Infof("Loaded CLI config for : %s", item)
+			logx.L.Infof("[%s] Loaded CLI config", item)
 		}
 
 		// send the instance to the channel (for next stage or final step)

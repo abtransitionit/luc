@@ -17,7 +17,6 @@ import (
 	"strings"
 
 	"github.com/abtransitionit/luc/pkg/errorx"
-	"go.uber.org/zap"
 )
 
 // FolderExists checks if a folder exists and is accessible.
@@ -88,30 +87,30 @@ func FileExists(path string) (bool, error) {
 //   - The complete file is written atomically (all-or-nothing)
 //   - Parent directories must exist (does not create directories)
 //   - Uses 0644 file permissions by default
-func SaveToFile(log *zap.SugaredLogger, path string, data []byte) (string, error) {
+func SaveToFile(path string, data []byte) (string, error) {
 	// manage argument
 	if path == "" {
-		msg := fmt.Sprintf("path is empty (%s)", path)
-		log.Debugf("❌ %s", msg)
+		// msg := fmt.Sprintf("path is empty (%s)", path)
+		// log.Debugf("❌ %s", msg)
 		return errorx.StringError("path is empty", "", errors.New(""))
 	}
 	if data == nil {
-		msg := "memory data to save is nil"
-		log.Debugf("❌ %s", msg)
+		// msg := "memory data to save is nil"
+		// log.Debugf("❌ %s", msg)
 		return errorx.StringError("Save empty data memory", "", errors.New(""))
 	}
 	// prerequisit: check it is an absolute path
 	absPath, err := filepath.Abs(path)
 	if err != nil {
-		msg := fmt.Sprintf("get absolute path (%s)", path)
-		log.Debugf("❌ %s", msg)
+		// msg := fmt.Sprintf("get absolute path (%s)", path)
+		// log.Debugf("❌ %s", msg)
 		return errorx.StringError("get absolute path", path, err)
 	}
 	// create a file
 	file, err := os.Create(absPath)
 	if err != nil {
-		msg := fmt.Sprintf("create file (%s)", absPath)
-		log.Debugf("❌ %s", msg)
+		// msg := fmt.Sprintf("create file (%s)", absPath)
+		// log.Debugf("❌ %s", msg)
 		return errorx.StringError("create file", absPath, err)
 	}
 	defer file.Close()
@@ -119,14 +118,14 @@ func SaveToFile(log *zap.SugaredLogger, path string, data []byte) (string, error
 	// copy content to file
 	bytesWritten, err := file.Write(data)
 	if err != nil {
-		msg := fmt.Sprintf("write to file (%s)", absPath)
-		log.Debugf("❌ %s", msg)
+		// msg := fmt.Sprintf("write to file (%s)", absPath)
+		// log.Debugf("❌ %s", msg)
 		return errorx.StringError("write to file", absPath, err)
 	}
 
 	// handle applogic SUCCESS
 	kbWritten := float64(bytesWritten) / 1024.0
-	log.Infof("✅ file (%s) created succesfully from memory data", absPath)
+	// log.Infof("✅ file (%s) created succesfully from memory data", absPath)
 	return fmt.Sprintf("%s (%.0f KB)", absPath, kbWritten), nil
 }
 
