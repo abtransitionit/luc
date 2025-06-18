@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package gocli
+package gocliold
 
 import (
 	"github.com/abtransitionit/luc/pkg/config"
@@ -11,9 +11,8 @@ import (
 
 func GuessFileType(in <-chan PipelineData, out chan<- PipelineData) {
 	go func() {
-		// close channel
-		defer close(out)
-
+		defer close(out) // close channel when done
+		// loop over each item of type PipelineData in the channel
 		for data := range in {
 			// propagate error if any
 			if data.Err != nil {

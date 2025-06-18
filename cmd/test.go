@@ -4,13 +4,14 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/netx"
 	"github.com/abtransitionit/luc/pkg/ui"
 	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/abtransitionit/luc/pkg/util/dnfapt"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +26,31 @@ var testCmd = &cobra.Command{
 	Long:  testLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Info(testSDesc)
-
+		value, err := dnfapt.UpdateOs()
+		if err != nil {
+			logx.L.Debugf("%s", err)
+		}
+		logx.L.Infof(" Status %v", value)
+		return
+		props := []string{
+			"cpu", "ram", "osarch", "ostype", "osfamily", "osdistro", "osversion", "oskversion",
+			"uuid", "cgroup", "osuser",
+			"netgateway", "netip", "init",
+			"selinfos", "osinfos"}
+		var listPropertOut = []string{}
+		for _, prop := range props {
+			value, err := util.OsPropertyGet(prop)
+			if err != nil {
+				// logx.L.Debugf("%s", err)
+				listPropertOut = append(listPropertOut, prop)
+				continue
+			}
+			fmt.Printf("%-10s: %s\n", prop, value)
+		}
+		if len(listPropertOut) > 0 {
+			logx.L.Debugf("❌ List property OUT: %s", listPropertOut)
+		}
+		return
 		// config.DisplayCliCondfigInfo()
 		cliUrl, err := config.GetCliProperty(logx.L, "nerdctl", "url")
 		if err != nil {
@@ -37,7 +62,7 @@ var testCmd = &cobra.Command{
 			logx.L.Infof("cliUrl: %s", cliUrl)
 		}
 		// download the file as memory data
-		fileInMemory, err := util.GetPublicFile(logx.L, cliUrl)
+		fileInMemory, err := util.GetPublicFile(cliUrl)
 		if err != nil {
 			return
 		}
@@ -90,7 +115,7 @@ var testCmd = &cobra.Command{
 		// 	logx.L.Infof("✅ vm %s is potentially configured", param)
 		// }
 
-		_, err = netx.IsSshConfiguredVmSshReachable(param)
+		_, err = util.IsSshConfiguredVmSshReachable(param)
 		if err != nil {
 			os.Exit(5)
 		}

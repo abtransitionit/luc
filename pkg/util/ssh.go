@@ -2,7 +2,7 @@
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
 
-package netx
+package util
 
 import (
 	"bytes"
@@ -12,7 +12,6 @@ import (
 
 	"github.com/abtransitionit/luc/pkg/errorx"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/util"
 )
 
 // IsSshConfiguredVmSshReachable checks if a VM is both:
@@ -44,7 +43,7 @@ import (
 //
 // Example:
 //
-// _, err := netx.IsSshConfiguredVmSshReachable(param)
+// _, err := util.IsSshConfiguredVmSshReachable(param)
 // if err != nil {
 // 	   os.Exit(2)
 // }
@@ -59,18 +58,18 @@ func IsSshConfiguredVmSshReachable(vmName string) (bool, error) {
 	configured, err := IsVmSshConfigured(vmName)
 	if err != nil {
 		// handle system FAILURE
-		msg := fmt.Sprintf("failed to check SSH config for VM: %s : %v", vmName, err)
-		logx.L.Debugf("❌ %s", msg)
+		// msg := fmt.Sprintf("failed to check SSH config for VM: %s : %v", vmName, err)
+		// logx.L.Debugf("❌ %s", msg)
 		return false, err
 		// handle applogic FAILURE
 	} else if !configured {
-		msg := fmt.Sprintf("VM %s is not configured in ~/.ssh/config.d/", vmName)
-		logx.L.Debugf("❌ %s", msg)
+		// msg := fmt.Sprintf("VM %s is not configured in ~/.ssh/config.d/", vmName)
+		// logx.L.Debugf("❌ %s", msg)
 		return false, fmt.Errorf("VM %s is not configured in ~/.ssh/config.d/", vmName)
 	}
 	// handle applogic SUCCESS
-	msg := fmt.Sprintf("VM %s is configured in ~/.ssh/config.d/", vmName)
-	logx.L.Debugf("✅ %s", msg)
+	// msg := fmt.Sprintf("VM %s is configured in ~/.ssh/config.d/", vmName)
+	// logx.L.Debugf("✅ %s", msg)
 
 	// prepare CLI to play : define CLI that helps to answer the function question
 	shellCli := fmt.Sprintf("ssh %s true", vmName)
@@ -82,17 +81,17 @@ func IsSshConfiguredVmSshReachable(vmName string) (bool, error) {
 
 	// handle system FAILURE - TODO: improve to know the real reaseon
 	if err != nil {
-		msg := fmt.Sprintf("failed to play CLI %s to check vm %s is SSH reachable (or VM is not SSH reachable)", shellCli, vmName)
-		logx.L.Debugf("❌ %s", msg)
+		// msg := fmt.Sprintf("failed to play CLI %s to check vm %s is SSH reachable (or VM is not SSH reachable)", shellCli, vmName)
+		// logx.L.Debugf("❌ %s", msg)
 		return errorx.BoolError("playing CLI", shellCli, err)
 	}
 
 	// handle applogic SUCCESS
-	msg = fmt.Sprintf("VM %s is SSH reachable", vmName)
-	logx.L.Debugf("✅ %s", msg)
+	// msg = fmt.Sprintf("VM %s is SSH reachable", vmName)
+	// logx.L.Debugf("✅ %s", msg)
 
 	hostname := strings.TrimSpace(out.String())
-	logx.L.Debugf("✅ vm %s is potentially configured in ssh consig and is ssh reachable : %v", vmName, hostname)
+	logx.L.Debugf("✅ vm %s is configured in ssh consig and is ssh reachable : %v", vmName, hostname)
 	return true, nil
 }
 
@@ -125,7 +124,7 @@ func IsVmSshConfigured(vmName string) (bool, error) {
 	var out bytes.Buffer
 
 	// prerequisite: ssh client is available : critical error
-	cliExists, err := util.CliExists(cliSshName)
+	cliExists, err := CliExists(cliSshName)
 	// handle FAILURE
 	if err != nil {
 		return errorx.BoolError("check SSH CLI exists", cliSshName, err)

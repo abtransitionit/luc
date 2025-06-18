@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package gocli
+package gocliold
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 
 const EpDescription = "produces a CLI name and sends it into a channel."
 
-func ep(arg ...string) (string, error) {
+func RunPipeline(arg ...string) (string, error) {
 	// check argmuents
 	if len(arg) == 0 {
 		logx.L.Error("no CLI name provided")

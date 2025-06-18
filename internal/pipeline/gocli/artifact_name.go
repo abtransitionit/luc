@@ -10,28 +10,18 @@ import (
 )
 
 func ArtifactName(in <-chan PipelineData, out chan<- PipelineData) {
-	go func() {
-		// close channel
-		defer close(out)
-
-		for data := range in {
-			// Step 1: propagate error if any
-			if data.Err != nil {
-				out <- data
-				continue
-			}
-
-			// step 2: define property
-			data.ArtifactName = path.Base(data.SpecificUrl)
-
-			// log information
-			logx.L.Infof("Artifact Name: '%s'", data.ArtifactName)
-
-			// step 3: send pipeline var to next pipeline step
+	defer close(out)
+	for data := range in {
+		if data.Err != nil {
 			out <- data
+			logx.L.Debugf("❌ Previous error detected")
+			continue
 		}
-	}()
-}
 
-// logx.L.Infow("Specific URL generated", "cli", data.Config.Name, "specificUrl", data.SpecificUrl)
-// logx.L.Infow("Specific URL generated: '%s'", data.SpecificUrl)
+		// set this instance property
+		data.ArtifactName = path.Base(data.SpecificUrl)
+
+		// send
+		out <- data
+	}
+}

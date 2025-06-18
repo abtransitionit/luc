@@ -11,7 +11,6 @@ import (
 	"net/http"
 
 	"github.com/abtransitionit/luc/pkg/errorx"
-	"go.uber.org/zap"
 )
 
 // # Purpose
@@ -53,11 +52,9 @@ import (
 //   - There is a default 10-second timeout (via http.DefaultClient)
 //   - The response body is automatically closed after reading
 //   - The caller is responsible for handling the returned data.
-func GetPublicFile(log *zap.SugaredLogger, url string) ([]byte, error) {
+func GetPublicFile(url string) ([]byte, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		msg := fmt.Sprintf("Get URL : %s", url)
-		log.Debugf("❌ %s", msg)
 		return errorx.ByteError("Get URL", url, err)
 	}
 	// close the response body at the end
@@ -65,9 +62,8 @@ func GetPublicFile(log *zap.SugaredLogger, url string) ([]byte, error) {
 
 	// manage status code
 	if resp.StatusCode != http.StatusOK {
-		msg := fmt.Sprintf("bad HTTP status (%s) when getting URL (%s)", resp.Status, url)
-		log.Debugf("❌ %s", msg)
-		return errorx.ByteError("Get correct HTTP status code", resp.Status, errors.New(""))
+		msg := fmt.Sprintf("Get correct HTTP status code (%s) for url %s", resp.Status, url)
+		return errorx.ByteError(msg, "", errors.New(""))
 	}
 	// here: status code is 200
 
@@ -75,12 +71,10 @@ func GetPublicFile(log *zap.SugaredLogger, url string) ([]byte, error) {
 	body, err := io.ReadAll(resp.Body)
 	// handle system FAILURE
 	if err != nil {
-		msg := fmt.Sprintf("Get Response Body from URL (%s), even status code is 200", url)
-		log.Debugf("❌ %s", msg)
 		return errorx.ByteError("Get Response Body from URL (%s), even status code is 200", url, err)
 	}
 	// handle applogic SUCCESS - here file content exists
-	log.Infof("✅ data donwloaded into memory")
+	// log.Infof("✅ data donwloaded into memory")
 	return body, nil
 }
 

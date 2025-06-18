@@ -5,8 +5,11 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package util
 
 import (
+	"bytes"
 	"errors"
+	"fmt"
 	"os/exec"
+	"strings"
 
 	"github.com/abtransitionit/luc/pkg/errorx"
 )
@@ -42,4 +45,53 @@ func CliExists(name string) (bool, error) {
 	}
 	// handle system FAILURE
 	return errorx.BoolError("check cli exists", name, err)
+}
+
+// # Purpose
+//
+// runs a local linux shell CLI and returns its stdout, stderr, and any error.
+//
+// Parameters:
+//   - command: A shell command string (e.g., "ls -l /").
+//
+// Returns:
+//   - stdout: The trimmed standard output of the command.
+//   - err:    An error if the command failed to run or returned a non-zero exit code.
+//
+// Usage:
+//
+//	output, err := RunCLILocal("hostname")
+//	if err != nil {
+//	    fmt.Printf("Error: %v\n", err)
+//	} else {
+//	    fmt.Println("Hostname:", output)
+//	}
+func RunCLILocal(command string) (stdout string, err error) {
+	cmd := exec.Command("bash", "-c", command)
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+
+	err = cmd.Run()
+	stdout = strings.TrimSpace(out.String())
+
+	if err != nil {
+		return stdout, fmt.Errorf("command failed: %v\noutput:\n%s", err, stdout)
+	}
+
+	return stdout, nil
+}
+
+func RunCLILocalOld01(command string) (stdout string, err error) {
+	cmd := exec.Command("bash", "-c", command)
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out // still capture errors in output for debugging
+
+	err = cmd.Run()
+	stdout = strings.TrimSpace(out.String())
+
+	return stdout, err
 }

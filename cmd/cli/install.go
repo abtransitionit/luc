@@ -31,7 +31,7 @@ var installCmd = &cobra.Command{
 			// get CLI name
 			cliName := args[0]
 			// Launch pipeline for that CLI
-			gocli.Ep11(cliName)
+			gocli.RunPipeline(cliName)
 			return
 		}
 

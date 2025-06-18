@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package gocli
+package gocliold
 
 import (
 	"path"
@@ -14,9 +14,8 @@ import (
 // Move File or folder to final destination
 func MvFof(in <-chan PipelineData, out chan<- PipelineData) {
 	go func() {
-		// close channel
-		defer close(out)
-
+		defer close(out) // close channel when done
+		// loop over each item of type PipelineData in the channel
 		for data := range in {
 			// Step 1: propagate error if any
 			if data.Err != nil {

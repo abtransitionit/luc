@@ -13,6 +13,14 @@ package config
 // - map a string to a struct
 // - map a key    to a value that have a type
 var cliConfigMap = map[string]CLIConfig{
+	"toto": {
+		Name:    "toto",
+		Tag:     "latest",
+		Url:     "github.com/spf13/$NAME-cli@$TAG",
+		DocUrl:  "https://cobra.dev",
+		GitUrl:  "https://github.com/spf13/cobra-cli",
+		UrlType: UrlGit,
+	},
 	"cobra": {
 		Name:    "cobra",
 		Tag:     "latest",

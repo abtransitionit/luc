@@ -12,35 +12,29 @@ import (
 )
 
 func SpecificUrl(in <-chan PipelineData, out chan<- PipelineData) {
-	go func() {
-		// close channel
-		defer close(out)
-
-		for data := range in {
-			// propagate error if any
-			if data.Err != nil {
-				out <- data
-				continue
-			}
-
-			// replace placeholders
-			url := data.GenericUrl
-			url = strings.ReplaceAll(url, "$NAME", data.Config.Name)
-			url = strings.ReplaceAll(url, "$TAG", data.Config.Tag)
-			url = strings.ReplaceAll(url, "$OS", runtime.GOOS)
-			url = strings.ReplaceAll(url, "$ARCH", runtime.GOARCH)
-			url = strings.ReplaceAll(url, "$UNAME", getUnameM())
-
-			// step 2: define property
-			data.SpecificUrl = url
-
-			// log information
-			logx.L.Infof("Specific URL: '%s'", data.SpecificUrl)
-
-			// step 3: send pipeline var to next pipeline step
+	defer close(out)
+	for data := range in {
+		if data.Err != nil {
 			out <- data
+			logx.L.Debugf("❌ Previous error detected")
+			continue
 		}
-	}()
+
+		// define var from instance property
+		url := data.GenericUrl
+		// replace placeholders
+		url = strings.ReplaceAll(url, "$NAME", data.Config.Name)
+		url = strings.ReplaceAll(url, "$TAG", data.Config.Tag)
+		url = strings.ReplaceAll(url, "$OS", runtime.GOOS)
+		url = strings.ReplaceAll(url, "$ARCH", runtime.GOARCH)
+		url = strings.ReplaceAll(url, "$UNAME", getUnameM())
+
+		// set this instance property
+		data.SpecificUrl = url
+
+		// send
+		out <- data
+	}
 }
 
 func getUnameM() string {

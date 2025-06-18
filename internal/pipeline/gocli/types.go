@@ -1,6 +1,9 @@
 package gocli
 
-import "github.com/abtransitionit/luc/pkg/config"
+import (
+	"github.com/abtransitionit/luc/pkg/config"
+	"github.com/jedib0t/go-pretty/table"
+)
 
 type PipelineData struct {
 	Config       config.CLIConfig // Full config (e.g., luc, helm, etc.)
@@ -11,5 +14,32 @@ type PipelineData struct {
 	ArtifactPath string           // Path to saved artifact on the host FS after it is curled
 	FofTmpPath   string           // file Or folder Path after CLI artefact is unzip (Tgz, Exe) or git clone (Git)
 	ArtifactType string           // guessed filetype : Exe or Tgz
+	CliName      string           //
 	Err          error            // If any step fails
+}
+
+// # Pupose
+//
+// Pretty print the Pipelined Data (usually for debugging)
+func (p PipelineData) String() string {
+	t := table.NewWriter()
+	t.SetStyle(table.StyleLight)
+	t.AppendHeader(table.Row{"Field", "Value"})
+
+	t.AppendRows([]table.Row{
+		{"Generic Url", p.GenericUrl},
+		{"Specific Url", p.SpecificUrl},
+		{"Artifact Name", p.ArtifactName},
+		{"Artifact Guessed Type", p.ArtifactType},
+		{"Artifact Path", p.ArtifactPath},
+		{"Artifact FofTmpPath", p.FofTmpPath},
+		{"Error", func() string {
+			if p.Err != nil {
+				return p.Err.Error()
+			}
+			return "-"
+		}()},
+	})
+
+	return t.Render()
 }

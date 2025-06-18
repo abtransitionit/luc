@@ -1,17 +1,18 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package update
+package gocliold
 
 import (
+	"path"
+
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-func DetesctOsPath(in <-chan PipelineData, out chan<- PipelineData) {
+func ArtifactName(in <-chan PipelineData, out chan<- PipelineData) {
 	go func() {
-		// close channel
-		defer close(out)
-
+		defer close(out) // close channel when done
+		// loop over each item of type PipelineData in the channel
 		for data := range in {
 			// Step 1: propagate error if any
 			if data.Err != nil {
@@ -20,9 +21,10 @@ func DetesctOsPath(in <-chan PipelineData, out chan<- PipelineData) {
 			}
 
 			// step 2: define property
+			data.ArtifactName = path.Base(data.SpecificUrl)
 
 			// log information
-			logx.L.Debugf("detect OS")
+			logx.L.Infof("Artifact Name: '%s'", data.ArtifactName)
 
 			// step 3: send pipeline var to next pipeline step
 			out <- data
@@ -31,3 +33,4 @@ func DetesctOsPath(in <-chan PipelineData, out chan<- PipelineData) {
 }
 
 // logx.L.Infow("Specific URL generated", "cli", data.Config.Name, "specificUrl", data.SpecificUrl)
+// logx.L.Infow("Specific URL generated: '%s'", data.SpecificUrl)

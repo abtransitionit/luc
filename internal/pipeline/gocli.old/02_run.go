@@ -1,22 +1,29 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package update
+package gocliold
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "update OS package and repositories to version latest."
+const Ep2Description = "Use a Shared Data to install a GO CLI using a GO pipeline."
 
-func RunPipeline() (string, error) {
-	logx.L.Debug(RunPipelineDescription)
+func RunPipeline2(cliName string) (string, error) {
+	// check argmuents
+	if cliName == "" {
+		logx.L.Error("no CLI name provided")
+		return "", fmt.Errorf("no CLI name provided")
+	}
+
 	// Define the pipeline channels
-	chSource := make(chan PipelineData)
-	// chGenericUrl := make(chan PipelineData)
-	// chSpecificUrl := make(chan PipelineData)
-	// chArtifactName := make(chan PipelineData)
-	// chArtifactPath := make(chan PipelineData)
+	chCliName := make(chan PipelineData)
+	chGenericUrl := make(chan PipelineData)
+	chSpecificUrl := make(chan PipelineData)
+	chArtifactName := make(chan PipelineData)
+	chArtifactPath := make(chan PipelineData)
 	// chGetArtifact := make(chan PipelineData)
 	// chGuessFileType := make(chan PipelineData)
 	// chSaveFile := make(chan PipelineData)
@@ -26,11 +33,11 @@ func RunPipeline() (string, error) {
 	chEndPipeline := make(chan PipelineData)
 
 	// Start each pipeline step
-	Source(chSource, "dnf")
-	// GenericUrl(chCliName, chGenericUrl)
-	// SpecificUrl(chGenericUrl, chSpecificUrl)
-	// ArtifactName(chSpecificUrl, chArtifactName)
-	// ArtifactPath(chArtifactName, chArtifactPath)
+	CliName(chCliName, cliName)
+	GenericUrl(chCliName, chGenericUrl)
+	SpecificUrl(chGenericUrl, chSpecificUrl)
+	ArtifactName(chSpecificUrl, chArtifactName)
+	ArtifactPath(chArtifactName, chArtifactPath)
 	// GetArtifact(chArtifactPath, chGetArtifact)
 	// GuessFileType(chGetArtifact, chGuessFileType)
 	// SaveFile(chGuessFileType, chSaveFile)
@@ -38,7 +45,7 @@ func RunPipeline() (string, error) {
 	// MvFof(chUnTgzFile, chMvFof)
 	// UpdatePath(chMvFof, chUpdatePath)
 	// EndPipeline(chUpdatePath, chEndPipeline)
-	EndPipeline(chSource, chEndPipeline)
+	EndPipeline(chArtifactPath, chEndPipeline)
 
 	// Read final result
 	for data := range chEndPipeline {

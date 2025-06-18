@@ -5,30 +5,50 @@ package update
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
 )
 
-// First/Source step of the pipeline that define the data to be pipelined
-func Source(out chan<- PipelineData, cliName string) {
-	// define goroutine
-	go func() {
-		// close channel
-		defer close(out)
+// # Purpose
+//
+// Source stage will send (out chan<-) data of type PipelineData to the channel
+func source(out chan<- PipelineData) {
+	defer close(out)
+	data := PipelineData{}
 
-		// declaradef variable
-		data := PipelineData{}
+	// log information
+	logx.L.Debugf("defining data to be pipelined")
 
-		// declare the var that will be pipelined (i.e shared/process by all process of the pipeline)
-		// TODO
+	osFamily, err := util.OsPropertyGet("osfamily")
+	if err != nil {
+		data.Err = err
+		logx.L.Debugf("❌ Error detected")
+	}
 
-		// log information
-		logx.L.Debugf("defining data to be pipelined")
-		logx.L.Debugf("pipelined data defined")
+	osDistro, err := util.OsPropertyGet("osdistro")
+	if err != nil {
+		data.Err = err
+		logx.L.Debugf("❌ Error detected")
+	}
 
-		// Step 2: send data to next step
-		out <- data
-	}()
+	hostType, err := util.OsPropertyGet("host")
+	if err != nil {
+		data.Err = err
+		logx.L.Debugf("❌ Error detected")
+	}
+
+	osVersion, err := util.OsPropertyGet("osversion")
+	if err != nil {
+		data.Err = err
+		logx.L.Debugf("❌ Error detected")
+	}
+
+	data.OsFamily = osFamily
+	data.OsDistro = osDistro
+	data.HostType = hostType
+	data.OsVersion = osVersion
+
+	// log information
+	logx.L.Debugf("pipelined data defined")
+
+	out <- data
 }
-
-// logx.L.Infow("Loaded CLI config", "cli", cliName, "url", SingleCliConfig.Url)
-// logx.L.Infof("URl is %s", SingleCliConfig.Url)
-// logx.L.Errorw("CLI config not found", "cli", cliName)
