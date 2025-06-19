@@ -11,13 +11,13 @@ Each `leaf` folder denotes a set of process involved in a pipeline and contains 
 
 
 # The `RunPipeline()` function
-- defines the pipeline stage order
+- defines the pipeline stages order
 # The `source` stage
-- Usualy defines the instance structure that will be pipelined
-- Initiate all the instance structure (if there is) that will be pipelined
+- Usualy defines the structure of the instance that will be pipelined
+- Initiate all the instance structure to piut in the pipeleine
 
 # The `first` stage
-- the first running immediatly after the `source` stage
+- The first stage running immediatly after the `source` stage
 
 # The `last` step
 - A standard functions.
