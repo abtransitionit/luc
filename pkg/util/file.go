@@ -270,7 +270,10 @@ func UntargzFile(srcTgzPath string, destFolder string) error {
 func MvFile(srcPath, dstPath string, permission os.FileMode, isSudo bool) (bool, error) {
 	// check srcPath is absolute
 	if !filepath.IsAbs(srcPath) {
-		return false, errors.New("source path must be absolute")
+		msg := fmt.Sprintf("source path must be absolute (%s)", srcPath)
+		return errorx.BoolError(msg, "", errors.New(""))
+
+		// return false, errors.New("source path must be absolute")
 	}
 
 	// check dstPath is absolute

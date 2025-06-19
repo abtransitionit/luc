@@ -22,10 +22,13 @@ func RunPipeline(cli ...string) (string, error) {
 	chOutSpecificUrl := make(chan PipelineData)
 	chOutArtifactName := make(chan PipelineData)
 	chOutArtifactPath := make(chan PipelineData)
-	chOutArtifact := make(chan PipelineData)
+	chOutArtifactGet := make(chan PipelineData)
 	chOutFileGuessType := make(chan PipelineData)
 	chOutFileSave := make(chan PipelineData)
-	chOutLast := chOutFileSave
+	chOutFileUnTgz := make(chan PipelineData)
+	chOutFileMove := make(chan PipelineData)
+	chOutBuildPath := make(chan PipelineData)
+	chOutLast := chOutBuildPath
 	// chOutLast := make(chan PipelineData)
 
 	// Start each pipeline stage concurently
@@ -34,9 +37,12 @@ func RunPipeline(cli ...string) (string, error) {
 	go SpecificUrl(chOutGenericUrl, chOutSpecificUrl)     // set property
 	go ArtifactName(chOutSpecificUrl, chOutArtifactName)  // set property
 	go ArtifactPath(chOutArtifactName, chOutArtifactPath) // set property
-	go GetArtifact(chOutArtifactPath, chOutArtifact)      // get artifact
-	go FileGuessType(chOutArtifact, chOutFileGuessType)   // get artifact
-	go FileSave(chOutFileGuessType, chOutFileSave)        // get artifact
+	go ArtifactGet(chOutArtifactPath, chOutArtifactGet)   // get artifact
+	go FileGuessType(chOutArtifactGet, chOutFileGuessType)
+	go FileSave(chOutFileGuessType, chOutFileSave)
+	go FileUntgz(chOutFileSave, chOutFileUnTgz)
+	go FileMove(chOutFileUnTgz, chOutFileMove)  // move file to final destination
+	go BuildPath(chOutFileMove, chOutBuildPath) // build $PATH
 
 	// This is the not a stage but the last foreground step reading all instance in the pipeline
 	err := lastStep(chOutLast)

@@ -25,7 +25,7 @@ func FileSave(in <-chan PipelineData, out chan<- PipelineData) {
 		case config.UrlExe, config.UrlTgz:
 			// proceed
 		default:
-			logx.L.Debugf("UrlType '%s' is not impact by this stage", data.Config.UrlType)
+			logx.L.Debugf("[%s] UrlType '%s' is not impact by this stage", data.Config.Name, data.Config.UrlType)
 			out <- data
 			continue
 		}

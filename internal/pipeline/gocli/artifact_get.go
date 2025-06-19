@@ -12,7 +12,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func GetArtifact(in <-chan PipelineData, out chan<- PipelineData) {
+func ArtifactGet(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
 	for data := range in {
 		if data.Err != nil {
@@ -61,7 +61,7 @@ func helperCurl(data PipelineData) PipelineData {
 
 	// set this instance property
 	data.MemoryFile = memoryFile
-
+	data.FofTmpPath = data.ArtifactPath
 	// log information
 	logx.L.Infof("[%s] File Downloaded into Memory", data.Config.Name)
 
@@ -88,7 +88,7 @@ func helperGitClone(data PipelineData) PipelineData {
 
 	// set this instance property
 	data.FofTmpPath = tmpDir
-	fmt.Println(data.String())
+	// fmt.Println(data.String())
 
 	// play CLI
 	cli := fmt.Sprintf("git clone --branch %s --depth 1 %s %s", data.Config.Tag, data.SpecificUrl, tmpDir)

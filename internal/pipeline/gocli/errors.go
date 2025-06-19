@@ -1,4 +1,4 @@
-package gocliold
+package gocli
 
 import "errors"
 

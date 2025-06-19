@@ -24,7 +24,6 @@ func FileGuessType(in <-chan PipelineData, out chan<- PipelineData) {
 			// proceed
 		default:
 			data.ArtifactType = "NA"
-			// logx.L.Debugf("file type for '%s' is not guesssed", data.ArtifactName)
 			logx.L.Debugf("[%s] UrlType '%s' is not impact by this stage", data.ArtifactName, data.Config.UrlType)
 			out <- data
 			continue
