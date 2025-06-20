@@ -18,7 +18,6 @@ func source(out chan<- PipelineData, listName ...string) {
 	// closing it make it available for next stage
 	// because it is defined outside
 	defer close(out)
-	data := PipelineData{}
 
 	// log information
 	logx.L.Debugf("defining data to be pipelined")
@@ -53,5 +52,5 @@ func source(out chan<- PipelineData, listName ...string) {
 	// log information
 	logx.L.Debugf("pipelined data defined")
 
-	out <- data
+	// out <- data
 }
