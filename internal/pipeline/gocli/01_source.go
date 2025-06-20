@@ -12,7 +12,7 @@ import (
 
 // # Purpose
 //
-// - This stage create an instance of the structure  to be pipelined
+// - This stage create an instance of the structure to be pipelined
 // - 1 instance of the structure per item in the cliNameList (e.g 9 cli => 9 structures)
 // - This stage will send (out chan<-) each instance into the channel
 func source(out chan<- PipelineData, cliNameList ...string) {

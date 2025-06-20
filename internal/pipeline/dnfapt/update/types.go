@@ -4,7 +4,7 @@ import "github.com/jedib0t/go-pretty/table"
 
 type PipelineData struct {
 	HostType              string // Vm or container
-	OsFamily              string // Rhel, Debian, dedora
+	OsFamily              string // Rhel, Debian, fedora
 	OsDistro              string // ubuntu, centos, alma, ...
 	OsVersion             string //
 	OskernelVersionBefore string //

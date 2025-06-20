@@ -9,14 +9,11 @@ import (
 )
 
 func update(in <-chan PipelineData, out chan<- PipelineData) {
-	logx.L.Info("Enter update")
-	defer close(out) // close channel when done
-	// loop over each item of type PipelineData in the channel
+	defer close(out)
 	for data := range in {
-		// Step 1: propagate error if any
 		if data.Err != nil {
-			logx.L.Debugf("❌ Previous error detected %v", data.Err)
 			out <- data
+			logx.L.Debugf("❌ Previous error detected")
 			continue
 		}
 
@@ -29,9 +26,7 @@ func update(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 
-		// step 3: send pipeline var to next pipeline step
+		// send
 		out <- data
 	}
 }
-
-// logx.L.Infow("Specific URL generated", "cli", data.Config.Name, "specificUrl", data.SpecificUrl)

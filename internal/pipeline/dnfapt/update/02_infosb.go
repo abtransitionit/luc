@@ -9,14 +9,16 @@ import (
 )
 
 func infoBefore(in <-chan PipelineData, out chan<- PipelineData) {
-	logx.L.Info("Enter infoBefore")
-	defer close(out) // close channel when done
-	// loop over each item of type PipelineData in the channel
+	defer close(out)
+	// loop over each key of the instance structure PipelineData
 	for data := range in {
-		// Step 1: propagate error if any
+		// if this instance property exists
 		if data.Err != nil {
-			logx.L.Debugf("❌ Previous error detected %v", data.Err)
+			// send the instance instance into the channel (for next stage/step)
 			out <- data
+			// log information
+			logx.L.Debugf("❌ Previous error detected")
+			// read another instance from the channel
 			continue
 		}
 
@@ -28,9 +30,7 @@ func infoBefore(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 		data.OskernelVersionBefore = osKernelVersion
 
-		// step 3: send pipeline var to next pipeline step
+		// send the instance to the channel (for next stage/step)
 		out <- data
 	}
 }
-
-// logx.L.Infow("Specific URL generated", "cli", data.Config.Name, "specificUrl", data.SpecificUrl)

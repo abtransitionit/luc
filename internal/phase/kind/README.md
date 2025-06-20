@@ -1,5 +1,5 @@
 # Process
-- install gocli: kind, nerdctl, nerdctl, rootlesskit, slirp4netns
+- install gocli: kind, nerdctl, containerd, rootlesskit, slirp4netns
 - install dnfapt: uidmap
 - configure service
   - create file content in memory

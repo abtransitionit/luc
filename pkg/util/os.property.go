@@ -270,19 +270,18 @@ func getNetGateway() (string, error) {
 	return strings.TrimSpace(line), nil
 }
 
-//
 // Example Usage:
+//
 //	props := []string{"cpu", "ram", "osarch", "uuid", "cgroup"}
 //
-// for _, prop := range props {
-// 	value, err := util.OsPropertyGet(prop)
-// 	if err != nil {
-// 		// logx.L.Debugf("%s", err)
-// 		continue
-// 	}
-// 	fmt.Printf("prop: %s value: %s\n", prop, value)
-// }
-
+//	for _, prop := range props {
+//		value, err := util.OsPropertyGet(prop)
+//		if err != nil {
+//			// logx.L.Debugf("%s", err)
+//			continue
+//		}
+//		fmt.Printf("prop: %s value: %s\n", prop, value)
+//	}
 func OsPropertyGet(property string) (string, error) {
 	handler, ok := propertyHandlers[property]
 	if !ok {

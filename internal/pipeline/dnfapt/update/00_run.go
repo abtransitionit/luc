@@ -17,14 +17,17 @@ func RunPipeline() (string, error) {
 	chOutBefore := make(chan PipelineData)
 	chOutUpdate := make(chan PipelineData)
 	chOutAfter := make(chan PipelineData)
-	chOutLast := make(chan PipelineData)
+	chOutNeedReboot := make(chan PipelineData)
+	chOutreboot := make(chan PipelineData)
+	chOutLast := chOutreboot
 
 	// Start each pipeline stage concurently
-	go source(chOutSource)                  // boostrap the Data
-	go infoBefore(chOutSource, chOutBefore) // update Pipelined data
-	go update(chOutBefore, chOutUpdate)     // update the OS
-	go infoAfter(chOutUpdate, chOutAfter)   // update Pipelined data
-	go needReboot(chOutAfter, chOutLast)    // update Pipelined data
+	go source(chOutSource)                     // boostrap the Data
+	go infoBefore(chOutSource, chOutBefore)    // update Pipelined data
+	go update(chOutBefore, chOutUpdate)        // update the OS
+	go infoAfter(chOutUpdate, chOutAfter)      // update Pipelined data
+	go needReboot(chOutAfter, chOutNeedReboot) // update Pipelined data
+	go reboot(chOutNeedReboot, chOutreboot)    // update Pipelined data
 
 	// This is the not a stage but the last foreground process waiting for the last stage data
 	err := lastStep(chOutLast)

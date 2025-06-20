@@ -8,14 +8,14 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const GocliDescription = "provision needed go CLI"
+const GoCliDescription = "provision needed go CLI"
 
-func gocli(arg ...string) (string, error) {
-	logx.L.Info(GocliDescription)
+func goCli(arg ...string) (string, error) {
+	logx.L.Info(GoCliDescription)
 	// Launch the pipeline attach to this phase
-	// goclipip.RunPipeline("toto", "kind", "nerdctl", "containerd", "rootlesskit", "slirp4netns")
+	goclipip.RunPipeline("kind", "nerdctl", "containerd", "rootlesskit", "slirp4netns")
 	// goclipip.RunPipeline("toto", "kind")
-	goclipip.RunPipeline("kind")
+	// goclipip.RunPipeline("kind")
 	// goclipip.RunPipeline("toto", "kind", "nerdctl", "containerd", "rootlesskit", "slirp4netns")
 	// on SUCCESS
 	return "", nil

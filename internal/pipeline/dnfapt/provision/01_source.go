@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package update
+package provision
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"
@@ -30,19 +30,7 @@ func source(out chan<- PipelineData, packageNameList ...string) {
 		logx.L.Debugf("❌ Error detected")
 	}
 
-	osDistro, err := util.OsPropertyGet("osdistro")
-	if err != nil {
-		data.Err = err
-		logx.L.Debugf("❌ Error detected")
-	}
-
 	hostType, err := util.OsPropertyGet("host")
-	if err != nil {
-		data.Err = err
-		logx.L.Debugf("❌ Error detected")
-	}
-
-	osVersion, err := util.OsPropertyGet("osversion")
 	if err != nil {
 		data.Err = err
 		logx.L.Debugf("❌ Error detected")
@@ -50,9 +38,7 @@ func source(out chan<- PipelineData, packageNameList ...string) {
 
 	// set this instance properties
 	data.OsFamily = osFamily
-	data.OsDistro = osDistro
 	data.HostType = hostType
-	data.OsVersion = osVersion
 
 	// log information
 	logx.L.Debugf("pipelined data defined")
