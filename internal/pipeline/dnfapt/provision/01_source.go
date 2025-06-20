@@ -11,9 +11,9 @@ import (
 // # Purpose
 //
 // - This stage create an instance of the structure to be pipelined
-// - 1 instance of the structure per item in the cliNameList (e.g 9 cli => 9 structures)
+// - 1 instance of the structure per item in the listName (e.g 9 cli => 9 structures)
 // - This stage will send (out chan<-) each instance into the channel
-func source(out chan<- PipelineData, packageNameList ...string) {
+func source(out chan<- PipelineData, listName ...string) {
 	// close channel when this code ended
 	// closing it make it available for next stage
 	// because it is defined outside
@@ -23,22 +23,32 @@ func source(out chan<- PipelineData, packageNameList ...string) {
 	// log information
 	logx.L.Debugf("defining data to be pipelined")
 
-	// get some OS property
-	osFamily, err := util.OsPropertyGet("osfamily")
-	if err != nil {
-		data.Err = err
-		logx.L.Debugf("❌ Error detected")
-	}
+	// loop over all items in the LIST
+	for _, item := range listName {
+		// create a new instance per item
+		data := PipelineData{}
 
-	hostType, err := util.OsPropertyGet("host")
-	if err != nil {
-		data.Err = err
-		logx.L.Debugf("❌ Error detected")
-	}
+		// get some OS property
+		osFamily, err := util.OsPropertyGet("osfamily")
+		if err != nil {
+			data.Err = err
+			logx.L.Debugf("❌ Error detected")
+		}
 
-	// set this instance properties
-	data.OsFamily = osFamily
-	data.HostType = hostType
+		hostType, err := util.OsPropertyGet("host")
+		if err != nil {
+			data.Err = err
+			logx.L.Debugf("❌ Error detected")
+		}
+
+		// set this instance properties
+		data.Name = item
+		data.OsFamily = osFamily
+		data.HostType = hostType
+
+		// send the instance to the channel (for next stage or final step)
+		out <- data
+	}
 
 	// log information
 	logx.L.Debugf("pipelined data defined")

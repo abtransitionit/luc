@@ -9,12 +9,12 @@ import (
 
 const RunPipelineDescription = "provision GO CLI(s)."
 
-func RunPipeline(cliNameList ...string) (string, error) {
+func RunPipeline(packageNameList ...string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
 
 	// Count and log the number of CLI args
-	argCount := len(cliNameList)
-	logx.L.Debugf("Received %d CLI(s) to provisioned:  %v", argCount, cliNameList)
+	argCount := len(packageNameList)
+	logx.L.Debugf("Received %d CLI(s) to provisioned:  %v", argCount, packageNameList)
 
 	// Define the pipeline channels
 	chOutSource := make(chan PipelineData)
@@ -32,7 +32,7 @@ func RunPipeline(cliNameList ...string) (string, error) {
 	// chOutLast := make(chan PipelineData)
 
 	// Start each pipeline stage concurently
-	go source(chOutSource, cliNameList...) // boostrap the Data
+	go source(chOutSource, packageNameList...) // boostrap the Data
 	// go GenericUrl(chOutSource, chOutGenericUrl)           // set property
 	// go SpecificUrl(chOutGenericUrl, chOutSpecificUrl)     // set property
 	// go ArtifactName(chOutSpecificUrl, chOutArtifactName)  // set property

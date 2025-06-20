@@ -19,6 +19,8 @@ func (p PipelineData) String() string {
 
 	t.AppendRows([]table.Row{
 		{"Package", p.Name},
+		{"HostType", p.HostType},
+		{"OS Family", p.OsFamily},
 		{"Error", func() string {
 			if p.Err != nil {
 				return p.Err.Error()
