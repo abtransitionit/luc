@@ -1,14 +1,14 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package update
+package provision
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util/dnfapt"
 )
 
-func update(in <-chan PipelineData, out chan<- PipelineData) {
+func provision(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
 	for data := range in {
 		if data.Err != nil {
@@ -17,8 +17,8 @@ func update(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 
-		// Update the OS
-		_, err := dnfapt.UpdateOs()
+		// Provision the package
+		_, err := dnfapt.ProvisionPackage(data.Name)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("Error detected")

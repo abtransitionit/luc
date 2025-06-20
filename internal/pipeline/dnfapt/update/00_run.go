@@ -23,11 +23,11 @@ func RunPipeline() (string, error) {
 
 	// Start each pipeline stage concurently
 	go source(chOutSource)                     // boostrap the Data
-	go infoBefore(chOutSource, chOutBefore)    // update Pipelined data
+	go infoBefore(chOutSource, chOutBefore)    // set property
 	go update(chOutBefore, chOutUpdate)        // update the OS
-	go infoAfter(chOutUpdate, chOutAfter)      // update Pipelined data
-	go needReboot(chOutAfter, chOutNeedReboot) // update Pipelined data
-	go reboot(chOutNeedReboot, chOutreboot)    // update Pipelined data
+	go infoAfter(chOutUpdate, chOutAfter)      // set property
+	go needReboot(chOutAfter, chOutNeedReboot) // set property
+	go reboot(chOutNeedReboot, chOutreboot)    // reboot if needed
 
 	// This is the not a stage but the last foreground process waiting for the last stage data
 	err := lastStep(chOutLast)
