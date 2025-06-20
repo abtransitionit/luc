@@ -44,7 +44,7 @@ func RunPipeline(cliNameList ...string) (string, error) {
 	go FileMove(chOutFileUnTgz, chOutFileMove)  // move file to final destination
 	go BuildPath(chOutFileMove, chOutBuildPath) // build $PATH
 
-	// This is the not a stage but the last foreground step reading all instance in the pipeline
+	// This is not a stage but the last foreground step reading all instance in the pipeline
 	err := lastStep(chOutLast)
 	if err != nil {
 		return "", err

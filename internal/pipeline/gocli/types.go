@@ -27,6 +27,7 @@ func (p PipelineData) String() string {
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{
+		{"gocli name", p.Config.Name},
 		{"Generic Url", p.GenericUrl},
 		{"Specific Url", p.SpecificUrl},
 		{"Artifact Name", p.ArtifactName},

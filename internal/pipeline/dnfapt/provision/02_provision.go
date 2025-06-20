@@ -9,7 +9,9 @@ import (
 )
 
 func provision(in <-chan PipelineData, out chan<- PipelineData) {
+	logx.L.Debugf("provision")
 	defer close(out)
+
 	for data := range in {
 		if data.Err != nil {
 			out <- data
@@ -18,6 +20,7 @@ func provision(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 
 		// Provision the package
+		logx.L.Debugf("[%s] provisioning", data.Name)
 		_, err := dnfapt.ProvisionPackage(data.Name)
 		if err != nil {
 			data.Err = err
@@ -25,6 +28,7 @@ func provision(in <-chan PipelineData, out chan<- PipelineData) {
 			out <- data
 			continue
 		}
+		logx.L.Debugf("✅ [%s] Provisioned ", data.Name)
 
 		// send
 		out <- data

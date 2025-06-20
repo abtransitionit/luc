@@ -1,13 +1,16 @@
 # Process
-- install gocli: kind, nerdctl, containerd, rootlesskit, slirp4netns
-- install dnfapt: uidmap
-- configure service
+- install CLI(s):
+  - **gocli**: kind, nerdctl, containerd, rootlesskit, slirp4netns
+  - **dnfapt**: uidmap
+- configure os services for
   - create file content in memory
   - save memory content to file
--   
-- export KIND_EXPERIMENTAL_PROVIDER=nerdctl
-- export path to kind, nerdctl, nerdctl
-  - sanitize PATH by eliminating doublons
+- export linux env variables:
+  - **KIND_EXPERIMENTAL_PROVIDER**
+    - KIND_EXPERIMENTAL_PROVIDER=nerdctl
+  - **PATH** : will all gocli binaries
+- sanitize PATH by eliminating doublons
+
 -  Create an AppArmor Profile Override for rootlesskit
 ```bash
 cat <<EOT | sudo tee "/etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit"
@@ -52,7 +55,6 @@ sudo loginctl enable-linger $(whoami)
 ```
 	
 
-Absolutely! Here’s a clear step-by-step doc on how to fix the rootless containerd problem caused by AppArmor restrictions, using standard file creation and commands:
 
 # Explanation
 
@@ -61,6 +63,58 @@ Absolutely! Here’s a clear step-by-step doc on how to fix the rootless contain
 * The override file grants **rootlesskit** the `userns` capability explicitly.
 * Restarting AppArmor reloads these changes, allowing rootlesskit to function properly.
 
+# Toknow
+**AppArmor** and **Selinux** allows both to improve linux Os security
+
+Both :  
+✔ **Restrict what programs can do** (beyond traditional file permissions).  
+✔ **Enforce fine-grained access control** (e.g., which files a process can read/write).  
+✔ **Prevent privilege escalation** and limit damage from compromised apps.  
+
+
+
+| Feature          | **AppArmor** | **SELinux** |
+|-----------------|------------|------------|
+| **Developed By** | Canonical (Ubuntu) | NSA (later Red Hat) |
+| **OS** | Ubuntu/Debian | RHEL/Fedora |
+| **Configuration** | Path-based rules (`/usr/bin/foo`) | Label-based (`system_u:object_r:httpd_exec_t`) |
+| **Ease of Use** | Simpler (uses plain-text profiles) | More complex (uses security contexts) |
+| **Default in**  | Ubuntu, Debian, openSUSE | RHEL, Fedora, CentOS, Android |
+| **Performance** | Lighter weight | More overhead (but more powerful) |
+| **Policy Type** | **Name-based** (e.g., `/var/log/** rw`) | **Type Enforcement (TE) + Role-Based Access Control (RBAC)** |
+
+## AppArmor
+- Uses **path-based rules** (e.g., allow `/usr/bin/nginx` to read `/var/log/nginx/*`).  
+- Profiles are stored in `/etc/apparmor.d/`.  
+- Example profile:  
+  ```apparmor
+  /usr/bin/firefox {
+    /etc/firefox/* r,
+    /home/*/.mozilla/** rw,
+  }
+  ```
+
+```bash
+sudo aa-status          # Check status
+sudo apparmor_parser -r /etc/apparmor.d/profile  # Reload a profile
+sudo aa-enforce /usr/bin/firefox  # Enforce a profile
+```
+
+
+## SELinux
+- Uses **security labels** (e.g., `httpd_t` can only access `httpd_log_t`).  
+- Managed via `semanage`, `chcon`, `restorecon`.  
+- Example rule:  
+  ```bash
+  chcon -t httpd_sys_content_t /var/www/html/index.html
+  ```
+
+```bash
+sestatus                # Check status
+ls -Z /var/www/html     # View security labels
+restorecon -Rv /var/www # Fix labels
+setenforce 0            # Temporarily disable (Permissive mode)
+```
 
 
 # Reference

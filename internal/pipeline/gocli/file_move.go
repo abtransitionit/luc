@@ -14,6 +14,7 @@ import (
 // Move File or folder to final destination
 func FileMove(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
+
 	for data := range in {
 		if data.Err != nil {
 			out <- data

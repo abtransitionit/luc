@@ -18,7 +18,7 @@ func (p PipelineData) String() string {
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{
-		{"Package", p.Name},
+		{"dnfapt package name", p.Name},
 		{"HostType", p.HostType},
 		{"OS Family", p.OsFamily},
 		{"Error", func() string {

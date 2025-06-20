@@ -11,6 +11,7 @@ import (
 
 func FileGuessType(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
+
 	for data := range in {
 		if data.Err != nil {
 			out <- data
