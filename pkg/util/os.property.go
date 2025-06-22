@@ -34,6 +34,7 @@ var propertyHandlers = map[string]PropertyHandler{
 	"osdistro":   getOsDistro,
 	"oskversion": getOsKernelVersion,
 	"osfamily":   getOsFamily,
+	"path":       getPath,
 	"ram":        getRam,
 	"selstatus":  getSelinuxStatus,
 	"selmode":    getSelinuxMode,
@@ -192,6 +193,14 @@ func getOsInfos() (string, error) {
 	}
 
 	return fmt.Sprintf("family: %-6s :: distro: %-10s :: OsVersion: %-6s :: OsKernelVersion: %s", family, distro, version, kernel), nil
+}
+
+func getPath() (string, error) {
+	path := os.Getenv("PATH")
+	if path == "" {
+		return "", fmt.Errorf("PATH environment variable is not set")
+	}
+	return path, nil
 }
 
 func getSelinuxStatus() (string, error) {

@@ -8,6 +8,7 @@ import "github.com/abtransitionit/luc/pkg/phase"
 
 var Phases = []phase.Phase{
 	phase.SetPhase("update", update, UpdateDescription),
+	phase.SetPhase("reboot", reboot, RebootDescription),
 	phase.SetPhase("dacli", daCli, DaCliDescription),
 	phase.SetPhase("gocli", goCli, GoCliDescription),
 	phase.SetPhase("service", service, ServiceDescription),

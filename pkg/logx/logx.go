@@ -116,7 +116,7 @@ func fixedWidthCallerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveAr
 	file := caller.TrimmedPath()
 	funcParts := strings.Split(caller.Function, ".")
 	funcName := funcParts[len(funcParts)-1]
-	fileWidth := 25
+	fileWidth := 30
 	funcWidth := 20
 	enc.AppendString(fmt.Sprintf("%-*s %-*s", fileWidth, file, funcWidth, funcName))
 }

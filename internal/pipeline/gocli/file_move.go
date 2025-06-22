@@ -68,7 +68,7 @@ func helperMvTgz(data PipelineData) PipelineData {
 		return data
 	}
 	if success {
-		logx.L.Infof("✅ Folder moved successfully to '%s'", dstPath)
+		logx.L.Infof("✅ [%s] Folder moved successfully to '%s'", data.Config.Name, dstPath)
 	}
 
 	return data

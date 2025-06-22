@@ -8,7 +8,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const UpdateDescription = "upgrade Kind VM OS."
+const UpdateDescription = "upgrade Kind VM OS using pipeleine."
 
 func update(arg ...string) (string, error) {
 	logx.L.Info(UpdateDescription)

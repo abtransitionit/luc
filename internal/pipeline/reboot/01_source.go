@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package update
+package reboot
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"
@@ -21,7 +21,7 @@ func source(out chan<- PipelineData, packageNameList ...string) {
 	data := PipelineData{}
 
 	// log information
-	logx.L.Debugf("defining data instances to be pipelined")
+	logx.L.Debugf("defining data to be pipelined")
 
 	// get some OS property
 	osFamily, err := util.OsPropertyGet("osfamily")
@@ -53,6 +53,9 @@ func source(out chan<- PipelineData, packageNameList ...string) {
 	data.OsDistro = osDistro
 	data.HostType = hostType
 	data.OsVersion = osVersion
+
+	// log information
+	logx.L.Debugf("pipelined data defined")
 
 	out <- data
 }

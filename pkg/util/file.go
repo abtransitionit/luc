@@ -19,7 +19,9 @@ import (
 	"github.com/abtransitionit/luc/pkg/errorx"
 )
 
-// FolderExists checks if a folder exists and is accessible.
+// # Purpose
+//
+// checks if a folder exists and is accessible.
 // Returns:
 //   - (true, nil)  if the folder exists
 //   - (false, nil) if the folder doesn't exist (normal case)
@@ -36,6 +38,8 @@ func FolderExists(path string) (bool, error) {
 	return errorx.BoolError("check folder exists", path, err)
 }
 
+// # Purpose
+//
 // FileExists checks if a file exists and is accessible.
 // Returns:
 //   - (true, nil)  if the file exists
@@ -53,7 +57,9 @@ func FileExists(path string) (bool, error) {
 	return errorx.BoolError("check file exists", path, err)
 }
 
-// writes data in memory to a file at the specified path.
+// # Purpose
+//
+// writes existing data in memory to a file at the specified path.
 //
 // Parameters:
 //   - path : string - Filesystem path where data should be written
@@ -168,6 +174,8 @@ func ListTgzContentInMemory(data []byte) error {
 	return nil
 }
 
+// # Purpose
+//
 // func IsGzippedMemoryContent(data []byte) (bool, error) {
 // 	if len(data) < 2 {
 // 		return false, fmt.Errorf("maybe not a gzipped file")
@@ -178,6 +186,8 @@ func ListTgzContentInMemory(data []byte) error {
 // 	return true, nil
 // }
 
+// # Purpose
+//
 // check if data culred in memory is a valid gzip tar
 func IsGzippedMemoryContent(data []byte) (bool, error) {
 	if len(data) < 2 {
@@ -189,6 +199,9 @@ func IsGzippedMemoryContent(data []byte) (bool, error) {
 	return false, nil // not gzipped, but not an error
 }
 
+// # Purpose
+//
+// check if data culred in memory is aa exe
 func IsMemoryContentAnExe(data []byte) (bool, error) {
 	if len(data) < 4 {
 		return false, fmt.Errorf("data too short to determine executable")
@@ -216,6 +229,9 @@ func IsMemoryContentAnExe(data []byte) (bool, error) {
 	return false, fmt.Errorf("unknown executable format")
 }
 
+// # Purpose
+//
+// decompresses a tgz file into a destination folder
 func UntargzFile(srcTgzPath string, destFolder string) error {
 	// Check destination is an absolute path
 	if !strings.HasPrefix(destFolder, "/") {
@@ -267,7 +283,7 @@ func UntargzFile(srcTgzPath string, destFolder string) error {
 // # Notes
 //
 // The helper function helperMvSudo is used when sudo is required
-func MvFile(srcPath, dstPath string, permission os.FileMode, isSudo bool) (bool, error) {
+func MvFile(srcPath, dstPath string, permission os.FileMode, pathIsRoot bool) (bool, error) {
 	// check srcPath is absolute
 	if !filepath.IsAbs(srcPath) {
 		msg := fmt.Sprintf("source path must be absolute (%s)", srcPath)
@@ -306,7 +322,7 @@ func MvFile(srcPath, dstPath string, permission os.FileMode, isSudo bool) (bool,
 	}
 
 	// Perform the move as sudo
-	if isSudo {
+	if pathIsRoot {
 		if err := helperMvSudo(srcPath, dstPath); err != nil {
 			return false, err
 		}
@@ -335,7 +351,9 @@ func helperMvSudo(srcPath, dstPath string) error {
 	return nil
 }
 
-// Helper function to remove a file or directory as sudo user at targetPath.
+// # Purpose
+//
+// Helper function to remove a file or directory as sudo user.
 // Returns an error if the command fails or produces output.
 //
 // Note:
@@ -359,7 +377,7 @@ func helperRmSudo(targetPath string) error {
 //   - dstPath: absolute path to the destination directory location (can include a rename).
 //   - permission: permission bits to apply to the source directory before the move.
 //   - forceOverwrite: whether to overwrite the destination if it already exists.
-//   - isSudo: whether to perform the move using elevated privileges.
+//   - pathIsRoot: whether to perform the move using elevated privileges.
 //
 // # Returns
 //   - success: true if the move operation succeeded, false otherwise.
@@ -378,7 +396,7 @@ func helperRmSudo(targetPath string) error {
 // # Notes
 //
 // The helper function helperMvSudo is used when sudo is required
-func MvFolder(srcPath, dstPath string, permission os.FileMode, forceOverwrite bool, isSudo bool) (bool, error) {
+func MvFolder(srcPath, dstPath string, permission os.FileMode, forceOverwrite bool, pathIsRoot bool) (bool, error) {
 	// check srcPath is absolute
 	if !filepath.IsAbs(srcPath) {
 		return false, errors.New("source path must be absolute")
@@ -418,7 +436,8 @@ func MvFolder(srcPath, dstPath string, permission os.FileMode, forceOverwrite bo
 		if !forceOverwrite {
 			return false, fmt.Errorf("destination path already exists: %s", dstPath)
 		}
-		if isSudo {
+		if pathIsRoot {
+			// Perform the rm as sudo
 			if err := helperRmSudo(dstPath); err != nil {
 				return false, fmt.Errorf("failed to remove existing destination with sudo: %w", err)
 			}
@@ -429,7 +448,7 @@ func MvFolder(srcPath, dstPath string, permission os.FileMode, forceOverwrite bo
 		}
 	}
 	// Perform the move as sudo
-	if isSudo {
+	if pathIsRoot {
 		if err := helperMvSudo(srcPath, dstPath); err != nil {
 			return false, err
 		}
@@ -442,41 +461,4 @@ func MvFolder(srcPath, dstPath string, permission os.FileMode, forceOverwrite bo
 	}
 
 	return true, nil
-}
-
-// returns a string to add to $PATH
-//
-// # Parameters
-//
-//   - base: the root directory to start the recursive search.
-//
-// # Returns
-//
-//   - string: a colon-separated list of all directories including the base.
-//   - error: any error encountered during directory traversal.
-//
-// # Example
-//
-//	pathStr, err := BuildPathFromSubdirs("/usr/local/bin")
-//	if err != nil {
-//	    log.Fatal(err)
-//	}
-//	fmt.Println("export PATH=" + pathStr + ":$PATH")
-func BuildPath(base string) (string, error) {
-	var paths []string
-
-	err := filepath.WalkDir(base, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if d.IsDir() {
-			paths = append(paths, path)
-		}
-		return nil
-	})
-	if err != nil {
-		return "", err
-	}
-
-	return strings.Join(paths, ":"), nil
 }

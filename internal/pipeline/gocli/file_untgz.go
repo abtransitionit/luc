@@ -53,7 +53,7 @@ func helperUnzip(data PipelineData) PipelineData {
 	err := util.UntargzFile(data.ArtifactPath, ArtifactTmpPath)
 	if err != nil {
 		data.Err = fmt.Errorf("[%s] failed to decompress file: %w", data.Config.Name, err)
-		logx.L.Debugf("❌ Error detected 2")
+		logx.L.Debugf("❌ Error detected 1")
 	} else {
 		logx.L.Debugf("[%s] Successfully decompressed into '%s", data.Config.Name, ArtifactTmpPath)
 	}

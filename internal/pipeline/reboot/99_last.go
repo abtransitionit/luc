@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package update
+package reboot
 
 import (
 	"fmt"
@@ -25,7 +25,7 @@ func lastStep(in <-chan PipelineData) error {
 			continue
 		}
 		// if no error exits : log information - one per structure
-		logx.L.Infof("[%s] Received Pipeline Data")
+		logx.L.Infof("Received Pipeline Data")
 		fmt.Println(data.String())
 	}
 	return nil

@@ -25,7 +25,7 @@ func lastStep(in <-chan PipelineData) error {
 			continue
 		}
 		// if no error exits : log information - one per structure
-		logx.L.Infof("Received Pipeline Data")
+		logx.L.Infof("[%s] Received Pipeline Data", data.Name)
 		fmt.Println(data.String())
 	}
 	return nil

@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package update
+package reboot
 
 import "github.com/jedib0t/go-pretty/table"
 
@@ -12,6 +12,7 @@ type PipelineData struct {
 	OsVersion             string //
 	OskernelVersionBefore string //
 	OskernelVersionAfter  string //
+	NeedReboot            string // true or false
 	Err                   error  // error if any
 }
 
@@ -30,6 +31,7 @@ func (p PipelineData) String() string {
 		{"Os Version", p.OsVersion},
 		{"Kernel Version (Before)", p.OskernelVersionBefore},
 		{"Kernel Version (After)", p.OskernelVersionAfter},
+		{"Need Reboot", p.NeedReboot},
 		{"Error", func() string {
 			if p.Err != nil {
 				return p.Err.Error()

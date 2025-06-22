@@ -56,12 +56,6 @@ sudo loginctl enable-linger $(whoami)
 	
 
 
-# Explanation
-
-* **AppArmor** is a Linux security module that restricts program capabilities.
-* By default, it may block **rootlesskit** from creating user namespaces needed for rootless containers.
-* The override file grants **rootlesskit** the `userns` capability explicitly.
-* Restarting AppArmor reloads these changes, allowing rootlesskit to function properly.
 
 # Toknow
 **AppArmor** and **Selinux** allows both to improve linux Os security
@@ -84,6 +78,8 @@ Both :
 | **Policy Type** | **Name-based** (e.g., `/var/log/** rw`) | **Type Enforcement (TE) + Role-Based Access Control (RBAC)** |
 
 ## AppArmor
+- A Linux security module that restricts program capabilities.
+- By default, it may block **rootlesskit** from creating user namespaces needed for rootless containers.
 - Uses **path-based rules** (e.g., allow `/usr/bin/nginx` to read `/var/log/nginx/*`).  
 - Profiles are stored in `/etc/apparmor.d/`.  
 - Example profile:  
@@ -93,6 +89,12 @@ Both :
     /home/*/.mozilla/** rw,
   }
   ```
+
+- What it does
+  * The override file grants **rootlesskit** the `userns` capability explicitly.
+
+- Restarting AppArmor reloads these changes, allowing rootlesskit to function properly.
+
 
 ```bash
 sudo aa-status          # Check status
@@ -114,6 +116,39 @@ sestatus                # Check status
 ls -Z /var/www/html     # View security labels
 restorecon -Rv /var/www # Fix labels
 setenforce 0            # Temporarily disable (Permissive mode)
+```
+
+# User service Vs. System service
+
+| Feature| User Service | System Service |
+| -| - | - |
+| Runs as         | Regular user                     | Root (or system-level)                           |
+| Managed by      | `systemctl --user`               | `sudo systemctl`                                 |
+| Config location | `~/.config/systemd/user/`        | `/etc/systemd/system/` or `/lib/systemd/system/` |
+| Starts at boot? | Only if **lingering** is enabled | Yes, by default                                  |
+| Scope           | Only affects the user            | Affects the whole system                         |
+
+
+# Lingering
+- allows to enable user services at startup (equivalent of system enable for system services)
+
+```bash
+# show infos for all user
+loginctl show-user 
+
+# show infos for user ubuntu
+loginctl show-user ubuntu --property=Display
+loginctl show-user ubuntu
+
+# enable lingering
+sudo loginctl enable-linger ubuntu
+
+# disable lingering
+sudo loginctl disable-linger ubuntu
+```
+ls /var/lib/systemd/linger
+```bash
+loginctl show-user ubuntu
 ```
 
 

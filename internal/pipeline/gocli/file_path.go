@@ -4,12 +4,14 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package gocli
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-// Move File or folder to final destination
+// generate the PATH of the CLI
 func BuildPath(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
 
@@ -20,13 +22,16 @@ func BuildPath(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 
-		// step 2: Define the PATH to export
+		// define the PATH to export
 		switch data.Config.UrlType {
 		case config.UrlTgz, config.UrlExe:
 			rootFolder := "/usr/local/bin"
 			path, err := util.BuildPath(rootFolder)
 			if err != nil {
-				logx.L.Debugf("❌ Failed to move file: %s", err)
+				data.Err = fmt.Errorf("[%s] unable to build PATH: %w", data.Config.Name, err)
+				logx.L.Debugf("❌ Error detected 1")
+				out <- data
+				continue
 			}
 			logx.L.Debugf("[%s] export PATH=%s", data.Config.Name, path+":$PATH")
 
@@ -36,7 +41,7 @@ func BuildPath(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 
-		// step 3: send pipeline var to next pipeline step
+		// send
 		out <- data
 	}
 }
