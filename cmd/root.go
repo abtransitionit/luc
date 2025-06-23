@@ -9,7 +9,6 @@ import (
 	"github.com/abtransitionit/luc/cmd/cli"
 	"github.com/abtransitionit/luc/cmd/kbe"
 	"github.com/abtransitionit/luc/cmd/kind"
-	"github.com/abtransitionit/luc/cmd/local"
 	"github.com/spf13/cobra"
 )
 
@@ -41,10 +40,11 @@ func Execute() {
 
 func init() {
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.AddCommand(util.UtilCmd)
 	rootCmd.AddCommand(cli.CliCmd)
 	rootCmd.AddCommand(kbe.KbeCmd)
 	rootCmd.AddCommand(kind.KindCmd)
-	rootCmd.AddCommand(local.LocalCmd)
+	// rootCmd.AddCommand(local.LocalCmd)
 	//
 	rootCmd.AddCommand(testCmd)
 }
