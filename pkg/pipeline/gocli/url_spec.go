@@ -25,7 +25,7 @@ func SpecificUrl(in <-chan PipelineData, out chan<- PipelineData) {
 		url := data.GenericUrl
 		// replace placeholders
 		url = strings.ReplaceAll(url, "$NAME", data.Config.Name)
-		url = strings.ReplaceAll(url, "$TAG", data.Config.Tag)
+		url = strings.ReplaceAll(url, "$TAG", data.Version)
 		url = strings.ReplaceAll(url, "$OS", runtime.GOOS)
 		url = strings.ReplaceAll(url, "$ARCH", runtime.GOARCH)
 		url = strings.ReplaceAll(url, "$UNAME", getUnameM())

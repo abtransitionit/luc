@@ -15,6 +15,8 @@ type PipelineData struct {
 	FofTmpPath   string           // file Or folder Path after CLI artefact is unzip (Tgz, Exe) or git clone (Git)
 	ArtifactType string           // guessed filetype : Exe or Tgz
 	CliName      string           //
+	Version      string           //
+	DstFolder    string           //
 	Err          error            // If any step fails
 }
 
@@ -28,12 +30,14 @@ func (p PipelineData) String() string {
 
 	t.AppendRows([]table.Row{
 		{"gocli name", p.Config.Name},
+		{"CLI version", p.Version},
 		{"Generic Url", p.GenericUrl},
 		{"Specific Url", p.SpecificUrl},
 		{"Artifact Name", p.ArtifactName},
 		{"Artifact Guessed Type", p.ArtifactType},
 		{"Artifact Path", p.ArtifactPath},
 		{"Artifact FofTmpPath", p.FofTmpPath},
+		{"Dst Folder", p.DstFolder},
 		{"Error", func() string {
 			if p.Err != nil {
 				return p.Err.Error()

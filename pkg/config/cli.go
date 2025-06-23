@@ -21,6 +21,14 @@ var cliConfigMap = map[string]CLIConfig{
 		GitUrl:  "https://github.com/spf13/cobra-cli",
 		UrlType: UrlGit,
 	},
+	"cni": {
+		Name:    "cni",
+		Tag:     "1.7.1",
+		Url:     "https://github.com/containernetworking/plugins/releases/download/v$TAG/$NAME-plugins-$OS-$ARCH-v$TAG.tgz",
+		DocUrl:  "https://www.cni.dev/",
+		GitUrl:  "https://github.com/containernetworking/plugins",
+		UrlType: UrlTgz,
+	},
 	"cobra": {
 		Name:    "cobra",
 		Tag:     "latest",
@@ -107,7 +115,7 @@ var cliConfigMap = map[string]CLIConfig{
 		Url:     "https://github.com/opencontainers/$NAME/releases/download/v$TAG/$NAME.$ARCH",
 		DocUrl:  "https://github.com/opencontainers/runc/tree/main",
 		GitUrl:  "https://github.com/opencontainers/runc",
-		UrlType: UrlOth,
+		UrlType: UrlExe,
 	},
 	"slirp4netns": {
 		Name:    "slirp4netns",

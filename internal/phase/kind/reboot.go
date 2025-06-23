@@ -4,8 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kind
 
 import (
-	rebootpip "github.com/abtransitionit/luc/internal/pipeline/reboot"
 	"github.com/abtransitionit/luc/pkg/logx"
+	rebootpip "github.com/abtransitionit/luc/pkg/pipeline/reboot"
 )
 
 const RebootDescription = "Reboot an OS."

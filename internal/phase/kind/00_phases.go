@@ -12,5 +12,7 @@ var Phases = []phase.Phase{
 	phase.SetPhase("dacli", daCli, DaCliDescription),
 	phase.SetPhase("gocli", goCli, GoCliDescription),
 	phase.SetPhase("service", service, ServiceDescription),
-	phase.SetPhase("env", env, EnvDescription),
+	phase.SetPhase("rc", rc, RcDescription),
+	phase.SetPhase("create", create, CreateDescription),
+	phase.SetPhase("check", check, CheckDescription),
 }

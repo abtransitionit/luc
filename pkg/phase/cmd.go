@@ -44,7 +44,7 @@ func CmdRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
 		// handle flag --show before checking arguments
 		if handled, err := handleShowFlag(cmd, phases); handled {
 			if err != nil {
-				logx.L.Debugf("❌ system failure : %w", err)
+				logx.L.Debugf("❌ system failure : %s", err)
 			}
 			return
 		}
@@ -52,7 +52,7 @@ func CmdRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
 		// handle --runall flag before checking arguments
 		if handled, err := handleRunAllFlag(cmd, phases); handled {
 			if err != nil {
-				logx.L.Debugf("❌ system failure : %w", err)
+				logx.L.Debugf("❌ system failure : %s", err)
 			}
 			return
 		}

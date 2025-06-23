@@ -58,7 +58,7 @@ func helperMvExe(data PipelineData) PipelineData {
 }
 
 func helperMvTgz(data PipelineData) PipelineData {
-	dstFolder := "/usr/local/bin"
+	dstFolder := data.DstFolder
 	dstPath := path.Join(dstFolder, data.Config.Name)
 	logx.L.Debugf("Moving '%s' to '%s'", data.FofTmpPath, dstPath)
 	success, err := util.MvFolder(data.FofTmpPath, dstPath, 0755, true, true)

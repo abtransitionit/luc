@@ -4,17 +4,18 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package gocli
 
 import (
+	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
 const RunPipelineDescription = "provision GO CLI(s)."
 
-func RunPipeline(cliNameList ...string) (string, error) {
+func RunPipeline(cliMap map[string]config.CustomCLIConfig) (string, error) {
+	// func RunPipeline(cliNameList ...string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
 
 	// Count and log the number of CLI args
-	argCount := len(cliNameList)
-	logx.L.Debugf("Received %d CLI(s) to provisioned:  %v", argCount, cliNameList)
+	logx.L.Debugf("Received %d CLI(s) to provisioned", len(cliMap))
 
 	// Define the pipeline channels
 	chOutSource := make(chan PipelineData)
@@ -32,7 +33,7 @@ func RunPipeline(cliNameList ...string) (string, error) {
 	// chOutLast := make(chan PipelineData)
 
 	// Start each pipeline stage concurently
-	go source(chOutSource, cliNameList...)                // boostrap the Data
+	go source(chOutSource, cliMap)                        // boostrap the Data
 	go GenericUrl(chOutSource, chOutGenericUrl)           // set property
 	go SpecificUrl(chOutGenericUrl, chOutSpecificUrl)     // set property
 	go ArtifactName(chOutSpecificUrl, chOutArtifactName)  // set property
