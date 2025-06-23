@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"github.com/abtransitionit/luc/internal/config"
+	"github.com/abtransitionit/luc/internal/util"
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/pipeline/gocli"
 	"github.com/spf13/cobra"
@@ -22,14 +23,9 @@ var testCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Info(testSDesc)
 
-		configMap := map[string]config.CustomCLIConfig{
-			"runc": {
-				Name:      "runc",
-				Version:   "1.3.0",
-				DstFolder: "/usr/local/bin",
-			},
-		}
-		gocli.RunPipeline(configMap)
+		ListOvhVm()
+		// provisionOneCli()
+
 	},
 }
 
@@ -42,4 +38,20 @@ func init() {
 	testCmd.Flags().BoolP("runall", "r", false, "Run all phases in batch mode")
 	// Make them mutually exclusive
 	testCmd.MarkFlagsMutuallyExclusive("list", "runall")
+}
+
+func provisionOneCli() {
+	// provision a cli
+	configMap := map[string]config.CustomCLIConfig{
+		"runc": {
+			Name:      "runc",
+			Version:   "1.3.0",
+			DstFolder: "/usr/local/bin",
+		},
+	}
+	gocli.RunPipeline(configMap)
+}
+
+func ListOvhVm() {
+	logx.L.Infof("🔹 List OVH Vm: %s", util.ListOvhVm())
 }

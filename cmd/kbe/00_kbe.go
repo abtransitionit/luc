@@ -29,6 +29,6 @@ var KbeCmd = &cobra.Command{
 }
 
 func init() {
-	KbeCmd.AddCommand(initCmd)
+	KbeCmd.AddCommand(provisionCmd)
 	KbeCmd.AddCommand(resetCmd)
 }

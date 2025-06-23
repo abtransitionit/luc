@@ -5,9 +5,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package util
 
 import (
-	"bytes"
 	"fmt"
-	"os/exec"
 	"strings"
 
 	"github.com/abtransitionit/luc/pkg/errorx"
@@ -49,49 +47,30 @@ import (
 // }
 
 func IsSshConfiguredVmSshReachable(vmName string) (bool, error) {
-	// logx.L.Info("checks whether a VM configured in ~/.ssh/config.d/ is SSH reachable")
-
-	// decare and/or define var
-	var out bytes.Buffer
 
 	// prerequisit: VM is configured in ~/.ssh/config.d/
 	configured, err := IsVmSshConfigured(vmName)
 	if err != nil {
-		// handle system FAILURE
-		// msg := fmt.Sprintf("failed to check SSH config for VM: %s : %v", vmName, err)
-		// logx.L.Debugf("❌ %s", msg)
 		return false, err
-		// handle applogic FAILURE
 	} else if !configured {
-		// msg := fmt.Sprintf("VM %s is not configured in ~/.ssh/config.d/", vmName)
-		// logx.L.Debugf("❌ %s", msg)
 		return false, fmt.Errorf("VM %s is not configured in ~/.ssh/config.d/", vmName)
 	}
-	// handle applogic SUCCESS
-	// msg := fmt.Sprintf("VM %s is configured in ~/.ssh/config.d/", vmName)
-	// logx.L.Debugf("✅ %s", msg)
 
-	// prepare CLI to play : define CLI that helps to answer the function question
-	shellCli := fmt.Sprintf("ssh %s true", vmName)
-	shellCmd := exec.Command("sh", "-c", shellCli)
-	// intermediate variable
-	shellCmd.Stdout = &out
-	// play CLI
-	err = shellCmd.Run()
+	// Play CLI
+	cli := fmt.Sprintf("ssh %s true", vmName)
+	_, err = RunCLILocal(cli)
+	if err != nil {
+		logx.L.Debugf("❌ Error detected 1")
+		return false, err
+	}
 
 	// handle system FAILURE - TODO: improve to know the real reaseon
 	if err != nil {
-		// msg := fmt.Sprintf("failed to play CLI %s to check vm %s is SSH reachable (or VM is not SSH reachable)", shellCli, vmName)
-		// logx.L.Debugf("❌ %s", msg)
-		return errorx.BoolError("playing CLI", shellCli, err)
+		return errorx.BoolError("playing CLI", cli, err)
 	}
 
-	// handle applogic SUCCESS
-	// msg = fmt.Sprintf("VM %s is SSH reachable", vmName)
-	// logx.L.Debugf("✅ %s", msg)
-
-	hostname := strings.TrimSpace(out.String())
-	logx.L.Debugf("✅ vm %s is configured in ssh consig and is ssh reachable : %v", vmName, hostname)
+	// hostname := strings.TrimSpace(out.String())
+	// logx.L.Debugf("✅ vm %s is configured in ssh config and is ssh reachable : %v", vmName, hostname)
 	return true, nil
 }
 
@@ -121,34 +100,27 @@ func IsSshConfiguredVmSshReachable(vmName string) (bool, error) {
 // Note: Function only return.
 func IsVmSshConfigured(vmName string) (bool, error) {
 	var cliSshName = "ssh"
-	var out bytes.Buffer
 
-	// prerequisite: ssh client is available : critical error
+	// check ssh client is available
 	cliExists, err := CliExists(cliSshName)
-	// handle FAILURE
 	if err != nil {
 		return errorx.BoolError("check SSH CLI exists", cliSshName, err)
 	}
-	// handle SUCCESS : a boolean
 	if !cliExists {
-		return false, nil // SSH not available → treat as "not configured"
+		return false, fmt.Errorf("not found CLI: ssh")
 	}
 
-	// Here: ssh cli exists
-	// Build CLI that helps to answer the function's question
-	cmd := fmt.Sprintf("ssh -G %s 2>/dev/null | grep ^hostname | tr -s ' ' | cut -d' ' -f2", vmName)
-	// Prepare the CLI
-	shellCmd := exec.Command("sh", "-c", cmd)
-	// Play the CLI
-	shellCmd.Stdout = &out
-
-	// handle system FAILURE
-	if err := shellCmd.Run(); err != nil {
-		return errorx.BoolError("check SSH config for vm", vmName, err)
+	// Build CLI that helps to answer the function's question/query
+	cli := fmt.Sprintf("ssh -G %s 2>/dev/null | grep ^hostname | tr -s ' ' | cut -d' ' -f2", vmName)
+	out, err := RunCLILocal(cli)
+	if err != nil {
+		logx.L.Debugf("❌ Error detected 2")
+		// return errorx.BoolError("check SSH config for vm", vmName, err)
+		return false, err
 	}
 
-	// handle SUCCESS: the hostname
-	hostname := strings.TrimSpace(out.String())
+	// success: the hostname
+	hostname := strings.TrimSpace(out)
 	if hostname == vmName {
 		return false, nil // VM not configured (normal case)
 	}

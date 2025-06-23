@@ -5,14 +5,12 @@ package kbe
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"
-	updatepip "github.com/abtransitionit/luc/pkg/pipeline/dnfapt/update"
 )
 
-const UpdateDescription = "upgrade Kind VM OS using pipeleine."
+const UpdateDescription = "upgrade all VMs/Nodes OS packages and packages repositories to version latest."
 
 func update(arg ...string) (string, error) {
 	logx.L.Info(UpdateDescription)
-	updatepip.RunPipeline()
-	// on SUCCESS
+	// Actual implementation would go here
 	return "", nil
 }

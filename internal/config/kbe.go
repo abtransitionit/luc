@@ -12,9 +12,9 @@ const (
 	KbeVersion = K8sVersion // follow up kubernetes version
 
 	// KBE nodes
-	KbeListNodeList = "o1u o2a o3r o5d o6f"
-	KbeNodeCplane   = "o1u"
-	KbeListWorker   = "o1u"
+	KbeListNode       = "o1u o2a o3r o5d o6f"
+	KbeListNodeCplane = "o1u"
+	KbeListNodeWorker = "o1u"
 
 	// KBE CLI
 	KbeKubeadmCliVersion = K8sVersion

@@ -6,6 +6,7 @@ package phase
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/ui"
@@ -129,8 +130,11 @@ func handleRunAllFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
 	for _, phase := range phases {
 		logx.L.Infof("👉 Running phase '%s'", phase.Name)
 		// handle system FAILURE
-		if _, err := phase.Func(); err != nil {
+		_, err := phase.Func()
+		if err != nil {
 			logx.L.Debugf("❌ Phase '%s' failed: %v", phase.Name, err)
+			os.Exit(1)
+			// return true, fmt.Errorf("phase %s failed: %w", phase.Name, err)
 			return true, fmt.Errorf("phase %s failed: %w", phase.Name, err)
 		}
 		// handle applogic SUCCESS
