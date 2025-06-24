@@ -8,9 +8,9 @@ import "github.com/abtransitionit/luc/pkg/phase"
 
 var Phases = []phase.Phase{
 	phase.SetPhase("display", display, DisplayDescription),
-	phase.SetPhase("checkSsh", checkSsh, CheckSshDescription),
+	phase.SetPhase("checkssh", checkSsh, CheckSshDescription),
+	phase.SetPhase("cpluc", cpLuc, CpLucDescription),
 
-	// phase.SetPhase("cpluc", cpLuc, CpLucDescription),
 	// phase.SetPhase("update", update, UpdateDescription),
 	// phase.SetPhase("reboot", reboot, RebootDescription),
 }

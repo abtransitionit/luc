@@ -5,53 +5,94 @@ package kbe
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/jedib0t/go-pretty/table"
+	"github.com/jedib0t/go-pretty/text"
 )
+
+type SshStatus struct {
+	Node          string
+	SshConfigured bool
+	SshReachable  bool
+}
+
+// for all Nodes
+var NodeSshStatusMap = map[string]SshStatus{}
 
 const CheckSshDescription = "check all nodes of the KBE clusters are SSH reachable."
 
 func checkSsh(arg ...string) (string, error) {
 	logx.L.Info(CheckSshDescription)
 
+	// initialize the map
+	NodeSshStatusMap = map[string]SshStatus{}
+
 	// convert the list of nodes to a go slice
 	SliceNodes := strings.Fields(config.KbeListNode)
 
 	// check nodes are SSH configured
 	logx.L.Info("check nodes are SSH configured")
-	for _, vm := range SliceNodes {
-		ok, err := util.IsVmSshConfigured(vm)
+	for _, node := range SliceNodes {
+		isSshConfigured, err := util.IsVmSshConfigured(node)
 		if err != nil {
-			return "", fmt.Errorf("vm: %s: %v", vm, err)
+			return "", fmt.Errorf("node: %s: %v", node, err)
 		}
-		fmt.Printf("Node   %-5s ssh configured: %v\n", vm, ok)
-	}
+		// Fill the map with a structure instance for each Node
+		NodeSshStatusMap[node] = SshStatus{
+			Node:          node,
+			SshConfigured: isSshConfigured,
+			SshReachable:  false, // default value for now
+		}
+
+	} // for
 
 	// check nodes are SSH reachable
 	logx.L.Info("check nodes are SSH reachable")
-	for _, vm := range strings.Fields(config.KbeListNode) {
-		ok, err := util.IsSshConfiguredVmSshReachable(vm)
+	for _, node := range strings.Fields(config.KbeListNode) {
+		isSssReachable, err := util.IsSshConfiguredVmSshReachable(node)
 		if err != nil {
-			fmt.Printf("Error for %s: %v\n", vm, err)
+			logx.L.Debugf("%s", err)
 			continue
 		}
-		fmt.Printf("Node   %-5s ssh reachable: %v\n", vm, ok)
-	}
-	// check results
+		// update the map for each node
+		nodeStatus := NodeSshStatusMap[node]
+		nodeStatus.SshReachable = isSssReachable
+		NodeSshStatusMap[node] = nodeStatus
 
+	} // for
+	logx.L.Info("Display the results")
+	DisplaySshStatusMap()
 	// on SUCCESS
 	return "", nil
 }
 
-// for 1 VM
-type CheckResult struct {
-	Node       string
-	Configured bool
-	Reachable  bool
+// pretty display
+func DisplaySshStatusMap() {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.SetStyle(table.StyleLight)
+	t.Style().Title.Align = text.AlignCenter
+
+	t.SetTitle("Current SSH Status for Nodes")
+	t.AppendHeader(table.Row{"Node", "SSH Configured", "SSH Reachable"})
+
+	for _, status := range NodeSshStatusMap {
+		t.AppendRow(table.Row{
+			status.Node,
+			status.SshConfigured,
+			status.SshReachable,
+		})
+	}
+
+	t.Render()
 }
 
-// for a set of VMs
-var CurrentClusterResult = map[string]CheckResult{}
+// display
+// fmt.Printf("Node   %-5s ssh configured: %v\n", node, isSshConfigured)
+// display
+// fmt.Printf("Node   %-5s ssh reachable: %v\n", node, isSssReachable)

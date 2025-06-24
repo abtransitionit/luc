@@ -12,16 +12,6 @@ import (
 	"github.com/jedib0t/go-pretty/text"
 )
 
-const DisplayDescription = "display KBE Cluster's informations."
-
-func display(arg ...string) (string, error) {
-	logx.L.Info(DisplayDescription)
-	// display informayions on the cluster
-	DisplayClusterConfig(CurrentClusterConfig)
-	// on SUCCESS
-	return "", nil
-}
-
 // Structure used to holds the cluster node informations.
 type ClusterConfig struct {
 	KbeListNode       string
@@ -36,14 +26,25 @@ var CurrentClusterConfig = ClusterConfig{
 	KbeListNodeCplane: config.KbeListNodeWorker,
 }
 
-// display the cluster node informations from the structure ClusterConfig
+const DisplayDescription = "display KBE Cluster's informations."
+
+func display(arg ...string) (string, error) {
+	logx.L.Info(DisplayDescription)
+	// display informayions on the cluster
+	DisplayClusterConfig(CurrentClusterConfig)
+	// on SUCCESS
+	return "", nil
+}
+
+// pretty display
 func DisplayClusterConfig(config ClusterConfig) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.SetStyle(table.StyleLight)
 	t.Style().Title.Align = text.AlignCenter
 
-	t.AppendHeader(table.Row{"Key", "Value"})
+	t.SetTitle("Cluster Node informations")
+	t.AppendHeader(table.Row{"Type", "Node(s)"})
 	t.AppendRows([]table.Row{
 		{"Node names", config.KbeListNode},
 		{"Worker Node names", config.KbeListNodeWorker},

@@ -5,7 +5,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package util
 
 import (
-	utilpub "github.com/abtransitionit/luc/pkg/util"
+	"github.com/abtransitionit/luc/pkg/util"
 )
 
 // List SSH reachable OVH VMs
@@ -21,12 +21,13 @@ func ListOvhVm() []string {
 		listVmSshReachable = []string{}
 	)
 	// define potentially vm names
-	listVmName, _ := utilpub.CartesianProduct(listVmPrefix, listOs)
+	listVmName, _ := util.CartesianProduct(listVmPrefix, listOs)
 
 	// loop over vm names
 	for _, vmName := range listVmName {
 		// check VM is ssh reachable
-		if IsReachable, _ := utilpub.IsSshConfiguredVmSshReachable(vmName); IsReachable {
+		IsReachable, _ := util.IsSshConfiguredVmSshReachable(vmName)
+		if IsReachable {
 			listVmSshReachable = append(listVmSshReachable, vmName)
 		}
 	}

@@ -40,7 +40,7 @@ func Execute() {
 
 func init() {
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.AddCommand(util.UtilCmd)
+	// rootCmd.AddCommand(util.UtilCmd)
 	rootCmd.AddCommand(cli.CliCmd)
 	rootCmd.AddCommand(kbe.KbeCmd)
 	rootCmd.AddCommand(kind.KindCmd)

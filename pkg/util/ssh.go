@@ -53,14 +53,13 @@ func IsSshConfiguredVmSshReachable(vmName string) (bool, error) {
 	if err != nil {
 		return false, err
 	} else if !configured {
-		return false, fmt.Errorf("VM %s is not configured in ~/.ssh/config.d/", vmName)
+		return false, fmt.Errorf("❌ Error: VM %s is not configured in ~/.ssh/config.d/", vmName)
 	}
 
 	// Play CLI
 	cli := fmt.Sprintf("ssh %s true", vmName)
 	_, err = RunCLILocal(cli)
 	if err != nil {
-		logx.L.Debugf("❌ Error detected 1")
 		return false, err
 	}
 
