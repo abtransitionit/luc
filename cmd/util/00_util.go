@@ -30,6 +30,6 @@ var UtilCmd = &cobra.Command{
 
 func init() {
 	UtilCmd.AddCommand(ovhCmd)
-	UtilCmd.AddCommand(propertyCmd)
+	UtilCmd.AddCommand(getpropCmd)
 	UtilCmd.AddCommand(resetCmd)
 }

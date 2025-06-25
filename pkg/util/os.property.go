@@ -9,8 +9,10 @@ import (
 	"os"
 	"os/user"
 	"runtime"
+	"sort"
 	"strings"
 
+	"github.com/jedib0t/go-pretty/table"
 	"github.com/opencontainers/selinux/go-selinux"
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/host"
@@ -45,9 +47,6 @@ var propertyMap = map[string]PropertyHandler{
 }
 
 // return propertyMap
-func GetPropertyMap() map[string]PropertyHandler {
-	return propertyMap
-}
 
 func getReboot() (string, error) {
 	// Ensure we're on Linux
@@ -284,6 +283,10 @@ func getNetGateway() (string, error) {
 	return strings.TrimSpace(line), nil
 }
 
+func GetPropertyMap() map[string]PropertyHandler {
+	return propertyMap
+}
+
 // Example Usage:
 //
 //	props := []string{"cpu", "ram", "osarch", "uuid", "cgroup"}
@@ -314,7 +317,35 @@ func GetLocalProperty(property string) (string, error) {
 // output, err := RunCLILocal(cli)
 // switch between local and remote transparently.
 //
-// type CommandRunner interface {
-//   Run(cmd string) (string, error)
-// }
-//
+//	type CommandRunner interface {
+//	  Run(cmd string) (string, error)
+//	}
+func GetRemoteProperty(vm string, property string) (string, error) {
+	cmd := fmt.Sprintf(`luc getprop %s`, property)
+	return RunCLIRemote(cmd, vm)
+}
+
+func ShowPropertyMap() {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+
+	// Simple header
+	t.AppendHeader(table.Row{"Property Name"})
+
+	// sort keys
+	var listPropertyName []string
+	for name := range propertyMap {
+		listPropertyName = append(listPropertyName, name)
+	}
+	sort.Strings(listPropertyName)
+
+	// Add rows
+	for _, name := range listPropertyName {
+		t.AppendRow(table.Row{
+			name,
+		})
+	}
+
+	// Render with default style
+	t.Render()
+}

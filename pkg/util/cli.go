@@ -10,55 +10,71 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
-
-	"github.com/abtransitionit/luc/pkg/errorx"
 )
 
-// checks if a CLI tool is available in the system's PATH.
-// Returns:
+// # Purpose
+//
+// checks if a CLI is available in the system's PATH.
+//
+// # Returns
 //   - (true, nil) if the tool exists
 //   - (false, nil) if the tool is not found (not treated as an error)
 //   - (false, error) if PATH lookup fails (e.g., permission issues)
 //
-// Usage examples:
+// # Usage examples
 //
-//		if exists, err := CliExist("go"); err != nil {
-//			log.Fatalf("PATH lookup failed: %v", err)
-//		} else if !exists {
-//		  log.Println("Go toolchain not found - please install Go first")
-//		}
+// localExists, err := CliExists("luc")
 //
-//		// Check for Docker CLI
-//		if exists, _ := CliExist("docker"); exists {
-//		    fmt.Println("Docker is available")
-//		} else {
-//		    fmt.Println("Docker not found in PATH")
-//		}
-//	 Note: Function intentionally only returns and does not include logging. Caller should handle logging if needed based on their context`
+//	if err != nil {
+//		 log.Fatalf("error checking luc locally: %v", err)
+//	}
+//
+// fmt.Println("luc available locally:", localExists)
 func CliExists(name string) (bool, error) {
 	_, err := exec.LookPath(name)
-	if err == nil {
-		return true, nil // Tool exists
+	if err != nil {
+		if errors.Is(err, exec.ErrNotFound) {
+			return false, nil // Tool is not installed (normal case)
+		}
+		return false, err // Unexpected error (e.g., permission issue)
 	}
-	if errors.Is(err, exec.ErrNotFound) {
-		return false, nil // Tool missing (normal case)
+	return true, nil
+}
+
+// # Purpose
+//
+// checks if a CLI is available on a remote VM.
+//
+// # Example usage
+//
+//	exists, err := CliExistsRemote("luc", "o1u")
+//	if err != nil {
+//		log.Fatalf("error checking luc on remote 'o1u': %v", err)
+//	}
+//
+// fmt.Println("luc available on o1u:", remoteExists)
+func CliRemoteExists(name, vm string) (bool, error) {
+	cmd := fmt.Sprintf("command -v %s", name)
+	output, err := RunCLIRemote(vm, cmd)
+	if err != nil {
+		// Any SSH or command failure (not found) returns false
+		return false, nil
 	}
-	// handle system FAILURE
-	return errorx.BoolError("check cli exists", name, err)
+	return strings.TrimSpace(output) != "", nil
 }
 
 // # Purpose
 //
 // runs a local linux shell CLI and returns its stdout, stderr, and any error.
 //
-// Parameters:
+// # Parameters
 //   - command: A shell command string (e.g., "ls -l /").
 //
-// Returns:
+// # Returns
 //   - stdout: The trimmed standard output of the command.
 //   - err:    An error if the command failed to run or returned a non-zero exit code.
 //
-// Usage:
+// # Usage
 //
 //	output, err := RunCLILocal("hostname")
 //	if err != nil {
@@ -97,7 +113,7 @@ func RunCLILocalOld01(command string) (stdout string, err error) {
 }
 
 // RunCLIRemote runs a shell command on a remote machine via SSH.
-func RunCLIRemote(vm string, command string) (stdout string, err error) {
+func RunCLIRemote(command string, vm string) (stdout string, err error) {
 	// Format SSH command: ssh user@host "command"
 	fullCmd := fmt.Sprintf(`ssh %s "%s"`, vm, command)
 
