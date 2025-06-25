@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package filecopy
+package rfilecopy
 
 const RunPipelineDescription = "copy a local file to remote VMs"
 

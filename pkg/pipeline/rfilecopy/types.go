@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package filecopy
+package rfilecopy
 
 import (
 	"github.com/jedib0t/go-pretty/table"
@@ -21,6 +21,7 @@ type PipelineData struct {
 func (p PipelineData) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
+	t.SetTitle("LUC remote copy status")
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{

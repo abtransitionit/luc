@@ -22,10 +22,12 @@ type PipelineData struct {
 func (p PipelineData) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
+	t.SetTitle("VM Status")
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{
-		{"HostType", p.HostType},
+		{"Host Name", p.HostName},
+		{"Host Type", p.HostType},
 		{"OS Family", p.OsFamily},
 		{"OS Distro", p.OsDistro},
 		{"Os Version", p.OsVersion},

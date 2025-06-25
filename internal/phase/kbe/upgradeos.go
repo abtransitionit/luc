@@ -6,7 +6,7 @@ package kbe
 import (
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	rupgrade "github.com/abtransitionit/luc/pkg/pipeline/dnfapt/remoteupgrade"
+	rupgrade "github.com/abtransitionit/luc/pkg/pipeline/dnfapt/rupgrade"
 )
 
 const UpgradeOsDescription = "provision OS with latest dnfapt packages and repositories."

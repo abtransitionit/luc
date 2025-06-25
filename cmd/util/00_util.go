@@ -14,9 +14,10 @@ var utilLDesc = utilSDesc + ` xxx.`
 
 // root Command
 var UtilCmd = &cobra.Command{
-	Use:   "util",
-	Short: utilSDesc,
-	Long:  utilLDesc,
+	Hidden: true, // available but not visible
+	Use:    "util",
+	Short:  utilSDesc,
+	Long:   utilLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Infof("%s", utilSDesc)
 		// manage argument
@@ -29,7 +30,8 @@ var UtilCmd = &cobra.Command{
 }
 
 func init() {
-	UtilCmd.AddCommand(ovhCmd)
 	UtilCmd.AddCommand(getpropCmd)
+	UtilCmd.AddCommand(mvfileCmd)
+	UtilCmd.AddCommand(ovhCmd)
 	UtilCmd.AddCommand(resetCmd)
 }

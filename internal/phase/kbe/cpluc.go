@@ -6,7 +6,7 @@ package kbe
 import (
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/pipeline/filecopy"
+	"github.com/abtransitionit/luc/pkg/pipeline/rfilecopy"
 )
 
 const CpLucDescription = "provision needed go CLI"
@@ -14,7 +14,7 @@ const CpLucDescription = "provision needed go CLI"
 func cpLuc(arg ...string) (string, error) {
 	logx.L.Info(CpLucDescription)
 	// Launch the pipeline attach to this phase
-	err := filecopy.RunPipeline(config.KbeListNode, "/tmp/luc-linux", "/tmp/luc")
+	err := rfilecopy.RunPipeline(config.KbeListNode, "/tmp/luc-linux", "/tmp/luc")
 	if err != nil {
 		return "", err
 	}

@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package filecopy
+package rfilecopy
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"

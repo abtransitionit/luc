@@ -4,10 +4,11 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package filecopy
+package rfilecopy
 
 import (
 	"fmt"
+	"path/filepath"
 	"sync"
 
 	"github.com/abtransitionit/luc/pkg/logx"
@@ -30,15 +31,30 @@ func concurrentlyCopyFile(in <-chan PipelineData, out chan<- PipelineData, nbWor
 				out <- data
 				continue
 			}
+
+			// copy file to /tmp
 			cmd := fmt.Sprintf("scp %s %s:%s", data.SrcFile, data.Node, data.DstFile)
 			_, err := util.RunCLILocal(cmd)
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("❌ error detected")
-			} else {
-				logx.L.Infof("[%s] ✅ Copied successfully", data.Node)
 			}
-
+			// sudo move file with luc EXCEPT if we must move LUC itself
+			cliName := filepath.Base(data.DstFile)
+			if cliName == "luc" {
+				cmd = fmt.Sprintf(`sudo mv %s "/usr/local/bin/" && chmod +x /usr/local/bin/luc`, data.DstFile)
+			} else {
+				cmd = fmt.Sprintf(`luc util mvfile %s "/usr/local/bin/" 0755 true`, data.DstFile)
+			}
+			// play CLI
+			_, err = util.RunCLIRemote(cmd, data.Node)
+			if err != nil {
+				data.Err = err
+				logx.L.Debugf("❌ error detected")
+			}
+			// set property
+			data.DstFile = fmt.Sprintf("/usr/local/bin/luc/%s", cliName)
+			// send
 			out <- data
 		} // for
 	} // worker

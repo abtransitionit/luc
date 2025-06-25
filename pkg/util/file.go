@@ -201,7 +201,7 @@ func IsGzippedMemoryContent(data []byte) (bool, error) {
 
 // # Purpose
 //
-// check if data culred in memory is aa exe
+// check if data culred in memory is an exe
 func IsMemoryContentAnExe(data []byte) (bool, error) {
 	if len(data) < 4 {
 		return false, fmt.Errorf("data too short to determine executable")
@@ -264,7 +264,7 @@ func UntargzFile(srcTgzPath string, destFolder string) error {
 //
 // # Parameters
 //   - srcPath: absolute path to the source file.
-//   - dstPath: absolute path to the destination file location (can include a rename).
+//   - dstPath: absolute dst folder or absolute filepath (if rename).
 //
 // # Returns
 //   - success: true if the move operation succeeded, false otherwise.

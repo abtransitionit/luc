@@ -32,25 +32,31 @@ func source(out chan<- PipelineData, vmList string) {
 		data := PipelineData{}
 
 		// get some OS property
-		osFamily, err := util.GetLocalProperty("osfamily")
+		osFamily, err := util.GetRemoteProperty("osfamily", vm)
+		if err != nil {
+			data.Err = err
+			logx.L.Debugf("❌ Error detected", err)
+		}
+
+		osDistro, err := util.GetRemoteProperty("osdistro", vm)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("❌ Error detected")
 		}
 
-		osDistro, err := util.GetLocalProperty("osdistro")
+		hostType, err := util.GetRemoteProperty("host", vm)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("❌ Error detected")
 		}
 
-		hostType, err := util.GetLocalProperty("host")
+		osVersion, err := util.GetRemoteProperty("osversion", vm)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("❌ Error detected")
 		}
 
-		osVersion, err := util.GetLocalProperty("osversion")
+		kernelVersion, err := util.GetRemoteProperty("oskversion", vm)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("❌ Error detected")
@@ -62,6 +68,7 @@ func source(out chan<- PipelineData, vmList string) {
 		data.OsDistro = osDistro
 		data.HostType = hostType
 		data.OsVersion = osVersion
+		data.OskernelVersionBefore = kernelVersion
 
 		// log information
 		logx.L.Debugf("[%s] defined data instances to be pipelined", vm)

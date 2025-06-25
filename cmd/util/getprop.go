@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package util
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 	"github.com/spf13/cobra"
@@ -28,7 +30,8 @@ var getpropCmd = &cobra.Command{
 				logx.L.Debugf("%s", err)
 				return
 			}
-			logx.L.Infof("value for property '%s': %s", propertyName, propertyValue)
+			// logx.L.Infof("value for property '%s': %s", propertyName, propertyValue)
+			fmt.Println(propertyValue)
 			return
 		}
 

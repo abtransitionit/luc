@@ -21,11 +21,24 @@ var deleteCmd = &cobra.Command{
 	// define the set of phases for this cmd
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Infof("%s", deleteSDesc)
-		cli := "kind delete cluster"
-		_, err := util.RunCLILocal(cli)
+
+		// are we on a linux VM
+		cli := "luc util getprop ostype"
+		ostype, err := util.RunCLILocal(cli)
 		if err != nil {
-			logx.L.Debugf("❌ Error detected")
+			logx.L.Debugf("%s", err)
 		}
-		logx.L.Debugf("✅ deleted cluster")
+		if ostype != "linux" {
+			logx.L.Debugf("❌ not on a linux VM")
+			return
+		}
+		logx.L.Debugf("✅ on a linux VM. will delete cluster")
+
+		// cli := "kind delete cluster"
+		// _, err := util.RunCLILocal(cli)
+		// if err != nil {
+		// 	logx.L.Debugf("❌ Error detected")
+		// }
+		// logx.L.Debugf("✅ deleted cluster")
 	},
 }

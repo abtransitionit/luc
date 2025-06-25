@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package filecopy
+package rfilecopy
 
 import (
 	"strings"
@@ -19,13 +19,13 @@ func source(out chan<- PipelineData, vmList string, srcFile, dstFile string) {
 	// closing it make it available for next stage
 	// because it is defined outside
 	defer close(out)
+	vms := strings.Fields(vmList) // convert ListAsString to slice
 
 	// log information
 	logx.L.Debugf("defining data to be pipelined")
-	logx.L.Debugf("Preparing file copy pipeline for %d VM(s)", len(vmList))
+	logx.L.Debugf("Preparing file copy pipeline for %d VM(s) : %s", len(vms), vms)
 
 	// loop over all items in the list
-	vms := strings.Fields(vmList) // convert ListAsString to slice
 	for _, vm := range vms {
 		// create a new instance per item (VM)
 		data := PipelineData{

@@ -4,8 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package util
 
 import (
+	"github.com/abtransitionit/luc/cmd/util/ovh"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/util"
 	"github.com/spf13/cobra"
 )
 
@@ -21,11 +21,14 @@ var ovhCmd = &cobra.Command{
 	// define the set of phases for this cmd
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Infof("%s", ovhSDesc)
-		cli := "kind delete cluster"
-		_, err := util.RunCLILocal(cli)
-		if err != nil {
-			logx.L.Debugf("❌ Error detected")
-		}
-		logx.L.Debugf("✅ deleted cluster")
+		cmd.Help()
 	},
 }
+
+func init() {
+	ovhCmd.AddCommand(ovh.ListvmCmd)
+	ovhCmd.AddCommand(ovh.CplucCmd)
+}
+
+// list ovh vm
+// cp luc to ovh vm provided as arg
