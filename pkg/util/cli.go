@@ -95,3 +95,25 @@ func RunCLILocalOld01(command string) (stdout string, err error) {
 
 	return stdout, err
 }
+
+// RunCLIRemote runs a shell command on a remote machine via SSH.
+func RunCLIRemote(vm string, command string) (stdout string, err error) {
+	// Format SSH command: ssh user@host "command"
+	fullCmd := fmt.Sprintf(`ssh %s "%s"`, vm, command)
+
+	// cmd := exec.Command("bash", "-c", fullCmd)
+	cmd := exec.Command("sh", "-c", fullCmd)
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+
+	err = cmd.Run()
+	stdout = strings.TrimSpace(out.String())
+
+	if err != nil {
+		return stdout, fmt.Errorf("remote command failed: %v\noutput:\n%s", err, stdout)
+	}
+
+	return stdout, nil
+}

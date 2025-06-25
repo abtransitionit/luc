@@ -1,19 +1,24 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package reboot
+package rupgrade
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func infoAfter(in <-chan PipelineData, out chan<- PipelineData) {
+func infoBefore(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
+	// loop over each key of the instance structure PipelineData
 	for data := range in {
+		// if this instance property exists
 		if data.Err != nil {
+			// send the instance instance into the channel (for next stage/step)
 			out <- data
+			// log information
 			logx.L.Debugf("❌ Previous error detected")
+			// read another instance from the channel
 			continue
 		}
 
@@ -23,9 +28,9 @@ func infoAfter(in <-chan PipelineData, out chan<- PipelineData) {
 			data.Err = err
 			logx.L.Debugf("❌ Error detected")
 		}
-		data.OskernelVersionAfter = osKernelVersion
+		data.OskernelVersionBefore = osKernelVersion
 
-		// send
+		// send the instance to the channel (for next stage/step)
 		out <- data
 	}
 }

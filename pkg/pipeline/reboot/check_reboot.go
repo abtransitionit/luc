@@ -18,7 +18,7 @@ func needReboot(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 
 		// step 2: get property
-		needReboot, err := util.OsPropertyGet("reboot")
+		needReboot, err := util.GetLocalProperty("reboot")
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("❌ Error detected")

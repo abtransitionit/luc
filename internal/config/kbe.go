@@ -12,6 +12,7 @@ const (
 	KbeVersion = K8sVersion // follow up kubernetes version
 
 	// KBE nodes
+	// KbeListNode = "o1u o2a o3r o5d"
 	KbeListNode       = "o1u o2a o3r o5d o6f"
 	KbeListNodeCplane = "o1u"
 	KbeListNodeWorker = "o1u"

@@ -13,7 +13,7 @@ import (
 // - This stage create an instance of the structure to be pipelined
 // - 1 instance of the structure per item in the cliNameList (e.g 9 cli => 9 structures)
 // - This stage will send (out chan<-) each instance into the channel
-func source(out chan<- PipelineData, packageNameList ...string) {
+func source(out chan<- PipelineData) {
 	// close channel when this code ended
 	// closing it make it available for next stage
 	// because it is defined outside
@@ -24,25 +24,25 @@ func source(out chan<- PipelineData, packageNameList ...string) {
 	logx.L.Debugf("defining data instances to be pipelined")
 
 	// get some OS property
-	osFamily, err := util.OsPropertyGet("osfamily")
+	osFamily, err := util.GetLocalProperty("osfamily")
 	if err != nil {
 		data.Err = err
 		logx.L.Debugf("❌ Error detected")
 	}
 
-	osDistro, err := util.OsPropertyGet("osdistro")
+	osDistro, err := util.GetLocalProperty("osdistro")
 	if err != nil {
 		data.Err = err
 		logx.L.Debugf("❌ Error detected")
 	}
 
-	hostType, err := util.OsPropertyGet("host")
+	hostType, err := util.GetLocalProperty("host")
 	if err != nil {
 		data.Err = err
 		logx.L.Debugf("❌ Error detected")
 	}
 
-	osVersion, err := util.OsPropertyGet("osversion")
+	osVersion, err := util.GetLocalProperty("osversion")
 	if err != nil {
 		data.Err = err
 		logx.L.Debugf("❌ Error detected")

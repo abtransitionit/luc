@@ -10,7 +10,7 @@ import (
 
 func ReloadAndApplyService(action string, listServiceName ...string) error {
 	// get property
-	osType, err := OsPropertyGet("ostype")
+	osType, err := GetLocalProperty("ostype")
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func StatusService(listServiceName ...string) (map[string]string, error) {
 	results := make(map[string]string)
 
 	// get property
-	osType, err := OsPropertyGet("ostype")
+	osType, err := GetLocalProperty("ostype")
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +97,7 @@ func StatusService(listServiceName ...string) (map[string]string, error) {
 func CreateServiceFile(stringContent string, filePath string) error {
 
 	// get property
-	osType, err := OsPropertyGet("ostype")
+	osType, err := GetLocalProperty("ostype")
 	if err != nil {
 		return err
 	}
@@ -116,7 +116,7 @@ func CreateServiceFile(stringContent string, filePath string) error {
 func CreateUserServiceFile(stringContent string, filePath string) error {
 
 	// get property
-	osType, err := OsPropertyGet("ostype")
+	osType, err := GetLocalProperty("ostype")
 	if err != nil {
 		return err
 	}

@@ -11,7 +11,6 @@ import (
 const RunPipelineDescription = "provision GO CLI(s)."
 
 func RunPipeline(cliMap map[string]config.CustomCLIConfig) (string, error) {
-	// func RunPipeline(cliNameList ...string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
 
 	// Count and log the number of CLI args

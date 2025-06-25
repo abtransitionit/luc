@@ -1,14 +1,14 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package reboot
+package rupgrade
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/abtransitionit/luc/pkg/util/dnfapt"
 )
 
-func infoAfter(in <-chan PipelineData, out chan<- PipelineData) {
+func update(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
 	for data := range in {
 		if data.Err != nil {
@@ -17,13 +17,14 @@ func infoAfter(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 
-		// step 2: get property
-		osKernelVersion, err := util.GetLocalProperty("oskversion")
+		// Update the OS
+		_, err := dnfapt.UpdateOs()
 		if err != nil {
 			data.Err = err
-			logx.L.Debugf("❌ Error detected")
+			logx.L.Debugf("Error detected")
+			out <- data
+			continue
 		}
-		data.OskernelVersionAfter = osKernelVersion
 
 		// send
 		out <- data

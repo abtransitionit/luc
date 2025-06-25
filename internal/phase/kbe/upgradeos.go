@@ -6,15 +6,15 @@ package kbe
 import (
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/pipeline/filecopy"
+	rupgrade "github.com/abtransitionit/luc/pkg/pipeline/dnfapt/remoteupgrade"
 )
 
-const CpLucDescription = "provision needed go CLI"
+const UpgradeOsDescription = "provision OS with latest dnfapt packages and repositories."
 
-func cpLuc(arg ...string) (string, error) {
-	logx.L.Info(CpLucDescription)
+func upgradeOs(arg ...string) (string, error) {
+	logx.L.Info(UpgradeOsDescription)
 	// Launch the pipeline attach to this phase
-	err := filecopy.RunPipeline(config.KbeListNode, "/tmp/luc-linux", "/tmp/luc")
+	err := rupgrade.RunPipeline(config.KbeListNode)
 	if err != nil {
 		return "", err
 	}

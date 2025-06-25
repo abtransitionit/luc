@@ -10,6 +10,7 @@ var Phases = []phase.Phase{
 	phase.SetPhase("display", display, DisplayDescription),
 	phase.SetPhase("checkssh", checkSsh, CheckSshDescription),
 	phase.SetPhase("cpluc", cpLuc, CpLucDescription),
+	phase.SetPhase("upgradeos", upgradeOs, UpgradeOsDescription),
 
 	// phase.SetPhase("update", update, UpdateDescription),
 	// phase.SetPhase("reboot", reboot, RebootDescription),

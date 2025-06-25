@@ -20,7 +20,7 @@ import (
 type PropertyHandler func() (string, error)
 
 // map a string to a function
-var propertyHandlers = map[string]PropertyHandler{
+var propertyMap = map[string]PropertyHandler{
 	"cpu":        getCpu,
 	"cgroup":     getCgroupVersion,
 	"init":       getInitSystem,
@@ -42,6 +42,11 @@ var propertyHandlers = map[string]PropertyHandler{
 	"selinfos":   getSelinuxInfos,
 	"osinfos":    getOsInfos,
 	"reboot":     getReboot,
+}
+
+// return propertyMap
+func GetPropertyMap() map[string]PropertyHandler {
+	return propertyMap
 }
 
 func getReboot() (string, error) {
@@ -284,15 +289,15 @@ func getNetGateway() (string, error) {
 //	props := []string{"cpu", "ram", "osarch", "uuid", "cgroup"}
 //
 //	for _, prop := range props {
-//		value, err := util.OsPropertyGet(prop)
+//		value, err := util.GetLocalProperty(prop)
 //		if err != nil {
 //			// logx.L.Debugf("%s", err)
 //			continue
 //		}
 //		fmt.Printf("prop: %s value: %s\n", prop, value)
 //	}
-func OsPropertyGet(property string) (string, error) {
-	handler, ok := propertyHandlers[property]
+func GetLocalProperty(property string) (string, error) {
+	handler, ok := propertyMap[property]
 	if !ok {
 		return "", fmt.Errorf("❌ unknown property requested: %s", property)
 	}
@@ -304,3 +309,12 @@ func OsPropertyGet(property string) (string, error) {
 
 	return output, nil
 }
+
+// Idea - execute this function remotly
+// output, err := RunCLILocal(cli)
+// switch between local and remote transparently.
+//
+// type CommandRunner interface {
+//   Run(cmd string) (string, error)
+// }
+//

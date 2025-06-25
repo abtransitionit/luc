@@ -31,14 +31,14 @@ func service(arg ...string) (string, error) {
 	// }
 
 	// get property
-	osFamily, err := util.OsPropertyGet("osfamily")
+	osFamily, err := util.GetLocalProperty("osfamily")
 	if err != nil {
 		logx.L.Debugf("❌ Error detected 2")
 		return "", err
 	}
 
 	// // get property
-	// envPath, err := util.OsPropertyGet("path")
+	// envPath, err := util.GetLocalProperty("path")
 	// if err != nil {
 	// 	logx.L.Debugf("❌ Error detected 4")
 	// 	return "", err
@@ -55,7 +55,7 @@ func service(arg ...string) (string, error) {
 	}
 
 	// get property
-	osUser, err := util.OsPropertyGet("osuser")
+	osUser, err := util.GetLocalProperty("osuser")
 	if err != nil {
 		logx.L.Debugf("❌ Error detected 3")
 		return "", err

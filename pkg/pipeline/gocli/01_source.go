@@ -13,9 +13,9 @@ import (
 
 // # Purpose
 //
-// - This stage create an instance of the structure to be pipelined
-// - 1 instance of the structure per item in the cliMap (e.g 9 cliMap => 1 structure => 9 instances)
-// - This stage will send (out chan<-) each instance into the channel
+// - This stage creates a PipelineData instance for each CLI in the cliMap
+// - e.g 9 CLI in the cliMap => 9 instances of the structure PipelineData
+// - It sends (out chan<-) each instance into the output channel
 func source(out chan<- PipelineData, cliMap map[string]configinternal.CustomCLIConfig) {
 	// close channel when this code ended
 	// closing it make it available for next stage
@@ -27,7 +27,7 @@ func source(out chan<- PipelineData, cliMap map[string]configinternal.CustomCLIC
 
 	// loop over all items in the list
 	for _, item := range cliMap {
-		// create a new instance per item
+		// create a new instance per item (CLI)
 		data := PipelineData{}
 
 		// Fetch the config for this CLI

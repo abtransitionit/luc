@@ -1,15 +1,20 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package reboot
+package filecopy
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func infoBefore(in <-chan PipelineData, out chan<- PipelineData) {
+// # Purpose
+//
+// - This step checks that the VM is SSH-configured and reachable.
+// - If not, it sets `data.Err` and passes it along.
+func checkVM(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
+
 	// loop over each key of the instance structure PipelineData
 	for data := range in {
 		// if this instance property exists
@@ -22,15 +27,14 @@ func infoBefore(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 
-		// step 2: get property
-		osKernelVersion, err := util.GetLocalProperty("oskversion")
-		if err != nil {
+		// set this instance property if Vm is not SSH-reachable
+		ok, err := util.IsSshConfiguredVmSshReachable(data.Node)
+		if err != nil || !ok {
+			// data.Err = fmt.Errorf("VM %s not SSH reachable or misconfigured: %v", data.Node, err)
 			data.Err = err
-			logx.L.Debugf("❌ Error detected")
+			logx.L.Debugf("❌ Previous error detected")
 		}
-		data.OskernelVersionBefore = osKernelVersion
 
-		// send the instance to the channel (for next stage/step)
 		out <- data
 	}
 }

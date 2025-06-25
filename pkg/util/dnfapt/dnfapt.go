@@ -15,7 +15,7 @@ import (
 func UpdateOs() (bool, error) {
 	var cli = ""
 	// get Li nux Os family
-	osFamily, err := util.OsPropertyGet("osfamily")
+	osFamily, err := util.GetLocalProperty("osfamily")
 	if err != nil {
 		return false, err
 	}
@@ -39,7 +39,7 @@ func UpdateOs() (bool, error) {
 func ProvisionPackage(packageName string) (bool, error) {
 	var cli = ""
 	// get Li nux Os family
-	osFamily, err := util.OsPropertyGet("osfamily")
+	osFamily, err := util.GetLocalProperty("osfamily")
 	if err != nil {
 		return false, err
 	}

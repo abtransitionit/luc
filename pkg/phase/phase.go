@@ -48,7 +48,7 @@ func ListPhases(phases []Phase) {
 
 	// Rows
 	for i, phase := range phases {
-		fmt.Printf("%-3d  %-8s  %s\n",
+		fmt.Printf("%-3d  %-10s  %s\n",
 			i+1,
 			phase.Name,
 			phase.Description)
