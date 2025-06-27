@@ -8,15 +8,14 @@ import (
 	"fmt"
 )
 
-// computes the Cartesian product of two string slices.
+// # Purpose
+//
+// - Reboots the current OS
 //
 // Returns:
 //
 //   - []string: containing the Cartesian product
 //   - error:    if either input slice is empty
-//
-// Time complexity: O(n*m) where n = len(a), m = len(b)
-// Space complexity: O(n*m)
 func Reboot() (string, error) {
 	// play CLI
 	cli := "sudo reboot"
@@ -25,4 +24,27 @@ func Reboot() (string, error) {
 		return "", fmt.Errorf("❌ Error rebooting : %v", err)
 	}
 	return output, nil
+}
+
+// # Purpose
+//
+// - Just lauch a reboot on a remote VM
+//
+// Returns:
+//
+//   - error:    if any error occurs
+func RemoteReboot(vm string) error {
+	// check arg
+	if vm == "" {
+		return fmt.Errorf("❌ Error: vm is empty")
+	}
+	// check VM is reachable
+	_, err := IsSshConfiguredVmSshReachable(vm)
+	if err != nil {
+		return err
+	}
+	// play CLI
+	cli := "sudo reboot"
+	RunCLIRemote(vm, cli)
+	return nil
 }

@@ -15,25 +15,25 @@ func RunPipeline(vmList string) (string, error) {
 	// Define the pipeline channels
 	ch01 := make(chan PipelineData)
 	ch02 := make(chan PipelineData)
-	// ch03 := make(chan PipelineData)
 	chOutLast := ch02
 
+	// sequential step
 	var dtpip PipelineData
-	dtpip.localExePath = "/usr/local/bin/luc"
 	dtpip.localOutput = "/tmp/luc"
+	dtpip.localExePath = "/usr/local/bin/luc"
 	dtpip.localOutXptf = "/tmp/luc-linux"
+	// build and deploy locally
+	buildLuc(dtpip)
 
-	buildLuc(dtpip)                // build and deploy locally
+	// aync stage
 	go source(ch01, dtpip, vmList) // define instances to send to the pipeline
 	go scpLuc(ch01, ch02, vmList)  // scp luc from local to remote
-	// go mvLucRemote(ch01, ch03, vmList) // mv remotely from tmp to final path
 
-	// This is not a stage but the last foreground step reading all instance in the pipeline
+	// final sequential step. collects all instances in the pipeline and build a sumary
 	err := lastStep(chOutLast)
 	if err != nil {
 		return "", err
 	}
-	// on SUCCESS
-	// time.Sleep(10 * time.Second)
+	// success
 	return "", nil
 }

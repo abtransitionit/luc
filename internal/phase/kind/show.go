@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package kbe
+package kind
 
 import (
 	"fmt"
@@ -13,19 +13,15 @@ import (
 
 // Structure used to holds the cluster node informations.
 type ClusterConfig struct {
-	KbeListNode       string
-	KbeListNodeWorker string
-	KbeListNodeCplane string
+	VmName string
 }
 
 // 1 instance of the structure for the cluster
 var CurrentClusterConfig = ClusterConfig{
-	KbeListNode:       config.KbeListNode,
-	KbeListNodeWorker: config.KbeListNodeWorker,
-	KbeListNodeCplane: config.KbeListNodeWorker,
+	VmName: config.KindVm,
 }
 
-const DisplayDescription = "display the desired KBE Cluster's configuration."
+const DisplayDescription = "display the desired KIND Cluster's configuration."
 
 func show(arg ...string) (string, error) {
 	logx.L.Info(DisplayDescription)
@@ -40,9 +36,7 @@ func (obj ClusterConfig) String() string {
 	t.SetTitle("Cluster config")
 	t.AppendHeader(table.Row{"Type", "Node(s)"})
 	t.AppendRows([]table.Row{
-		{"All Node names", obj.KbeListNode},
-		{"Worker Node names", obj.KbeListNodeWorker},
-		{"Control Plane Node names", obj.KbeListNodeCplane},
+		{"VM name", obj.VmName},
 	})
 
 	return t.Render() // returns string output of the table

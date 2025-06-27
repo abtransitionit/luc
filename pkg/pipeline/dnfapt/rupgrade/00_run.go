@@ -4,31 +4,34 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package rupgrade
 
 import (
+	"strings"
+
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "Pipeline: update OS package and repositories to version latest."
+const RunPipelineDescription = "remote upgrade OS package and repositories to version latest."
 
-func RunPipeline(vmList string) error {
+func RunPipeline(vmList string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
-
+	// define var
+	vms := strings.Fields(vmList) // convert ListAsString to slice
+	nbVm := len(vms)
 	// Define the pipeline channels
-	chOutSource := make(chan PipelineData)
-	// chOutUpdate := make(chan PipelineData)
-	// chOutAfter := make(chan PipelineData)
-	chOutLast := chOutSource
+	ch01 := make(chan PipelineData)
+	ch02 := make(chan PipelineData)
+	ch03 := make(chan PipelineData)
+	chOutLast := ch03
 
-	// Start each pipeline stage concurently
-	go source(chOutSource, vmList) // boostrap the Data
-	// go upgradeConcurent(chOutSource, chOutUpdate, vmList) // update the OS
-	// go infoAfter(chOutUpdate, chOutAfter)                      // set property
+	// aync stage
+	go source(ch01, vms) // define instances to send to the pipeline
+	go remoteUpgrade(ch01, ch02, nbVm)
+	go remoteReboot(ch02, ch03, nbVm)
 
-	// This is the not a stage but the last foreground process waiting for the last stage data
+	// final sequential step. collects all instances in the pipeline and build a sumary
 	err := lastStep(chOutLast)
 	if err != nil {
-		return err
+		return "", err
 	}
-	// on SUCCESS
-	// time.Sleep(10 * time.Second)
-	return nil
+	// success
+	return "", nil
 }

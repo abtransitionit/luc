@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package kbe
+package kind
 
 import (
 	"github.com/abtransitionit/luc/internal/config"
@@ -9,11 +9,6 @@ import (
 )
 
 func checkSsh(arg ...string) (string, error) {
-	// launch this function
-	_, err := util.CheckSsh(config.KbeListNode)
-	if err != nil {
-		return "", err
-	}
-	// success
+	util.CheckSsh(config.KindVm)
 	return "", nil
 }

@@ -11,13 +11,12 @@ import (
 
 // # Purpose
 //
-// - This stage creates a PipelineData instance for each CLI in the cliMap
-// - e.g 9 CLI in the cliMap => 9 instances of the structure PipelineData
+// - This stage creates an instance per item in the vmList
+// - e.g 3 items in the vmList => 3 instances of the structure PipelineData
 // - It sends (out chan<-) each instance into the output channel
 func source(out chan<- PipelineData, dtpip PipelineData, vmList string) {
 	// close channel when this code ended
-	// closing it make it available for next stage
-	// because it is defined outside
+	// closing it make it available for next stage, because it is defined outside
 	defer close(out)
 	vms := strings.Fields(vmList) // convert ListAsString to slice
 
@@ -27,7 +26,7 @@ func source(out chan<- PipelineData, dtpip PipelineData, vmList string) {
 		if vm == "" {
 			continue
 		}
-		// define one per VM
+		// define one per item
 		data := PipelineData{}
 
 		// set this instance properties
@@ -40,6 +39,7 @@ func source(out chan<- PipelineData, dtpip PipelineData, vmList string) {
 
 		// log information
 		logx.L.Debugf("[%s] send instance to the pipeline", vm)
+		// sen this instance to the channel
 		out <- data
 
 	} // for

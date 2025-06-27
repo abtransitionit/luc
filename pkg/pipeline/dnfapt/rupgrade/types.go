@@ -13,6 +13,7 @@ type PipelineData struct {
 	OsVersion             string //
 	OskernelVersionBefore string //
 	OskernelVersionAfter  string //
+	RebootStatus          string //
 	Err                   error  // error if any
 }
 
@@ -33,6 +34,7 @@ func (obj PipelineData) String() string {
 		{"Os Version", obj.OsVersion},
 		{"Kernel Version (Before)", obj.OskernelVersionBefore},
 		{"Kernel Version (After)", obj.OskernelVersionAfter},
+		{"Reboot Status", obj.RebootStatus},
 		{"Error", func() string {
 			if obj.Err != nil {
 				return obj.Err.Error()

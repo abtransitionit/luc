@@ -22,31 +22,31 @@ import (
 type PropertyHandler func() (string, error)
 
 // map a string to a function
-var propertyMap = map[string]PropertyHandler{
-	"cpu":        getCpu,
-	"cgroup":     getCgroupVersion,
-	"init":       getInitSystem,
-	"host":       getHost,
-	"netip":      getNetIp,
-	"netgateway": getNetGateway,
-	"osuser":     getOsUser,
-	"ostype":     getOsType,
-	"osarch":     getOsArch,
-	"osversion":  getOsVersion,
-	"osdistro":   getOsDistro,
-	"oskversion": getOsKernelVersion,
-	"osfamily":   getOsFamily,
-	"path":       getPath,
-	"ram":        getRam,
-	"selstatus":  getSelinuxStatus,
-	"selmode":    getSelinuxMode,
-	"uuid":       getUuid,
-	"selinfos":   getSelinuxInfos,
-	"osinfos":    getOsInfos,
-	"reboot":     getReboot,
+var OsPropertyMap = map[string]PropertyHandler{
+	"cpu":          getCpu,
+	"cgroup":       getCgroupVersion,
+	"init":         getInitSystem,
+	"host":         getHost,
+	"netip":        getNetIp,
+	"netgateway":   getNetGateway,
+	"osuser":       getOsUser,
+	"ostype":       getOsType,
+	"osarch":       getOsArch,
+	"osversion":    getOsVersion,
+	"osdistro":     getOsDistro,
+	"oskversion":   getOsKernelVersion,
+	"osfamily":     getOsFamily,
+	"path":         getPath,
+	"ram":          getRam,
+	"selstatus":    getSelinuxStatus,
+	"selmode":      getSelinuxMode,
+	"uuid":         getUuid,
+	"selinfos":     getSelinuxInfos,
+	"osinfos":      getOsInfos,
+	"rebootstatus": getReboot,
 }
 
-// return propertyMap
+// return OsPropertyMap
 
 func getReboot() (string, error) {
 	// Ensure we're on Linux
@@ -283,8 +283,8 @@ func getNetGateway() (string, error) {
 	return strings.TrimSpace(line), nil
 }
 
-func GetPropertyMap() map[string]PropertyHandler {
-	return propertyMap
+func GetOsPropertyMap() map[string]PropertyHandler {
+	return OsPropertyMap
 }
 
 // Example Usage:
@@ -300,7 +300,7 @@ func GetPropertyMap() map[string]PropertyHandler {
 //		fmt.Printf("prop: %s value: %s\n", prop, value)
 //	}
 func GetLocalProperty(property string) (string, error) {
-	handler, ok := propertyMap[property]
+	handler, ok := OsPropertyMap[property]
 	if !ok {
 		return "", fmt.Errorf("❌ unknown property requested: %s", property)
 	}
@@ -322,7 +322,7 @@ func GetLocalProperty(property string) (string, error) {
 //	}
 func GetRemoteProperty(property string, vm string) (string, error) {
 	cmd := fmt.Sprintf(`luc util getprop %s`, property)
-	return RunCLIRemote(cmd, vm)
+	return RunCLIRemote2(cmd, vm)
 }
 
 func ShowMapProperty() {
@@ -334,7 +334,7 @@ func ShowMapProperty() {
 
 	// sort keys
 	var listPropertyName []string
-	for name := range propertyMap {
+	for name := range OsPropertyMap {
 		listPropertyName = append(listPropertyName, name)
 	}
 	sort.Strings(listPropertyName)

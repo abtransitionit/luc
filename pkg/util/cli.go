@@ -100,10 +100,16 @@ func RunCLILocal(command string) (stdout string, err error) {
 	return stdout, nil
 }
 
-func RunCLILocal2(command string, liveOutput bool) (stdout string, err error) {
+func RunCLILocal2(command string, liveOutput ...bool) (stdout string, err error) {
+	// Set default value (false if not provided)
+	live := false
+	if len(liveOutput) > 0 {
+		live = liveOutput[0]
+	}
+
 	cmd := exec.Command("bash", "-c", command)
 
-	if liveOutput {
+	if live {
 		// Live output mode - show in terminal
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
@@ -129,19 +135,6 @@ func RunCLILocal2(command string, liveOutput bool) (stdout string, err error) {
 	}
 }
 
-func RunCLILocalOld01(command string) (stdout string, err error) {
-	cmd := exec.Command("bash", "-c", command)
-
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &out // still capture errors in output for debugging
-
-	err = cmd.Run()
-	stdout = strings.TrimSpace(out.String())
-
-	return stdout, err
-}
-
 // RunCLIRemote runs a shell command on a remote machine via SSH.
 func RunCLIRemote(command string, vm string) (stdout string, err error) {
 	// Format SSH command: ssh user@host "command"
@@ -162,4 +155,42 @@ func RunCLIRemote(command string, vm string) (stdout string, err error) {
 	}
 
 	return stdout, nil
+}
+
+func RunCLIRemote2(command string, vm string, liveOutput ...bool) (stdout string, err error) {
+	// Set default value for liveOutput
+	live := false
+	if len(liveOutput) > 0 {
+		live = liveOutput[0]
+	}
+
+	// Format SSH command: ssh user@host "command"
+	fullCmd := fmt.Sprintf(`ssh %s "%s"`, vm, command)
+
+	cmd := exec.Command("sh", "-c", fullCmd)
+
+	if live {
+		// Live output mode - show in terminal
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		err = cmd.Run()
+		if err != nil {
+			return "", fmt.Errorf("remote command failed: %v", err)
+		}
+		return "", nil // No captured output in live mode
+	} else {
+		// Silent mode - capture output (original behavior)
+		var out bytes.Buffer
+		cmd.Stdout = &out
+		cmd.Stderr = &out
+
+		err = cmd.Run()
+		stdout = strings.TrimSpace(out.String())
+
+		if err != nil {
+			return stdout, fmt.Errorf("remote command failed: %v\noutput:\n%s", err, stdout)
+		}
+		return stdout, nil
+	}
 }

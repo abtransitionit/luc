@@ -51,4 +51,4 @@ func init() {
 
 }
 
-// GetPropertyMap()
+// GetOsPropertyMap()

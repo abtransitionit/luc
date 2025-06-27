@@ -5,6 +5,10 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package config
 
 const (
+	// where to install kind
+	// KindVm = "o1u"
+	KindVm = "o1u o2a"
+
 	// Apparmor service configuration file content
 	ApparmorServiceConf = `
 		# Allow rootlesskit to create user namespaces (userns)
