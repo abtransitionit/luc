@@ -325,7 +325,7 @@ func GetRemoteProperty(property string, vm string) (string, error) {
 	return RunCLIRemote(cmd, vm)
 }
 
-func ShowPropertyMap() {
+func ShowMapProperty() {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 

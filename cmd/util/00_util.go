@@ -33,5 +33,4 @@ func init() {
 	UtilCmd.AddCommand(getpropCmd)
 	UtilCmd.AddCommand(mvfileCmd)
 	UtilCmd.AddCommand(ovhCmd)
-	UtilCmd.AddCommand(resetCmd)
 }

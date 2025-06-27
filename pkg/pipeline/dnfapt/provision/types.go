@@ -12,18 +12,18 @@ type PipelineData struct {
 // # Pupose
 //
 // Pretty print the Pipelined Data (usually for debugging)
-func (p PipelineData) String() string {
+func (obj PipelineData) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{
-		{"dnfapt package name", p.Name},
-		{"HostType", p.HostType},
-		{"OS Family", p.OsFamily},
+		{"dnfapt package name", obj.Name},
+		{"HostType", obj.HostType},
+		{"OS Family", obj.OsFamily},
 		{"Error", func() string {
-			if p.Err != nil {
-				return p.Err.Error()
+			if obj.Err != nil {
+				return obj.Err.Error()
 			}
 			return "-"
 		}()},

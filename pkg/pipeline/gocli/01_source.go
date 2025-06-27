@@ -31,7 +31,7 @@ func source(out chan<- PipelineData, cliMap map[string]configinternal.CustomCLIC
 		data := PipelineData{}
 
 		// Fetch the config for this CLI
-		CliConfig, ok := config.GetCLIConfigMap(item.Name)
+		CliConfig, ok := config.GetCLIConfig(item.Name)
 		if !ok {
 			// add this property (if error) to the instance structure
 			data.Err = fmt.Errorf("❌ CLI not found in config map")
@@ -44,7 +44,8 @@ func source(out chan<- PipelineData, cliMap map[string]configinternal.CustomCLIC
 			// log information
 			logx.L.Infof("[%s] Loaded CLI config", item.Name)
 		}
-
+		// log information
+		// logx.L.Debugf("[%s] defined data instances to be pipelined", vm)
 		// send the instance to the channel (for next stage or final step)
 		out <- data
 	}

@@ -18,20 +18,20 @@ type PipelineData struct {
 // # Pupose
 //
 // Pretty print the Pipelined Data (usually for debugging)
-func (p PipelineData) String() string {
+func (obj PipelineData) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
 	t.SetTitle("LUC remote copy status")
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{
-		{"Vm name", p.Node},
-		{"Src file", p.SrcFile},
-		{"Dst file", p.DstFile},
-		{"Nb nodes", p.NbNode},
+		{"Vm name", obj.Node},
+		{"Src file", obj.SrcFile},
+		{"Dst file", obj.DstFile},
+		{"Nb nodes", obj.NbNode},
 		{"Error", func() string {
-			if p.Err != nil {
-				return p.Err.Error()
+			if obj.Err != nil {
+				return obj.Err.Error()
 			}
 			return "-"
 		}()},

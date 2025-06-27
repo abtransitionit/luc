@@ -19,22 +19,22 @@ type PipelineData struct {
 // # Pupose
 //
 // Pretty print the Pipelined Data (usually for debugging)
-func (p PipelineData) String() string {
+func (obj PipelineData) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{
-		{"HostType", p.HostType},
-		{"OS Family", p.OsFamily},
-		{"OS Distro", p.OsDistro},
-		{"Os Version", p.OsVersion},
-		{"Kernel Version (Before)", p.OskernelVersionBefore},
-		{"Kernel Version (After)", p.OskernelVersionAfter},
-		{"Need Reboot", p.NeedReboot},
+		{"HostType", obj.HostType},
+		{"OS Family", obj.OsFamily},
+		{"OS Distro", obj.OsDistro},
+		{"Os Version", obj.OsVersion},
+		{"Kernel Version (Before)", obj.OskernelVersionBefore},
+		{"Kernel Version (After)", obj.OskernelVersionAfter},
+		{"Need Reboot", obj.NeedReboot},
 		{"Error", func() string {
-			if p.Err != nil {
-				return p.Err.Error()
+			if obj.Err != nil {
+				return obj.Err.Error()
 			}
 			return "-"
 		}()},

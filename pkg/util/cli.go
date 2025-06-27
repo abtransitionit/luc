@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -97,6 +98,35 @@ func RunCLILocal(command string) (stdout string, err error) {
 	}
 
 	return stdout, nil
+}
+
+func RunCLILocal2(command string, liveOutput bool) (stdout string, err error) {
+	cmd := exec.Command("bash", "-c", command)
+
+	if liveOutput {
+		// Live output mode - show in terminal
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		err = cmd.Run()
+		if err != nil {
+			return "", fmt.Errorf("command failed: %v", err)
+		}
+		return "", nil // No captured output in live mode
+	} else {
+		// Silent mode - capture output (original behavior)
+		var out bytes.Buffer
+		cmd.Stdout = &out
+		cmd.Stderr = &out
+
+		err = cmd.Run()
+		stdout = strings.TrimSpace(out.String())
+
+		if err != nil {
+			return stdout, fmt.Errorf("command failed: %v\noutput:\n%s", err, stdout)
+		}
+		return stdout, nil
+	}
 }
 
 func RunCLILocalOld01(command string) (stdout string, err error) {

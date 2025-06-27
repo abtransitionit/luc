@@ -48,9 +48,9 @@ func curl(arg ...string) (string, error) {
 	logx.L.Infof("'%s' for CLI '%s'", CurlDescription, cliName)
 
 	// Does config exist ?
-	cli, ok := config.GetCLIConfigMap(cliName)
+	cli, ok := config.GetCLIConfig(cliName)
 	if !ok {
-		msg := "CLI not found in the CliConfigMap"
+		msg := "CLI not found in the SharedCliConfigMap"
 		logx.L.Debugf("❌ %s. impacted CLI: %s", msg, cliName)
 		return "", errors.New(msg)
 	}

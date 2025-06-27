@@ -53,7 +53,7 @@ func concurrentlyCopyFile(in <-chan PipelineData, out chan<- PipelineData, nbWor
 				logx.L.Debugf("❌ error detected")
 			}
 			// set property
-			data.DstFile = fmt.Sprintf("/usr/local/bin/luc/%s", cliName)
+			data.DstFile = fmt.Sprintf("/usr/local/bin/%s", cliName)
 			// send
 			out <- data
 		} // for

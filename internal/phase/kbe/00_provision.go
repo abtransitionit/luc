@@ -6,8 +6,8 @@ package kbe
 
 import "github.com/abtransitionit/luc/pkg/phase"
 
-var Phases = []phase.Phase{
-	phase.SetPhase("display", display, DisplayDescription),
+var ProvisionPhases = []phase.Phase{
+	phase.SetPhase("show", show, DisplayDescription),
 	phase.SetPhase("checkssh", checkSsh, CheckSshDescription),
 	phase.SetPhase("cpluc", cpLuc, CpLucDescription),
 	phase.SetPhase("upgradeos", upgradeOs, UpgradeOsDescription),

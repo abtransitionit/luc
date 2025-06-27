@@ -7,7 +7,6 @@ package config
 import (
 	"errors"
 	"fmt"
-	"os"
 	"runtime"
 	"strings"
 
@@ -36,9 +35,11 @@ type CLIConfig struct {
 	UrlType UrlType
 }
 
+type CLIConfigMap map[string]CLIConfig
+
 // # Purpose
 //
-// - get a CLI's metadata for a given CLI in a CliConfigMap.
+// - get a CLI's metadata for a given CLI in a SharedCliConfigMap.
 //
 // # Parameters
 //   - cliName: The name of the CLI.
@@ -49,7 +50,7 @@ type CLIConfig struct {
 //
 // # Example
 //
-//	config, ok := GetCLIConfigMap("cobra")
+//	config, ok := GetCLIConfig("cobra")
 //	if !ok {
 //	    log.Fatalf("CLI config not found")
 //	}
@@ -58,8 +59,8 @@ type CLIConfig struct {
 // # Notes
 //   - The function performs a lookup in a pre-defined internal map of CLI configurations (cliConfigMap).
 //   - If the CLI name does not exist in the map, the returned boolean will be `false` and the CLIConfig will be zero-valued.
-func GetCLIConfigMap(cliName string) (CLIConfig, bool) {
-	c, ok := cliConfigMap[cliName]
+func GetCLIConfig(cliName string) (CLIConfig, bool) {
+	c, ok := SharedCliConfigMap[cliName]
 	return c, ok
 }
 
@@ -147,32 +148,26 @@ func (u UrlType) IsGitable() (bool, error) {
 	}
 }
 
-// # Purpose
-//
-// - Pretty display a CLIConfigMap
-func ShowCliConfigMap() {
+func (obj CLIConfigMap) String() string {
 	t := table.NewWriter()
-	t.SetOutputMirror(os.Stdout)
-
-	// Simple header
+	t.SetStyle(table.StyleLight)
+	t.SetTitle("CLI Config Map")
 	t.AppendHeader(table.Row{"CLI Name", "Version", "Type", "Doc", "Git"})
 
-	// Add rows
-	for name, cfg := range cliConfigMap {
+	for name, item := range obj {
 		t.AppendRow(table.Row{
 			name,
-			cfg.Tag,
-			cfg.UrlType,
-			cfg.DocUrl,
-			cfg.GitUrl,
+			item.Tag,
+			item.UrlType,
+			item.DocUrl,
+			item.GitUrl,
 		})
 	}
 
-	// Render with default style
-	t.Render()
+	return t.Render()
 }
 
-// get a specific property of a CLI in a CliConfigMap
+// get a specific property of a CLI in a SharedCliConfigMap
 //
 // # Parameters:
 //   - log: a *zap.SugaredLogger used for debug logging.
@@ -202,7 +197,7 @@ func ShowCliConfigMap() {
 //		}
 func GetCliProperty(log *zap.SugaredLogger, name string, property string) (string, error) {
 	value := ""
-	cliConf, ok := cliConfigMap[name]
+	cliConf, ok := SharedCliConfigMap[name]
 	if !ok {
 		log.Debugf("❌ CLI (%s) not found in map", name)
 		return errorx.StringError("find CLI (%s) in map", name, errors.New(""))
@@ -256,7 +251,7 @@ func GetCliProperty(log *zap.SugaredLogger, name string, property string) (strin
 // - If ARCH or OS are not provided, they will be get/inferred at runtime.
 
 func GetCliSpecificUrl(log *zap.SugaredLogger, cliName string, osArch ...string) (string, error) {
-	cliConf, exists := cliConfigMap[cliName]
+	cliConf, exists := SharedCliConfigMap[cliName]
 	if !exists {
 		msg := fmt.Sprintf("CLI (%s) not found in map", cliName)
 		log.Debugf("❌ %s", msg)

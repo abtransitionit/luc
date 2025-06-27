@@ -9,7 +9,7 @@ import (
 	rupgrade "github.com/abtransitionit/luc/pkg/pipeline/dnfapt/rupgrade"
 )
 
-const UpgradeOsDescription = "provision OS with latest dnfapt packages and repositories."
+const UpgradeOsDescription = "provision OS nodes with latest dnfapt packages and repositories."
 
 func upgradeOs(arg ...string) (string, error) {
 	logx.L.Info(UpgradeOsDescription)

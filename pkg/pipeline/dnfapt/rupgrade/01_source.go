@@ -22,7 +22,7 @@ func source(out chan<- PipelineData, vmList string) {
 	defer close(out)
 	vms := strings.Fields(vmList) // convert ListAsString to slice
 
-	logx.L.Debugf("defining data instances to be pipelined")
+	logx.L.Debugf("defining instances to be pipelined")
 	for _, vm := range vms {
 		vm = strings.TrimSpace(vm)
 		if vm == "" {
@@ -76,5 +76,4 @@ func source(out chan<- PipelineData, vmList string) {
 		out <- data
 
 	} // for
-
 }

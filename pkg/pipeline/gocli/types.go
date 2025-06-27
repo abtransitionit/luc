@@ -23,24 +23,24 @@ type PipelineData struct {
 // # Pupose
 //
 // Pretty print the Pipelined Data (usually for debugging)
-func (p PipelineData) String() string {
+func (obj PipelineData) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{
-		{"gocli name", p.Config.Name},
-		{"CLI version", p.Version},
-		{"Generic Url", p.GenericUrl},
-		{"Specific Url", p.SpecificUrl},
-		{"Artifact Name", p.ArtifactName},
-		{"Artifact Guessed Type", p.ArtifactType},
-		{"Artifact Path", p.ArtifactPath},
-		{"Artifact FofTmpPath", p.FofTmpPath},
-		{"Dst Folder", p.DstFolder},
+		{"gocli name", obj.Config.Name},
+		{"CLI version", obj.Version},
+		{"Generic Url", obj.GenericUrl},
+		{"Specific Url", obj.SpecificUrl},
+		{"Artifact Name", obj.ArtifactName},
+		{"Artifact Guessed Type", obj.ArtifactType},
+		{"Artifact Path", obj.ArtifactPath},
+		{"Artifact FofTmpPath", obj.FofTmpPath},
+		{"Dst Folder", obj.DstFolder},
 		{"Error", func() string {
-			if p.Err != nil {
-				return p.Err.Error()
+			if obj.Err != nil {
+				return obj.Err.Error()
 			}
 			return "-"
 		}()},

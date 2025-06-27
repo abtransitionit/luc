@@ -55,7 +55,7 @@ func source(out chan<- PipelineData, packageNameList ...string) {
 	data.OsVersion = osVersion
 
 	// log information
-	logx.L.Debugf("pipelined data defined")
-
+	// logx.L.Debugf("[%s] defined data instances to be pipelined", vm)
+	// send the instance to the channel (for next stage or final step)
 	out <- data
 }

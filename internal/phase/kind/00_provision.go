@@ -6,7 +6,9 @@ package kind
 
 import "github.com/abtransitionit/luc/pkg/phase"
 
-var Phases = []phase.Phase{
+var ProvisionPhases = []phase.Phase{
+	// phase.SetPhase("display", display, DisplayDescription),
+	// phase.SetPhase("checkssh", checkSsh, CheckSshDescription),
 	phase.SetPhase("update", update, UpdateDescription),
 	phase.SetPhase("reboot", reboot, RebootDescription),
 	phase.SetPhase("dacli", daCli, DaCliDescription),

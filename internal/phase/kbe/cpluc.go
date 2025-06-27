@@ -6,18 +6,38 @@ package kbe
 import (
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/pipeline/rfilecopy"
+	"github.com/abtransitionit/luc/pkg/pipeline/cpluc"
 )
 
-const CpLucDescription = "provision needed go CLI"
+const CpLucDescription = "provision LUC CLI"
 
 func cpLuc(arg ...string) (string, error) {
 	logx.L.Info(CpLucDescription)
-	// Launch the pipeline attach to this phase
-	err := rfilecopy.RunPipeline(config.KbeListNode, "/tmp/luc-linux", "/tmp/luc")
+	_, err := cpluc.RunPipeline(config.KbeListNode)
 	if err != nil {
+		logx.L.Debugf("%s", err)
 		return "", err
 	}
-	// on SUCCESS
 	return "", nil
 }
+
+// err := rfilecopy.RunPipeline(config.KbeListNode, "/tmp/luc-linux", "/tmp/luc")
+// if err != nil {
+// 	return "", err
+// }
+
+// cli := fmt.Sprintf("luc util ovh cpluc %s --force", listVm)
+// output, err := util.RunCLILocal(cli)
+// if err != nil {
+// 	logx.L.Debugf("%s", err)
+// 	return "", err
+// }
+// println(output)
+
+// // listVm := "o1u"
+// cli := fmt.Sprintf("luc util ovh cpluc %s --force", config.KbeListNode)
+// _, err := util.RunCLILocal(cli)
+// if err != nil {
+// 	logx.L.Debugf("%s", err)
+// 	return "", err
+// }

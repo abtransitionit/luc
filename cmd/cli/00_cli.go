@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package cli
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/spf13/cobra"
 )
@@ -20,7 +22,7 @@ var CliCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// handle flag = --show
 		if cmd.Flag("show").Value.String() == "true" {
-			config.ShowCliConfigMap()
+			fmt.Println(config.SharedCliConfigMap)
 			return
 		}
 		cmd.Help()

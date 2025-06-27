@@ -6,13 +6,13 @@ package config
 
 // # Purpose
 //
-// - private variable called the CliConfigMap
+// - private variable called the SharedCliConfigMap
 //
 // # Notes
 //
 // - map a string to a struct
 // - map a key    to a value that have a type
-var cliConfigMap = map[string]CLIConfig{
+var SharedCliConfigMap = CLIConfigMap{
 	"toto": {
 		Name:    "toto",
 		Tag:     "latest",

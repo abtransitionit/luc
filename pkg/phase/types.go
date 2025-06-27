@@ -4,8 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package phase
 
 import (
-	"os"
-
 	"github.com/jedib0t/go-pretty/table"
 )
 
@@ -17,24 +15,68 @@ type Phase struct {
 	// ExecuteFunc func(ctx context.Context) error // Reserved for future contextual execution.
 }
 
-func ShowPhase(setPhase []Phase) {
+// mandatory to implement pretty print
+type PhaseList []Phase
+
+// # Purpose
+//
+// pretty print
+//
+// # Usage
+//
+// fmt.Println(PhaseList(ASliceOfPhases))
+func (obj PhaseList) String() string {
 	t := table.NewWriter()
-	t.SetOutputMirror(os.Stdout)
+	t.SetStyle(table.StyleLight)
+	t.SetTitle("List of Phases")
+	t.AppendHeader(table.Row{"ID", "Name", "Description"})
 
-	// Simple header
-	t.AppendHeader(table.Row{"A", "B", "C"})
-
-	// Simple header
-
-	// Add rows
-	for name, cfg := range setPhase {
-		t.AppendRow(table.Row{
-			name,
-			cfg.Description,
-			cfg.Name,
-		})
+	for i, phase := range obj {
+		t.AppendRow(table.Row{i + 1, phase.Name, phase.Description})
 	}
 
-	// Render with default style
-	t.Render()
+	return t.Render()
+}
+
+// func ShowPhase(phases []Phase) {
+// 	t := table.NewWriter()
+// 	t.SetOutputMirror(os.Stdout)
+// 	t.SetStyle(table.StyleLight)
+// 	t.Style().Title.Align = text.AlignCenter
+
+// 	t.SetTitle("List of phases")
+// 	t.AppendHeader(table.Row{"ID", "Name", "Description"})
+
+// 	for i, phase := range phases {
+// 		t.AppendRow(table.Row{
+// 			i + 1,
+// 			phase.Name,
+// 			phase.Description,
+// 		})
+// 	}
+
+// 	t.Render()
+// }
+
+// creates and returns a new Phase with the given name, function, and description.
+// This is a convenience constructor for building Phase instances.
+//
+// Parameters:
+//   - name: A phase ID.
+//   - fn:   The function attached to the phase. It must return an error.
+//   - desc: The purpose of the phase.
+//
+// Returns:
+//
+//	A Phase struct with all fields initialized:
+//	  - Name is set to the provided name.
+//	  - Func is set to the provided function.
+//	  - Description is set to the provided description.
+//
+// Example usage:
+//
+//	import "github.com/abtransitionit/luc/pkg/deploy"
+//	p := phase.SetPhase("check", checkFunc, "Check system health before deployment")
+func SetPhase(name string, fn func(cmd ...string) (string, error), desc string) Phase {
+	return Phase{Name: name, Func: fn, Description: desc}
 }

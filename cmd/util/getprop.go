@@ -37,7 +37,7 @@ var getpropCmd = &cobra.Command{
 
 		// handle flag = --show
 		if cmd.Flag("show").Value.String() == "true" {
-			util.ShowPropertyMap()
+			util.ShowMapProperty()
 			return
 		} else {
 			cmd.Help()

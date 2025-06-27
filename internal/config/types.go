@@ -9,3 +9,5 @@ type CustomCLIConfig struct {
 	Version   string
 	DstFolder string
 }
+
+type CustomCLIConfigMap map[string]CustomCLIConfig

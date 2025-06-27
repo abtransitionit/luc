@@ -61,6 +61,7 @@ func CmdRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
 		// manage CMD argument
 		if len(args) == 0 {
 			cmd.Help()
+			fmt.Println(PhaseList(phases))
 			return
 		}
 		if len(args) != 1 {
@@ -87,9 +88,9 @@ func CmdRun(phases []Phase, initSDesc string) func(*cobra.Command, []string) {
 func handleShowFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
 	if cmd.Flags().Changed("show") {
 		logx.L.Debugf("cmd '%s' description is : %s", cmd.Name(), cmd.Short)
-		logx.L.Infof("👉 list all phase name")
-		ListPhases(phases)
-		// phase.ShowPhase(phases)
+		logx.L.Infof("👉 list all phase names")
+		// cast phases to PhaseList
+		fmt.Println(PhaseList(phases))
 		return true, nil
 	}
 	return false, nil

@@ -31,7 +31,7 @@ const (
 //
 // - map a string to a struct
 // - map a key    to a value that have a type
-var KindCliConfigMap = map[string]CustomCLIConfig{
+var KindCliConfigMap = CustomCLIConfigMap{
 	"cni": {
 		Name:      "cni",
 		Version:   "1.7.1",
