@@ -14,16 +14,14 @@ func RunPipeline() (string, error) {
 
 	// Define the pipeline channels
 	chOutSource := make(chan PipelineData)
-	chOutBefore := make(chan PipelineData)
 	chOutUpdate := make(chan PipelineData)
 	chOutAfter := make(chan PipelineData)
 	chOutLast := chOutAfter
 
 	// Start each pipeline stage concurently
-	go source(chOutSource)                  // boostrap the Data
-	go infoBefore(chOutSource, chOutBefore) // set property
-	go update(chOutBefore, chOutUpdate)     // update the OS
-	go infoAfter(chOutUpdate, chOutAfter)   // set property
+	go source(chOutSource)                // boostrap the Data
+	go update(chOutSource, chOutUpdate)   // dnfatpt upgrade the local OS (where the cli is launched)
+	go infoAfter(chOutUpdate, chOutAfter) // set property
 
 	// This is the not a stage but the last foreground process waiting for the last stage data
 	err := lastStep(chOutLast)

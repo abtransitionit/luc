@@ -6,6 +6,7 @@ package update
 import "github.com/jedib0t/go-pretty/table"
 
 type PipelineData struct {
+	HostName              string // remote vm name or local host name
 	HostType              string // Vm or container
 	OsFamily              string // Rhel, Debian, fedora
 	OsDistro              string // ubuntu, centos, alma, ...

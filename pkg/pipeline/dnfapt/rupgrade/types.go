@@ -6,8 +6,8 @@ package rupgrade
 import "github.com/jedib0t/go-pretty/table"
 
 type PipelineData struct {
-	HostType              string // Vm or container
 	HostName              string //
+	HostType              string // Vm or container
 	OsFamily              string // Rhel, Debian, fedora
 	OsDistro              string // ubuntu, centos, alma, ...
 	OsVersion             string //
@@ -22,7 +22,7 @@ type PipelineData struct {
 func (p PipelineData) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
-	t.SetTitle("VM Status")
+	t.SetTitle("VM OS dnfapt upgrade Status")
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{

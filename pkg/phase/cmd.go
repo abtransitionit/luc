@@ -198,7 +198,7 @@ var forceFlag bool
 //	}
 func CmdInit(cmd *cobra.Command) {
 	cmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation")
-	cmd.Flags().BoolP("show", "s", false, "List all available phases")
+	cmd.Flags().BoolP("show", "s", false, "List all available phase names")
 	cmd.Flags().BoolP("runall", "r", false, "Run all phases in sequence in batch mode")
 	// Make them mutually exclusive
 	cmd.MarkFlagsMutuallyExclusive("show", "runall")

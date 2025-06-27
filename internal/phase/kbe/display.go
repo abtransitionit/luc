@@ -46,7 +46,7 @@ func DisplayClusterConfig(config ClusterConfig) {
 	t.SetTitle("Cluster Node informations")
 	t.AppendHeader(table.Row{"Type", "Node(s)"})
 	t.AppendRows([]table.Row{
-		{"Node names", config.KbeListNode},
+		{"All Node names", config.KbeListNode},
 		{"Worker Node names", config.KbeListNodeWorker},
 		{"Control Plane Node names", config.KbeListNodeCplane},
 	})

@@ -3,7 +3,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
 package rfilecopy
 
-const RunPipelineDescription = "copy a local file to remote VMs"
+const RunPipelineDescription = "copy a local file concurently to remote VMs"
 
 // The map here could be VMName => destination folder
 func RunPipeline(vmList string, srcFile string, dstFile string) error {
@@ -19,7 +19,6 @@ func RunPipeline(vmList string, srcFile string, dstFile string) error {
 	// Start each pipeline stage
 	go source(chOutSource, vmList, srcFile, dstFile)
 	go checkVM(chOutSource, chOutSshCheck)
-	// go copyFile(chOutSshCheck, chOutCopy)
 	go concurrentlyCopyFile(chOutSshCheck, chOutCopy, len(vmList))
 
 	// Last step

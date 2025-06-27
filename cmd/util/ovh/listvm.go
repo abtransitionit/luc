@@ -4,8 +4,10 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package ovh
 
 import (
+	"fmt"
+
+	"github.com/abtransitionit/luc/internal/util"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/phase"
 	"github.com/spf13/cobra"
 )
 
@@ -20,10 +22,7 @@ var ListvmCmd = &cobra.Command{
 	Long:  listvmLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Infof("%s", listvmSDesc)
-		cmd.Help()
+		logx.L.Infof("wait a minute: time to test all possible OVH VMs, from your declared OVH configuration.")
+		fmt.Println(util.ListOvhVm())
 	},
-}
-
-func init() {
-	phase.CmdInit(ListvmCmd)
 }

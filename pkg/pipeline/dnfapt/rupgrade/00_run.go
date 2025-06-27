@@ -14,15 +14,13 @@ func RunPipeline(vmList string) error {
 
 	// Define the pipeline channels
 	chOutSource := make(chan PipelineData)
-	// chOutBefore := make(chan PipelineData)
-	// chOutUpdate := make(chan PipelineData)
+	chOutUpdate := make(chan PipelineData)
 	// chOutAfter := make(chan PipelineData)
-	chOutLast := chOutSource
+	chOutLast := chOutUpdate
 
 	// Start each pipeline stage concurently
-	go source(chOutSource, vmList) // boostrap the Data
-	// go infoBefore(chOutSource, chOutBefore)                    // set property
-	// go upgradeConcurent(chOutBefore, chOutUpdate, len(vmList)) // update the OS
+	go source(chOutSource, vmList)                        // boostrap the Data
+	go upgradeConcurent(chOutSource, chOutUpdate, vmList) // update the OS
 	// go infoAfter(chOutUpdate, chOutAfter)                      // set property
 
 	// This is the not a stage but the last foreground process waiting for the last stage data

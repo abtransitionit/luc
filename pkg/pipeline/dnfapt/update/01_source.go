@@ -48,11 +48,18 @@ func source(out chan<- PipelineData) {
 		logx.L.Debugf("❌ Error detected")
 	}
 
+	osKernelVersion, err := util.GetLocalProperty("oskversion")
+	if err != nil {
+		data.Err = err
+		logx.L.Debugf("❌ Error detected")
+	}
+
 	// set this instance properties
 	data.OsFamily = osFamily
 	data.OsDistro = osDistro
 	data.HostType = hostType
 	data.OsVersion = osVersion
+	data.OskernelVersionBefore = osKernelVersion
 
 	out <- data
 }

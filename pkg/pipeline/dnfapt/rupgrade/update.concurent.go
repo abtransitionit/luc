@@ -5,13 +5,15 @@ package rupgrade
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func upgradeConcurent(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) {
+func upgradeConcurent(in <-chan PipelineData, out chan<- PipelineData, vmList string) {
+	vms := strings.Fields(vmList) // convert ListAsString to slice
+	nbWorker := len(vms)
 	var wg sync.WaitGroup
 	defer close(out)
 
@@ -25,23 +27,16 @@ func upgradeConcurent(in <-chan PipelineData, out chan<- PipelineData, nbWorker 
 				continue
 			}
 
-			// Update the OS
-			// cmd := fmt.Sprintf("cp %s %s:%s", SrcFile, DstFile)
-			cmd := fmt.Sprintf("pwd; ls -ial")
-			_, err := util.RunCLIRemote(data.HostName, cmd)
-			if err != nil {
-				data.Err = err
-				logx.L.Debugf("❌ error detected")
-			}
-
-			// // Update the OS
-			// _, err := dnfapt.UpdateOs()
+			// Update the VM OS based on its osFamily
+			cmd := fmt.Sprintf("luc util osupgrade")
+			logx.L.Debugf("⚠️ will play loccally on the remote VM: %s", cmd)
+			// cmd := fmt.Sprintf("pwd; ls -ial")
+			// result, err := util.RunCLIRemote(cmd, data.HostName)
 			// if err != nil {
 			// 	data.Err = err
-			// 	logx.L.Debugf("Error detected")
-			// 	out <- data
-			// 	continue
+			// 	logx.L.Debugf("❌ error detected")
 			// }
+			// logx.L.Debugf("⚠️ result: %s", result)
 
 			// send
 			out <- data
