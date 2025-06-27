@@ -51,6 +51,10 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
 				}
 				// log end wait
 				logx.L.Debugf("[%s] got ssh reachability", data.HostName)
+
+				// set instance property
+				data.RebootStatus = "false"
+
 			}
 
 			// get property
