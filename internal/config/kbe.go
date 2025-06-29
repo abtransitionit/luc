@@ -42,3 +42,32 @@ const (
 	// OS Kernel
 	KbeKernelFileName = "99-kbe.conf"
 )
+
+// # Purpose
+//
+// - Map of dnfapt CLI to install
+var KbeDnfaptCliConfigMap = CustomCLIConfigMap{
+	"crio": {
+		Name:      "crio",
+		Version:   "1.7.1",
+		DstFolder: "/usr/local/bin", // default: /opt/cni/bin
+	},
+}
+
+var KbeGoCliConfigMap = CustomCLIConfigMap{
+	"kubeadm": {
+		Name:      "kubeadm",
+		Version:   KbeVersion,
+		DstFolder: "/usr/local/bin",
+	},
+	"kubectl": {
+		Name:      "kubectl",
+		Version:   KbeVersion,
+		DstFolder: "/usr/local/bin",
+	},
+	"helm": {
+		Name:      "helm",
+		Version:   "3.17.3",
+		DstFolder: "/usr/local/bin",
+	},
+}

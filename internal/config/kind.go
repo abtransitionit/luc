@@ -7,7 +7,8 @@ package config
 const (
 	// where to install kind
 	// KindVm = "o1u"
-	KindVm = "o1u o2a"
+	KindVm        = "o1u o2a"
+	KindDnfaptCli = "uidmap"
 
 	// Apparmor service configuration file content
 	ApparmorServiceConf = `
@@ -30,12 +31,17 @@ const (
 // # Purpose
 //
 // - List of go CLI to install
+var KindDnfaptCliConfigMap = CustomCLIConfigMap{
+	"uidmap": {
+		Name:    "uidmap",
+		Version: "",
+	},
+}
+
+// # Purpose
 //
-// # Notes
-//
-// - map a string to a struct
-// - map a key    to a value that have a type
-var KindCliConfigMap = CustomCLIConfigMap{
+// - List of go CLI to install
+var KindGoCliConfigMap = CustomCLIConfigMap{
 	"cni": {
 		Name:      "cni",
 		Version:   "1.7.1",

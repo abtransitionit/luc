@@ -9,13 +9,13 @@ import (
 	"github.com/abtransitionit/luc/pkg/pipeline/gocli"
 )
 
-const GoCliDescription = "provision needed go CLI"
+const GoCliDescription = "provision Go CLI(s)"
 
 func goCli(arg ...string) (string, error) {
 	logx.L.Info(GoCliDescription)
 	// Launch the pipeline attach to this phase
 	// gocli.RunPipeline("kind", "nerdctl", "containerd", "rootlesskit", "slirp4netns")
-	gocli.RunPipeline(config.KindCliConfigMap)
+	gocli.RunPipeline(config.KbeGoCliConfigMap)
 	// on SUCCESS
 	return "", nil
 }

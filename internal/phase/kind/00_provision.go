@@ -14,13 +14,10 @@ var ProvisionPhases = []phase.Phase{
 	phase.SetPhase("checkssh", checkSsh, util.CheckSshDescription),
 	phase.SetPhase("cpluc", cpLuc, CpLucDescription),
 	phase.SetPhase("upgrade", upgrade, UpgradeDescription),
-
-	// phase.SetPhase("update", update, UpdateDescription),
-	phase.SetPhase("reboot", reboot, RebootDescription),
-	phase.SetPhase("dacli", daCli, DaCliDescription),
+	phase.SetPhase("dapack", daPack, DaPackDescription),
 	phase.SetPhase("gocli", goCli, GoCliDescription),
-	phase.SetPhase("service", service, ServiceDescription),
-	phase.SetPhase("rc", rc, RcDescription),
-	phase.SetPhase("create", create, CreateDescription),
-	phase.SetPhase("check", check, CheckDescription),
+	// phase.SetPhase("service", service, ServiceDescription),
+	// phase.SetPhase("rc", rc, RcDescription),
+	// phase.SetPhase("create", create, CreateDescription),
+	// phase.SetPhase("check", check, CheckDescription),
 }
