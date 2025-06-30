@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 
 package config
 
+import "github.com/abtransitionit/luc/pkg/config"
+
 const (
 	K8sVersion = "1.32.0"
 )
@@ -46,7 +48,7 @@ const (
 // # Purpose
 //
 // - Map of dnfapt CLI to install
-var KbeDnfaptCliConfigMap = CustomCLIConfigMap{
+var KbeDnfaptCliConfigMap = config.CustomCLIConfigMap{
 	"crio": {
 		Name:      "crio",
 		Version:   "1.7.1",
@@ -54,7 +56,7 @@ var KbeDnfaptCliConfigMap = CustomCLIConfigMap{
 	},
 }
 
-var KbeGoCliConfigMap = CustomCLIConfigMap{
+var KbeGoCliConfigMap = config.CustomCLIConfigMap{
 	"kubeadm": {
 		Name:      "kubeadm",
 		Version:   KbeVersion,

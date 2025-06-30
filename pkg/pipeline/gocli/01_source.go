@@ -6,24 +6,23 @@ package gocli
 import (
 	"fmt"
 
-	configinternal "github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
 // # Purpose
 //
-// - This stage creates a PipelineData instance for each CLI in the cliMap
-// - e.g 9 CLI in the cliMap => 9 instances of the structure PipelineData
-// - It sends (out chan<-) each instance into the output channel
-func source(out chan<- PipelineData, cliMap map[string]configinternal.CustomCLIConfig) {
+// - This stage create an instance of the structure to be pipelined
+// - 1 instance of the structure per item in the cliMap (e.g 9 cli => 9 instances)
+// - This stage will send (out chan<-) each instance into the channel
+func source(out chan<- PipelineData, vms []string, cliMap config.CustomCLIConfigMap) {
 	// close channel when this code ended
-	// closing it make it available for next stage
-	// because it is defined outside
+	// closing it make it available for next stage, because it is defined outside
 	defer close(out)
 
-	// log information
-	logx.L.Debugf("defining data to be pipelined")
+	logx.L.Debugf("defining instances to be pipelined")
+	logx.L.Debugf("Vms        to provision.    : %d : %s", len(vms), vms)
+	// logx.L.Debugf("CLI(s) to install per VM: %d : %s", len(cliMap), util.GetMapKeys(cliMap))
 
 	// loop over all items in the list
 	for _, item := range cliMap {

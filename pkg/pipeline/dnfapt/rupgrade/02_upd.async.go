@@ -11,7 +11,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/util/dnfapt"
 )
 
-func remoteUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
+func rUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
 	nbWorker := nbVm // as many workers as VM
 	var wg sync.WaitGroup
 	defer close(out)
@@ -28,7 +28,7 @@ func remoteUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
 
 			// remote upgrade
 			logx.L.Debugf("[%s] remote upgrading", data.HostName)
-			_, err := dnfapt.RemoteUpgrade(data.HostName, data.OsFamily)
+			_, err := dnfapt.RUpgrade(data.HostName, data.OsFamily)
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("[%s] ❌ error detected 1", data.HostName)
@@ -37,14 +37,14 @@ func remoteUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
 			}
 			logx.L.Debugf("[%s] remote upgraded", data.HostName)
 
-			// check reboot status
+			// set reboot status
 			logx.L.Debugf("[%s] getting reboot status", data.HostName)
 			rebootStatus, err := util.GetRemoteProperty("rebootstatus", data.HostName)
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("[%s] ❌ Error detected 2", data.HostName)
 			}
-			logx.L.Debugf("[%s] got reboot status", data.HostName)
+			logx.L.Debugf("[%s] got reboot status : %s", data.HostName, rebootStatus)
 
 			// set instance property
 			data.RebootStatus = rebootStatus

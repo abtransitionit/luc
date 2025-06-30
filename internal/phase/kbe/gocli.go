@@ -15,7 +15,7 @@ func goCli(arg ...string) (string, error) {
 	logx.L.Info(GoCliDescription)
 	// Launch the pipeline attach to this phase
 	// gocli.RunPipeline("kind", "nerdctl", "containerd", "rootlesskit", "slirp4netns")
-	gocli.RunPipeline(config.KbeGoCliConfigMap)
+	gocli.RunPipeline(config.KbeListNode, config.KbeGoCliConfigMap)
 	// on SUCCESS
 	return "", nil
 }

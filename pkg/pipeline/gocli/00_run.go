@@ -4,52 +4,56 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package gocli
 
 import (
-	"github.com/abtransitionit/luc/internal/config"
+	"strings"
+
+	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "provision GO CLI(s)."
+const RunPipelineDescription = "install GO CLIs on VMs."
 
-func RunPipeline(cliMap map[string]config.CustomCLIConfig) (string, error) {
+func RunPipeline(vmList string, cliMap config.CustomCLIConfigMap) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
 
-	// Count and log the number of CLI args
-	logx.L.Debugf("Received %d CLI(s) to provisioned", len(cliMap))
+	// define var
+	vms := strings.Fields(vmList) // convert ListAsString to slice ([]string)
+	// nbVm := len(vms)
+
+	// // Count and log the number of CLI args
+	// logx.L.Debugf("Received %d CLI(s) to provisioned", len(cliMap))
 
 	// Define the pipeline channels
-	chOutSource := make(chan PipelineData)
-	chOutGenericUrl := make(chan PipelineData)
-	chOutSpecificUrl := make(chan PipelineData)
-	chOutArtifactName := make(chan PipelineData)
-	chOutArtifactPath := make(chan PipelineData)
-	chOutArtifactGet := make(chan PipelineData)
-	chOutFileGuessType := make(chan PipelineData)
-	chOutFileSave := make(chan PipelineData)
-	chOutFileUnTgz := make(chan PipelineData)
-	chOutFileMove := make(chan PipelineData)
-	chOutBuildPath := make(chan PipelineData)
-	chOutLast := chOutBuildPath
-	// chOutLast := make(chan PipelineData)
+	ch01 := make(chan PipelineData)
+	// chOutGenericUrl := make(chan PipelineData)
+	// chOutSpecificUrl := make(chan PipelineData)
+	// chOutArtifactName := make(chan PipelineData)
+	// chOutArtifactPath := make(chan PipelineData)
+	// chOutArtifactGet := make(chan PipelineData)
+	// chOutFileGuessType := make(chan PipelineData)
+	// chOutFileSave := make(chan PipelineData)
+	// chOutFileUnTgz := make(chan PipelineData)
+	// chOutFileMove := make(chan PipelineData)
+	// chOutBuildPath := make(chan PipelineData)
+	chOutLast := ch01
 
-	// Start each pipeline stage concurently
-	go source(chOutSource, cliMap)                        // boostrap the Data
-	go GenericUrl(chOutSource, chOutGenericUrl)           // set property
-	go SpecificUrl(chOutGenericUrl, chOutSpecificUrl)     // set property
-	go ArtifactName(chOutSpecificUrl, chOutArtifactName)  // set property
-	go ArtifactPath(chOutArtifactName, chOutArtifactPath) // set property
-	go ArtifactGet(chOutArtifactPath, chOutArtifactGet)   // get artifact
-	go FileGuessType(chOutArtifactGet, chOutFileGuessType)
-	go FileSave(chOutFileGuessType, chOutFileSave)
-	go FileUntgz(chOutFileSave, chOutFileUnTgz)
-	go FileMove(chOutFileUnTgz, chOutFileMove)  // move file to final destination
-	go BuildPath(chOutFileMove, chOutBuildPath) // build $PATH
+	// aync stage (i.e running concurrently/in parallel)
+	go source(ch01, vms, cliMap) // define instances to send to the pipeline
+	// go GenericUrl(chOutSource, chOutGenericUrl)           // set property
+	// go SpecificUrl(chOutGenericUrl, chOutSpecificUrl)     // set property
+	// go ArtifactName(chOutSpecificUrl, chOutArtifactName)  // set property
+	// go ArtifactPath(chOutArtifactName, chOutArtifactPath) // set property
+	// go ArtifactGet(chOutArtifactPath, chOutArtifactGet)   // get artifact
+	// go FileGuessType(chOutArtifactGet, chOutFileGuessType)
+	// go FileSave(chOutFileGuessType, chOutFileSave)
+	// go FileUntgz(chOutFileSave, chOutFileUnTgz)
+	// go FileMove(chOutFileUnTgz, chOutFileMove)  // move file to final destination
+	// go BuildPath(chOutFileMove, chOutBuildPath) // build $PATH
 
-	// This is not a stage but the last foreground step reading all instance in the pipeline
+	// final sequential step. collects all instances in the pipeline and build a sumary
 	err := lastStep(chOutLast)
 	if err != nil {
 		return "", err
 	}
-	// on SUCCESS
-	// time.Sleep(10 * time.Second)
+	// success
 	return "", nil
 }

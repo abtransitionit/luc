@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package rupgrade
+package packagex
 
 import (
 	"strings"
@@ -28,40 +28,35 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
 			}
 
 			// remote reboot if needed
-			if strings.ToLower(strings.TrimSpace(data.RebootStatus)) == "true" {
-				// reboot
-				logx.L.Debugf("[%s] remote rebooting", data.HostName)
-				err := util.RemoteReboot(data.HostName)
+			if strings.ToLower(strings.TrimSpace(data.RebootStatus)) == "false" {
+				logx.L.Debugf("[%s] Skipping reboot : reboot status is false", data.HostName)
+				out <- data
+				continue
+			}
+			// reboot
+			logx.L.Debugf("[%s] remote rebooting", data.HostName)
+			util.RemoteReboot(data.HostName)
+			logx.L.Debugf("[%s] remote rebooted", data.HostName)
+
+			// wait ssh reachable
+			logx.L.Debugf("[%s] getting ssh reachability", data.HostName)
+			for {
+				isReachable, err := util.IsSshConfiguredVmSshReachable(data.HostName)
 				if err != nil {
 					data.Err = err
-					logx.L.Debugf("[%s] ❌ error detected 1", data.HostName)
+					logx.L.Debugf("[%s] ❌ error detected 2", data.HostName)
 					out <- data
 					continue
+				} else if !isReachable {
+					break
 				}
-				logx.L.Debugf("[%s] remote rebooted", data.HostName)
-
-				// wait ssh reachable
-				logx.L.Debugf("[%s] getting ssh reachability", data.HostName)
-				for {
-					isReachable, err := util.IsSshConfiguredVmSshReachable(data.HostName)
-					if err != nil {
-						data.Err = err
-						logx.L.Debugf("[%s] ❌ error detected 2", data.HostName)
-						out <- data
-						continue
-					}
-					if err == nil && isReachable {
-						break
-					}
-					time.Sleep(2 * time.Second)
-				}
-				// log end wait
-				logx.L.Debugf("[%s] got ssh reachability", data.HostName)
-
-				// set instance property
-				data.RebootStatus = "false"
-
+				time.Sleep(2 * time.Second)
 			}
+			// log end wait
+			logx.L.Debugf("[%s] got ssh reachability", data.HostName)
+
+			// set instance property
+			data.RebootStatus = "false"
 
 			// get property
 			kernelVersion, err := util.GetRemoteProperty("oskversion", data.HostName)

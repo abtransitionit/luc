@@ -6,6 +6,7 @@ package util
 
 import (
 	"fmt"
+	"os/exec"
 )
 
 // # Purpose
@@ -38,13 +39,20 @@ func RemoteReboot(vm string) error {
 	if vm == "" {
 		return fmt.Errorf("❌ Error: vm is empty")
 	}
+
 	// check VM is reachable
 	_, err := IsSshConfiguredVmSshReachable(vm)
 	if err != nil {
 		return err
 	}
-	// play CLI
-	cli := "sudo reboot"
-	RunCLIRemote(vm, cli)
+
+	// remote reboot
+	cmd := exec.Command("ssh", vm, "sudo reboot")
+	err = cmd.Run()
+	if err != nil {
+		return fmt.Errorf("❌ Failed to send reboot command to '%s': %v", vm, err)
+	}
+
+	// success
 	return nil
 }

@@ -13,14 +13,14 @@ package config
 // - map a string to a struct
 // - map a key    to a value that have a type
 var SharedCliConfigMap = CLIConfigMap{
-	"toto": {
-		Name:    "toto",
-		Tag:     "latest",
-		Url:     "github.com/spf13/$NAME-cli@$TAG",
-		DocUrl:  "https://cobra.dev",
-		GitUrl:  "https://github.com/spf13/cobra-cli",
-		UrlType: UrlGit,
-	},
+	// "toto": {
+	// 	Name:    "toto",
+	// 	Tag:     "latest",
+	// 	Url:     "github.com/spf13/$NAME-cli@$TAG",
+	// 	DocUrl:  "https://cobra.dev",
+	// 	GitUrl:  "https://github.com/spf13/cobra-cli",
+	// 	UrlType: UrlGit,
+	// },
 	"cni": {
 		Name:    "cni",
 		Tag:     "1.7.1",

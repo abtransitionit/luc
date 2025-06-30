@@ -13,8 +13,8 @@ import (
 
 // # Purpose
 //
-// upgrade a Linux OS dnfapt package and package repositories to version latest
-func RemoteUpgrade(vm string, osFamily string) (bool, error) {
+// remote upgrade a Linux OS dnfapt package and package repositories to version latest
+func RUpgrade(vm string, osFamily string) (bool, error) {
 	var cli = ""
 	// check arg
 	if vm == "" {
@@ -87,6 +87,76 @@ func ProvisionPackage(packageName string) (bool, error) {
 	}
 	// Play CLI
 	_, err = util.RunCLILocal(cli)
+	if err != nil {
+		return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
+	}
+
+	// on SUCCESS
+	return true, nil
+}
+
+// # Purpose
+//
+// - remote install 1..1 dnfapt package
+func RInstallP(vm string, osFamily string, packageName string) (bool, error) {
+	var cli = ""
+	// check arg
+	if vm == "" {
+		return false, fmt.Errorf("❌ Error: vm is empty")
+	}
+	if osFamily == "" {
+		return false, fmt.Errorf("❌ Error: osFamily is empty")
+	}
+	//
+	switch strings.TrimSpace(osFamily) {
+	case "debian":
+		cli = fmt.Sprintf(
+			"DEBIAN_FRONTEND=noninteractive sudo apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install -qq -y %s > /dev/null && DEBIAN_FRONTEND=noninteractive sudo apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' update -qq -y > /dev/null",
+			packageName)
+	case "rhel", "fedora":
+		cli = fmt.Sprintf(
+			"sudo dnf install -q -y %s > /dev/null && sudo dnf update -q -y > /dev/null",
+			packageName)
+	default:
+		return false, fmt.Errorf("❌ Error/Warning: unsupported Linux OS Family: %s", osFamily)
+	}
+	// Play CLI
+	_, err := util.RunCLIRemote2(cli, vm)
+	if err != nil {
+		return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
+	}
+
+	// on SUCCESS
+	return true, nil
+}
+
+// # Purpose
+//
+// - remote install 1..1 dnfapt repository
+func RInstallR(vm string, osFamily string, packageName string) (bool, error) {
+	var cli = ""
+	// check arg
+	if vm == "" {
+		return false, fmt.Errorf("❌ Error: vm is empty")
+	}
+	if osFamily == "" {
+		return false, fmt.Errorf("❌ Error: osFamily is empty")
+	}
+	//
+	switch strings.TrimSpace(osFamily) {
+	case "debian":
+		cli = fmt.Sprintf(
+			"DEBIAN_FRONTEND=noninteractive sudo apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install -qq -y %s > /dev/null && DEBIAN_FRONTEND=noninteractive sudo apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' update -qq -y > /dev/null",
+			packageName)
+	case "rhel", "fedora":
+		cli = fmt.Sprintf(
+			"sudo dnf install -q -y %s > /dev/null && sudo dnf update -q -y > /dev/null",
+			packageName)
+	default:
+		return false, fmt.Errorf("❌ Error/Warning: unsupported Linux OS Family: %s", osFamily)
+	}
+	// Play CLI
+	_, err := util.RunCLIRemote2(cli, vm)
 	if err != nil {
 		return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
 	}

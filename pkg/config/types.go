@@ -35,6 +35,13 @@ type CLIConfig struct {
 	UrlType UrlType
 }
 
+type CustomCLIConfig struct {
+	Name      string
+	Version   string
+	DstFolder string
+}
+
+type CustomCLIConfigMap map[string]CustomCLIConfig
 type CLIConfigMap map[string]CLIConfig
 
 // # Purpose

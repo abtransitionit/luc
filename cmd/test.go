@@ -4,10 +4,12 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package cmd
 
 import (
-	"github.com/abtransitionit/luc/internal/config"
-	"github.com/abtransitionit/luc/internal/util"
+	configi "github.com/abtransitionit/luc/internal/config"
+	utili "github.com/abtransitionit/luc/internal/util"
+	configp "github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/pipeline/gocli"
+	"github.com/abtransitionit/luc/pkg/util"
 	"github.com/spf13/cobra"
 )
 
@@ -23,8 +25,8 @@ var testCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Info(testSDesc)
 
-		ListOvhVm()
-		// provisionOneCli()
+		// ListOvhVm()
+		ListMapKey()
 
 	},
 }
@@ -40,18 +42,29 @@ func init() {
 	testCmd.MarkFlagsMutuallyExclusive("list", "runall")
 }
 
-func provisionOneCli() {
+func installGoCli() {
+	// define test var
+	vm := "o1u"
 	// provision a cli
-	configMap := map[string]config.CustomCLIConfig{
+	configMap := configp.CustomCLIConfigMap{
 		"runc": {
 			Name:      "runc",
 			Version:   "1.3.0",
 			DstFolder: "/usr/local/bin",
 		},
 	}
-	gocli.RunPipeline(configMap)
+	gocli.RunPipeline(vm, configMap)
 }
 
 func ListOvhVm() {
-	logx.L.Infof("🔹 List OVH Vm: %s", util.ListOvhVm())
+	logx.L.Info("List OVH Vm")
+	logx.L.Info("🔹 List : %s", utili.ListOvhVm())
+}
+
+func ListMapKey() {
+	logx.L.Info("List map:keys")
+	// list := []string{"a", "b", "c"}
+	listKey := util.GetMapKeys(configi.KindGoCliConfigMap)
+	logx.L.Infof("🔹 as slice:      %s", listKey)
+	logx.L.Infof("🔹 as StringList: %s", util.GetStringfromSliceWithSpace(listKey))
 }

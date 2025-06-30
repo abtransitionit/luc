@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 
 package config
 
+import "github.com/abtransitionit/luc/pkg/config"
+
 const (
 	// where to install kind
 	// KindVm = "o1u"
@@ -31,7 +33,7 @@ const (
 // # Purpose
 //
 // - List of go CLI to install
-var KindDnfaptCliConfigMap = CustomCLIConfigMap{
+var KindDnfaptCliConfigMap = config.CustomCLIConfigMap{
 	"uidmap": {
 		Name:    "uidmap",
 		Version: "",
@@ -41,7 +43,7 @@ var KindDnfaptCliConfigMap = CustomCLIConfigMap{
 // # Purpose
 //
 // - List of go CLI to install
-var KindGoCliConfigMap = CustomCLIConfigMap{
+var KindGoCliConfigMap = config.CustomCLIConfigMap{
 	"cni": {
 		Name:      "cni",
 		Version:   "1.7.1",

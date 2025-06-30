@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package rupgrade
+package packagex
 
 import (
 	"strings"
@@ -31,13 +31,7 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
 			if strings.ToLower(strings.TrimSpace(data.RebootStatus)) == "true" {
 				// reboot
 				logx.L.Debugf("[%s] remote rebooting", data.HostName)
-				err := util.RemoteReboot(data.HostName)
-				if err != nil {
-					data.Err = err
-					logx.L.Debugf("[%s] ❌ error detected 1", data.HostName)
-					out <- data
-					continue
-				}
+				util.RemoteReboot(data.HostName)
 				logx.L.Debugf("[%s] remote rebooted", data.HostName)
 
 				// wait ssh reachable

@@ -16,7 +16,7 @@ const DaPackDescription = "provision Dnfapt Package"
 func daPack(arg ...string) (string, error) {
 	logx.L.Info(DaPackDescription)
 
-	// For test purposes - Build StringList of packages
+	// Build []string of the Map:key
 	listPackage := ""
 	for key := range config.KindDnfaptCliConfigMap {
 		listPackage += key + " "

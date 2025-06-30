@@ -8,10 +8,9 @@ import (
 
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
-	"github.com/abtransitionit/luc/pkg/util/dnfapt"
 )
 
-func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
+func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int, vms []string, packages []string) {
 	nbWorker := nbVm // as many workers as VM
 	var wg sync.WaitGroup
 	defer close(out)
@@ -26,28 +25,43 @@ func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
 				continue
 			}
 
-			// remote install
+			// remote install dnfapt packages
 			logx.L.Debugf("[%s] remote installing packages", data.HostName)
-			_, err := dnfapt.RemoteUpgrade(data.HostName, data.OsFamily)
-			if err != nil {
-				data.Err = err
-				logx.L.Debugf("[%s] ❌ error detected 1", data.HostName)
-				out <- data
-				continue
+			for _, pkgName := range data.PackageList {
+				logx.L.Debugf("[%s] remote installing package %s", data.HostName, pkgName)
+				// _, err := dnfapt.RemoteInstall(data.HostName, data.OsFamily, pkgName)
+				// if err != nil {
+				// 	data.Err = err
+				// 	logx.L.Debugf("[%s] ❌ error detected 1", data.HostName)
+				// 	out <- data
+				// 	continue
+				// }
 			}
 			logx.L.Debugf("[%s] remote installed packages", data.HostName)
 
-			// check reboot status
+			// set reboot status
 			logx.L.Debugf("[%s] getting reboot status", data.HostName)
 			rebootStatus, err := util.GetRemoteProperty("rebootstatus", data.HostName)
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("[%s] ❌ Error detected 2", data.HostName)
 			}
-			logx.L.Debugf("[%s] got reboot status", data.HostName)
+			logx.L.Debugf("[%s] got reboot status : ", data.HostName, rebootStatus)
 
 			// set instance property
 			data.RebootStatus = rebootStatus
+
+			// get property
+			kernelVersion, err := util.GetRemoteProperty("oskversion", data.HostName)
+			if err != nil {
+				data.Err = err
+				logx.L.Debugf("[%s] ❌ Error detected 3", data.HostName)
+				out <- data
+				continue
+			}
+
+			// set instance property
+			data.OskernelVersionAfter = kernelVersion
 
 			// send
 			out <- data

@@ -66,7 +66,7 @@ func getReboot() (string, error) {
 
 	// Select appropriate command
 	var cli string
-	switch osFamily {
+	switch strings.TrimSpace(osFamily) {
 	case "debian":
 		cli = "test -f /var/run/reboot-required && echo true || echo false"
 	case "rhel":
