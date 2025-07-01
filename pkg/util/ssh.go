@@ -150,12 +150,11 @@ func CheckSsh(arg ...string) (string, error) {
 	// initialize the map
 	NodeSshStatusMap = SshStatusMap{}
 
-	// convert input to slice
+	// define var
 	var SliceNodes []string
 
 	if len(arg) == 1 && strings.Contains(arg[0], " ") {
-		// Single space-separated string -> split it
-		SliceNodes = strings.Fields(arg[0])
+		SliceNodes = strings.Fields(arg[0]) // convert ListAsString to slice ([]string)
 	} else {
 		// Already a slice of node names
 		SliceNodes = arg

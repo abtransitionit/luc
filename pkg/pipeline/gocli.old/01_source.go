@@ -32,31 +32,30 @@ func source(out chan<- PipelineData, vms []string, cliMap config.CustomCLIConfig
 	logx.L.Debugf("CLI(s) to install per VM: %d : %s", nbCli, util.GetMapKeys(cliMap))
 	logx.L.Debugf("Will use a many workers as VM: %d ", nbWorker)
 
-	// loop over all items in the list (CLI)
+	// loop over all items in the list
 	for _, item := range cliMap {
-		// create an instance per item
+		// create an instance per item (CLI)
 		data := PipelineData{}
 
-		// Fetch the shared public config for this CLI
-		cliConfig, ok := config.GetCLIConfig(item.Name)
+		// Fetch the config for this CLI
+		CliConfig, ok := config.GetCLIConfig(item.Name)
 		if !ok {
-			data.Err = fmt.Errorf("[%s] ❌ CLI not found in config map", item.Name)
-			logx.L.Debugf("[%s] ❌ Error detected", item.Name)
-			out <- data
-			continue
+			// add this property (if error) to the instance structure
+			data.Err = fmt.Errorf("❌ CLI not found in config map")
+			logx.L.Debugf("❌ Error detected")
+		} else {
+			// add this property to the pipelined data
+			data.Config = CliConfig
+			data.Version = item.Version
+			data.DstFolder = item.DstFolder
+			// log information
+			logx.L.Infof("[%s] Loaded CLI config", item.Name)
 		}
-		// define instance property
-		data.Config = cliConfig
-		data.Version = item.Version
-		data.DstFolder = item.DstFolder
-		data.GenericUrl = cliConfig.Url
-
 		// log information
-		logx.L.Debugf("[%s] Loaded CLI config. Sending instance to the pipeline", item.Name)
-		// sen this instance to the channel
+		// logx.L.Debugf("[%s] defined data instances to be pipelined", vm)
+		// send the instance to the channel (for next stage or final step)
 		out <- data
-
-	} // for
+	}
 
 }
 

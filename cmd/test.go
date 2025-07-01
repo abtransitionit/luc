@@ -4,11 +4,12 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package cmd
 
 import (
+	"fmt"
+
 	configi "github.com/abtransitionit/luc/internal/config"
 	utili "github.com/abtransitionit/luc/internal/util"
-	configp "github.com/abtransitionit/luc/pkg/config"
+	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/pipeline/gocli"
 	"github.com/abtransitionit/luc/pkg/util"
 	"github.com/spf13/cobra"
 )
@@ -26,7 +27,8 @@ var testCmd = &cobra.Command{
 		logx.L.Info(testSDesc)
 
 		// ListOvhVm()
-		ListMapKey()
+		// ListMapKey()
+		installGoCli()
 
 	},
 }
@@ -43,17 +45,30 @@ func init() {
 }
 
 func installGoCli() {
-	// define test var
+
+	// define vm
 	vm := "o1u"
-	// provision a cli
-	configMap := configp.CustomCLIConfigMap{
-		"runc": {
-			Name:      "runc",
-			Version:   "1.3.0",
-			DstFolder: "/usr/local/bin",
-		},
+
+	// define 1 cli
+	cliConfig := config.CustomCLIConfig{
+		Name:      "runc",
+		Version:   "1.3.0",
+		DstFolder: "/usr/local/bin",
 	}
-	gocli.RunPipeline(vm, configMap)
+
+	// get vm property
+	osFamily, err := util.GetRemoteProperty("osfamily", vm)
+	if err != nil {
+		logx.L.Errorf("%s", err)
+	}
+
+	// log
+	logx.L.Infof("instal go cli on %s:%s", vm, osFamily)
+	fmt.Println(cliConfig)
+
+	// install cli(s) on VM
+	// gocli.RInstallC(vm, &cliConfig)
+
 }
 
 func ListOvhVm() {

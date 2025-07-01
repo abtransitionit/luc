@@ -33,7 +33,7 @@ const (
 // # Purpose
 //
 // - List of go CLI to install
-var KindDnfaptCliConfigMap = config.CustomCLIConfigMap{
+var KindDaCliConfigMap = config.CustomCLIConfigMap{
 	"uidmap": {
 		Name:    "uidmap",
 		Version: "",

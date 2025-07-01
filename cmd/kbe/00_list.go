@@ -9,7 +9,7 @@ import (
 )
 
 // Description
-var kbeSDesc = "manage Kubernetes clusters (KBE = Kubernetes Easy)."
+var kbeSDesc = "manage Kubernetes clusters."
 var kbeLDesc = kbeSDesc + ` xxx.`
 
 // root Command

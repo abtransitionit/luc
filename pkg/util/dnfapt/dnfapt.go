@@ -66,34 +66,6 @@ func Upgrade() (bool, error) {
 	// on SUCCESS
 	return true, nil
 }
-func ProvisionPackage(packageName string) (bool, error) {
-	var cli = ""
-	// get Li nux Os family
-	osFamily, err := util.GetLocalProperty("osfamily")
-	if err != nil {
-		return false, err
-	}
-	switch strings.TrimSpace(osFamily) {
-	case "debian":
-		cli = fmt.Sprintf(
-			"DEBIAN_FRONTEND=noninteractive sudo apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install -qq -y %s > /dev/null && DEBIAN_FRONTEND=noninteractive sudo apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' update -qq -y > /dev/null",
-			packageName)
-	case "rhel", "fedora":
-		cli = fmt.Sprintf(
-			"sudo dnf install -q -y %s > /dev/null && sudo dnf update -q -y > /dev/null",
-			packageName)
-	default:
-		return false, fmt.Errorf("❌ Error/Warning: unsupported Linux OS Family: %s", osFamily)
-	}
-	// Play CLI
-	_, err = util.RunCLILocal(cli)
-	if err != nil {
-		return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
-	}
-
-	// on SUCCESS
-	return true, nil
-}
 
 // # Purpose
 //

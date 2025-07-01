@@ -24,16 +24,25 @@ func RunPipeline(vmList string, cliMap config.CustomCLIConfigMap) (string, error
 
 	// Define the pipeline channels
 	ch01 := make(chan PipelineData)
-	ch02 := make(chan PipelineData)
-	// ch03 := make(chan PipelineData)
-	// ch04 := make(chan PipelineData)
-	chOutLast := ch02
+	// chOutGenericUrl := make(chan PipelineData)
+	// chOutSpecificUrl := make(chan PipelineData)
+	// chOutArtifactName := make(chan PipelineData)
+	// chOutArtifactPath := make(chan PipelineData)
+	// chOutArtifactGet := make(chan PipelineData)
+	// chOutFileGuessType := make(chan PipelineData)
+	// chOutFileSave := make(chan PipelineData)
+	// chOutFileUnTgz := make(chan PipelineData)
+	// chOutFileMove := make(chan PipelineData)
+	// chOutBuildPath := make(chan PipelineData)
+	chOutLast := ch01
 
 	// aync stage (i.e running concurrently/in parallel)
 	go source(ch01, vms, cliMap) // define instances to send to the pipeline
-	go setUrlSpec(ch01, ch02)
-	// go setArtifact(ch02, ch03)
-	// go getArtifact(ch03, ch04) // get artifact
+	// go GenericUrl(chOutSource, chOutGenericUrl)           // set property
+	// go SpecificUrl(chOutGenericUrl, chOutSpecificUrl)     // set property
+	// go ArtifactName(chOutSpecificUrl, chOutArtifactName)  // set property
+	// go ArtifactPath(chOutArtifactName, chOutArtifactPath) // set property
+	// go ArtifactGet(chOutArtifactPath, chOutArtifactGet)   // get artifact
 	// go FileGuessType(chOutArtifactGet, chOutFileGuessType)
 	// go FileSave(chOutFileGuessType, chOutFileSave)
 	// go FileUntgz(chOutFileSave, chOutFileUnTgz)

@@ -35,30 +35,30 @@ func GetMapKeys[V any](m map[string]V) []string {
 
 // # Purpose
 //
-// - convert a []string to a String "item1 item2 item3 ..."
+// - convert a []string to a string like "item1@item2@item3@ ..."
 //
 // # Parameters
 //
-// - ListKey: A []string slice containing the keys to be formatted.
+// - ListKey: A []string slice containing the strings to be formatted.
 //
 // # Return
 //
-// - string:  A single string containing all the keys joined by the separator.
+// - string:  A single string containing all the strings joined by the separator.
 func GetStringfromSlice(ListString []string, separator string) string {
 	return strings.Join(ListString, separator)
 }
 
 // # Purpose
 //
-// - convert a []string to a String "item1 item2 item3 ..."
+// - convert a []string to a space separated string "item1 item2 item3 ..."
 //
 // # Parameters
 //
-// - ListKey: A []string slice containing the keys to be formatted.
+// - ListString: A []string slice containing the strings to be formatted.
 //
 // # Return
 //
-// - string:  A single string containing all the keys separated by a space.
-func GetStringfromSliceWithSpace(keys []string) string {
-	return GetStringfromSlice(keys, " ")
+// - string:  A single string containing all the strings joined by a space.
+func GetStringfromSliceWithSpace(ListString []string) string {
+	return GetStringfromSlice(ListString, " ")
 }

@@ -17,12 +17,12 @@ import (
 var rootSDesc = "LUC (aka. Linux Unified CLI) is a user-friendly, auto-documented command-line interface."
 var rootLDesc = rootSDesc + ` It simplifies daily tasks for DevOps engineers and developers by providing a unified and consistent CLI experience. LUC can, for example:
 	→ Manage containers and container images,
-	→ Manage Linux OS packages and repositories using a unified interface — no need to worry about whether it's apt or dnf,
+	→ Manage Linux OS packages and repositories using a unified interface — no need to worry about whether it's apt or dnf nor if it's debian, fedora or ubuntu
 	→ Manage remote VM objects,
 	→ Simplify the creation and management of Kubernetes clusters across virtual machines,
 	→ ...and much more.
 
-As a Linux cross-distribution CLI, LUC is also well-suited for automation and integration into CI/CD pipelines.`
+As a Linux cross-distribution CLI, LUC is also well-suited and ready for full automation and integration into any CI/CD pipelines.`
 
 // root Command
 var rootCmd = &cobra.Command{

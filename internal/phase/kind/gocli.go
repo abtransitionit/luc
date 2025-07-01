@@ -12,10 +12,11 @@ import (
 const GoCliDescription = "provision Go CLI"
 
 func goCli(arg ...string) (string, error) {
-	logx.L.Info(GoCliDescription)
-	// Launch the pipeline attach to this phase
-	// gocli.RunPipeline("kind", "nerdctl", "containerd", "rootlesskit", "slirp4netns")
-	gocli.RunPipeline(config.KindVm, config.KindGoCliConfigMap)
-	// on SUCCESS
+	logx.L.Info(CpLucDescription)
+	_, err := gocli.RunPipeline(config.KindVm, config.KindGoCliConfigMap)
+	if err != nil {
+		logx.L.Debugf("%s", err)
+		return "", err
+	}
 	return "", nil
 }

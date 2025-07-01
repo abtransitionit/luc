@@ -8,8 +8,7 @@ import (
 type PipelineData struct {
 	Config       config.CLIConfig // Full config (e.g., luc, helm, etc.)
 	GenericUrl   string           // Url as it appears in the ConfigMap
-	AppUrl       string           // Url after app specific placeholders are replaced
-	HostUrl      string           // Url after host specific placeholders are replaced
+	SpecificUrl  string           // Url after placeholders are replaced
 	MemoryFile   []byte           // In-memory file content	after curl is successful
 	ArtifactName string           // artifact name as it appears in the specific URL
 	ArtifactPath string           // Path to saved artifact on the host FS after it is curled
@@ -33,11 +32,10 @@ func (obj PipelineData) String() string {
 		{"gocli name", obj.Config.Name},
 		{"CLI version", obj.Version},
 		{"Generic Url", obj.GenericUrl},
-		{"App Url", obj.AppUrl},
-		{"Host Url", obj.HostUrl},
+		{"Specific Url", obj.SpecificUrl},
 		{"Artifact Name", obj.ArtifactName},
-		{"Artifact Path", obj.ArtifactPath},
 		{"Artifact Guessed Type", obj.ArtifactType},
+		{"Artifact Path", obj.ArtifactPath},
 		{"Artifact FofTmpPath", obj.FofTmpPath},
 		{"Dst Folder", obj.DstFolder},
 		{"Error", func() string {

@@ -155,25 +155,6 @@ func (u UrlType) IsGitable() (bool, error) {
 	}
 }
 
-func (obj CLIConfigMap) String() string {
-	t := table.NewWriter()
-	t.SetStyle(table.StyleLight)
-	t.SetTitle("CLI Config Map")
-	t.AppendHeader(table.Row{"CLI Name", "Version", "Type", "Doc", "Git"})
-
-	for name, item := range obj {
-		t.AppendRow(table.Row{
-			name,
-			item.Tag,
-			item.UrlType,
-			item.DocUrl,
-			item.GitUrl,
-		})
-	}
-
-	return t.Render()
-}
-
 // get a specific property of a CLI in a SharedCliConfigMap
 //
 // # Parameters:
@@ -288,4 +269,61 @@ func GetCliSpecificUrl(log *zap.SugaredLogger, cliName string, osArch ...string)
 	url = strings.ReplaceAll(url, "$ARCH", archType)
 
 	return url, nil
+}
+
+// pretty print
+func (c CustomCLIConfig) String() string {
+	t := table.NewWriter()
+	// t.SetOutputMirror(os.Stdout) // Optional: for direct output
+	t.SetStyle(table.StyleLight)
+	t.SetTitle("Custom CLI Config")
+	t.AppendHeader(table.Row{"Name", "Version", "Destination Folder"})
+
+	t.AppendRow(table.Row{
+		c.Name,
+		c.Version,
+		c.DstFolder,
+	})
+
+	return t.Render()
+}
+
+// pretty print
+func (obj CLIConfigMap) String() string {
+	t := table.NewWriter()
+	t.SetStyle(table.StyleLight)
+	t.SetTitle("CLI Config Map")
+	// t.AppendHeader(table.Row{"CLI Name", "Version", "Type", "Doc", "Git"})
+	t.AppendHeader(table.Row{"CLI Name", "Type", "Doc", "Git"})
+
+	for name, item := range obj {
+		t.AppendRow(table.Row{
+			name,
+			// item.Tag,
+			item.UrlType,
+			item.DocUrl,
+			item.GitUrl,
+		})
+	}
+
+	return t.Render()
+}
+
+// pretty print
+func (obj CustomCLIConfigMap) String() string {
+	t := table.NewWriter()
+	t.SetStyle(table.StyleLight)
+	t.SetTitle("CLI Custom Config Map")
+	t.AppendHeader(table.Row{"CLI Name", "Version", "Type", "Doc", "Git"})
+
+	for name, item := range obj {
+		t.AppendRow(table.Row{
+			name,
+			item.Name,
+			item.Version,
+			item.DstFolder,
+		})
+	}
+
+	return t.Render()
 }

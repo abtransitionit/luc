@@ -18,7 +18,7 @@ func daPack(arg ...string) (string, error) {
 
 	// Build []string of the Map:key
 	listPackage := ""
-	for key := range config.KindDnfaptCliConfigMap {
+	for key := range config.KindDaCliConfigMap {
 		listPackage += key + " "
 	}
 	listPackage = strings.TrimSpace(listPackage)
