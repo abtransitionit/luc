@@ -23,13 +23,14 @@ func setArtifact(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 
 		// get instance property
-		url := data.AppUrl
-		// set instance property
-		data.ArtifactName = path.Base(url)
-		uniquePath := filepath.Join("/tmp", fmt.Sprintf("%s_%d", data.ArtifactName, time.Now().UnixNano()))
-		data.ArtifactPath = uniquePath
+		url := data.HostUrl
 
-		// log information
+		// set instance property
+		data.ArtName = path.Base(url)
+		uniquePath := filepath.Join("/tmp", fmt.Sprintf("%s_%d", data.ArtName, time.Now().UnixNano()))
+		data.ArtPath1 = uniquePath
+
+		// log
 		logx.L.Debugf("[%s] setted artifact property", data.Config.Name)
 		// send
 		out <- data

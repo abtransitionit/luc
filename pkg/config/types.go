@@ -314,11 +314,10 @@ func (obj CustomCLIConfigMap) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
 	t.SetTitle("CLI Custom Config Map")
-	t.AppendHeader(table.Row{"CLI Name", "Version", "Type", "Doc", "Git"})
+	t.AppendHeader(table.Row{"CLI Name", "Version", "Dst Folder"})
 
-	for name, item := range obj {
+	for _, item := range obj {
 		t.AppendRow(table.Row{
-			name,
 			item.Name,
 			item.Version,
 			item.DstFolder,

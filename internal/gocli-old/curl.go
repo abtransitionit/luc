@@ -99,7 +99,7 @@ func curl(arg ...string) (string, error) {
 
 	// save memory content into OS file
 	uniqueFsPath := fmt.Sprintf("/tmp/%s_%d", artefactName, time.Now().UnixNano())
-	_, err = util.SaveToFile(uniqueFsPath, fileInMemory)
+	_, err = util.SaveToFile(fileInMemory, uniqueFsPath)
 	if err != nil {
 		return "", err
 	}

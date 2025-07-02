@@ -94,7 +94,16 @@ func StatusService(listServiceName ...string) (map[string]string, error) {
 // 	return nil
 // }
 
-func CreateServiceFile(stringContent string, filePath string) error {
+func CreateServiceFileRemote(stringContent string, filePath string, vm string) error {
+	cli := fmt.Sprintf(`luc util oservice cfile %s`, filePath)
+	_, err := RunCLIRemote2(cli, vm)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func CreateServiceFileLocal(stringContent string, filePath string) error {
 
 	// get property
 	osType, err := GetLocalProperty("ostype")

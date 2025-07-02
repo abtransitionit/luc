@@ -21,7 +21,7 @@ var cplucLDesc = cplucSDesc + `
 	`
 
 // provision Command
-var CplucCmd = &cobra.Command{
+var cpLucCmd = &cobra.Command{
 	Use:   "cpluc OvhVm1 OvhVm2 ...",
 	Short: cplucSDesc,
 	Long:  cplucLDesc,
@@ -52,6 +52,6 @@ var CplucCmd = &cobra.Command{
 var force bool
 
 func init() {
-	// phase.CmdInit(CplucCmd)
-	CplucCmd.Flags().BoolVar(&force, "force", false, "Force execution even if not needed")
+	// phase.CmdInit(cpLucCmd)
+	cpLucCmd.Flags().BoolVar(&force, "force", false, "Force execution even if not needed")
 }

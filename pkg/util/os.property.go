@@ -30,7 +30,7 @@ var OsPropertyMap = map[string]PropertyHandler{
 	"netip":        getNetIp,
 	"netgateway":   getNetGateway,
 	"osuser":       getOsUser,
-	"ostype":       getOsType,
+	"ostype":       getOsType, // e.g. linux, windows, darwin
 	"osarch":       getOsArch,
 	"osversion":    getOsVersion,
 	"osdistro":     getOsDistro,
@@ -41,12 +41,20 @@ var OsPropertyMap = map[string]PropertyHandler{
 	"selstatus":    getSelinuxStatus,
 	"selmode":      getSelinuxMode,
 	"uuid":         getUuid,
+	"uname":        getUnameM,
 	"selinfos":     getSelinuxInfos,
 	"osinfos":      getOsInfos,
 	"rebootstatus": getReboot,
 }
 
-// return OsPropertyMap
+func getUnameM() (string, error) {
+	cli := "uname -m"
+	output, err := RunCLILocal(cli)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(output), nil
+}
 
 func getReboot() (string, error) {
 	// Ensure we're on Linux

@@ -32,15 +32,15 @@ func FileSave(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 
 		// Check path is defined
-		if data.ArtifactPath == "" {
-			data.Err = fmt.Errorf("ArtifactPath is empty for cli (%s), cannot save file", data.Config.Name)
+		if data.ArtPath1 == "" {
+			data.Err = fmt.Errorf("ArtPath1 is empty for cli (%s), cannot save file", data.Config.Name)
 			logx.L.Debugf("❌ Error detected 1")
 			out <- data
 			continue
 		}
 
 		// Save the file from memory into host FS
-		_, err := util.SaveToFile(data.ArtifactPath, data.MemoryFile)
+		_, err := util.SaveToFile(data.MemoryFile, data.ArtPath1)
 		if err != nil {
 			data.Err = fmt.Errorf("failed to save file for cli (%s): %w", data.Config.Name, err)
 			logx.L.Debugf("❌ Error detected 2")

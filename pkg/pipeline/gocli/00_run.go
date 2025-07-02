@@ -18,6 +18,7 @@ func RunPipeline(vmList string, cliMap config.CustomCLIConfigMap) (string, error
 	// define var
 	vms := strings.Fields(vmList) // convert ListAsString to slice ([]string)
 	// nbVm := len(vms)
+	nbWorker := len(vms)
 
 	// // Count and log the number of CLI args
 	// logx.L.Debugf("Received %d CLI(s) to provisioned", len(cliMap))
@@ -25,23 +26,26 @@ func RunPipeline(vmList string, cliMap config.CustomCLIConfigMap) (string, error
 	// Define the pipeline channels
 	ch01 := make(chan PipelineData)
 	ch02 := make(chan PipelineData)
-	// ch03 := make(chan PipelineData)
-	// ch04 := make(chan PipelineData)
-	chOutLast := ch02
+	ch03 := make(chan PipelineData)
+	ch04 := make(chan PipelineData)
+	ch05 := make(chan PipelineData)
+	ch06 := make(chan PipelineData)
+	// ch07 := make(chan PipelineData)
+	chOutLast := ch06
+
+	// log
+	logx.L.Debugf("Will use a many workers as VM: %d ", nbWorker)
 
 	// aync stage (i.e running concurrently/in parallel)
 	go source(ch01, vms, cliMap) // define instances to send to the pipeline
 	go setUrlSpec(ch01, ch02)
-	// go setArtifact(ch02, ch03)
-	// go getArtifact(ch03, ch04) // get artifact
-	// go FileGuessType(chOutArtifactGet, chOutFileGuessType)
-	// go FileSave(chOutFileGuessType, chOutFileSave)
-	// go FileUntgz(chOutFileSave, chOutFileUnTgz)
-	// go FileMove(chOutFileUnTgz, chOutFileMove)  // move file to final destination
-	// go BuildPath(chOutFileMove, chOutBuildPath) // build $PATH
+	go setArtifact(ch02, ch03)
+	go getArtifact(ch03, ch04, nbWorker) // get artifact
+	go unTgz(ch04, ch05, nbWorker)
+	go Move(ch05, ch06, nbWorker) // move to final destination
 
 	// final sequential step. collects all instances in the pipeline and build a sumary
-	err := lastStep(chOutLast)
+	err := lastStep(chOutLast, vms)
 	if err != nil {
 		return "", err
 	}

@@ -16,7 +16,7 @@ var listvmSDesc = "List configured and reachable OVH VMs."
 var listvmLDesc = listvmSDesc + ` xxx.`
 
 // init Command
-var ListvmCmd = &cobra.Command{
+var listVmCmd = &cobra.Command{
 	Use:   "listvm",
 	Short: listvmSDesc,
 	Long:  listvmLDesc,

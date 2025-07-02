@@ -77,6 +77,9 @@ var SharedCliConfigMap = CLIConfigMap{
 		GitUrl:  "https://github.com/kubernetes-sigs/kubebuilder",
 		UrlType: UrlGit,
 	},
+	"kubeadm": {
+		Name: "kubeadm",
+	},
 	"kubectl": {
 		Name: "kubectl",
 		// Tag:     "v1.32.2",
@@ -128,7 +131,7 @@ var SharedCliConfigMap = CLIConfigMap{
 	"sonobuoy": {
 		Name: "sonobuoy",
 		// Tag:     "v0.57.3",
-		Url:     "https://github.com/vmware-tanzu/sonobuoy.git",
+		Url:     "https://github.com/vmware-tanzu/$NAME.git",
 		DocUrl:  "https://sonobuoy.io/docs/main/",
 		GitUrl:  "https://github.com/vmware-tanzu/sonobuoy",
 		UrlType: UrlGit,

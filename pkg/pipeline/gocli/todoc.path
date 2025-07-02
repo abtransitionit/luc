@@ -1,0 +1,60 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package gocli
+
+import (
+	"fmt"
+
+	"github.com/abtransitionit/luc/pkg/config"
+	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
+)
+
+// generate the PATH of the CLI
+func buildPath(in <-chan PipelineData, out chan<- PipelineData) {
+	defer close(out)
+
+	for data := range in {
+		if data.Err != nil {
+			out <- data
+			logx.L.Debugf("❌ Previous error detected")
+			continue
+		}
+
+		// use cases
+		switch data.Config.UrlType {
+		case config.UrlTgz, config.UrlExe:
+			data = helperPathExeTgz(data)
+		default:
+			logx.L.Debugf("[%s] UrlType '%s' is not impact by this stage", data.Config.Name, data.Config.UrlType)
+		}
+
+		// send
+		out <- data
+	}
+}
+
+func helperPathExeTgz(data PipelineData) PipelineData {
+	// define var
+	rootFolder := "/usr/local/bin"
+
+	// log
+	logx.L.Debugf("[%s] [%s] building PATH", data.Config.Name, data.HostName)
+
+	// play code
+	path, err := util.BuildPath(rootFolder)
+
+	// error
+	if err != nil {
+		logx.L.Debugf("❌ Error detected 1")
+		data.Err = fmt.Errorf("[%s] %w", data.Config.Name, err)
+		return data
+	}
+
+	// success
+	logx.L.Debugf("[%s] [%s] builded export PATH=%s", data.Config.Name, data.HostName, path+":$PATH")
+	logx.L.Debugf("[%s] export PATH=%s", data.Config.Name, path+":$PATH")
+	return data
+
+}

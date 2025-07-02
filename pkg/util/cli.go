@@ -166,6 +166,7 @@ func RunCLIRemote2(command string, vm string, liveOutput ...bool) (stdout string
 
 	// Format SSH command: ssh user@host "command"
 	fullCmd := fmt.Sprintf(`ssh %s "%s"`, vm, command)
+	// fullCmd := fmt.Sprintf(`ssh -F ~/.ssh/config %s "%s"`, vm, command)
 
 	cmd := exec.Command("sh", "-c", fullCmd)
 

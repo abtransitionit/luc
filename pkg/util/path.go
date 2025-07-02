@@ -31,31 +31,40 @@ import (
 //	    log.Fatal(err)
 //	}
 //	fmt.Println("export PATH=" + pathStr + ":$PATH")
-func BuildPath(basePath string) (string, error) {
-	// Validate and normalize the basePath
-	absBasePath, err := CheckPath(basePath)
+func GetSubdirLocal(basePath string) (string, error) {
+
+	// check arg
+	if basePath == "" {
+		return "", fmt.Errorf("no base path provided")
+	}
+
+	// play code
+	cli := fmt.Sprintf(`find %s -type d | sort | paste -sd\;`, basePath)
+	path, err := RunCLILocal2(cli)
 	if err != nil {
 		return "", err
 	}
+	return path, nil
+}
 
-	var paths []string
+func GetSubdirRemote(basePath string, vm string) (string, error) {
 
-	// Walk through the directory tree and collect all directories
-	err = filepath.WalkDir(absBasePath, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if d.IsDir() {
-			paths = append(paths, path)
-		}
-		return nil
-	})
-	if err != nil {
-		return "", fmt.Errorf("error building path tree: %w", err)
+	// check arg
+	if basePath == "" {
+		return "", fmt.Errorf("no base path provided")
+	}
+	// check arg
+	if vm == "" {
+		return "", fmt.Errorf("no vm provided")
 	}
 
-	// Join all collected paths with colon separator
-	return strings.Join(paths, ":"), nil
+	// play code
+	cli := fmt.Sprintf(`find %s -type d | sort | paste -sd\;`, basePath)
+	path, err := RunCLIRemote2(cli, vm)
+	if err != nil {
+		return "", err
+	}
+	return path, nil
 }
 
 // # Purpose
@@ -113,20 +122,25 @@ func UpdPath(srcPath string) (string, error) {
 }
 
 func CheckPath(path string) (string, error) {
+
+	// check arg
 	if path == "" {
 		return "", fmt.Errorf("no path provided")
 	}
 
+	// check path is absolute
 	absPath, err := filepath.Abs(path)
 	if err != nil {
 		return "", fmt.Errorf("invalid path: %v", err)
 	}
 
+	// check path exists
 	if _, err := os.Stat(absPath); os.IsNotExist(err) {
 		return "", fmt.Errorf("path does not exist: %s", absPath)
 	} else if err != nil {
 		return "", fmt.Errorf("error checking path: %v", err)
 	}
 
+	// success
 	return absPath, nil
 }

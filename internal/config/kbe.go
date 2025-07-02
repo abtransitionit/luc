@@ -13,7 +13,7 @@ const (
 	// KBE version
 	KbeVersion = K8sVersion // follow up kubernetes version
 
-	// KBE nodes
+	// where to install KBE
 	// KbeListNode = "o1u o2a o3r o5d o6f" // o6f generate error
 	// KbeListNode = "o1u o2a o3r o4f o5d"
 	KbeListNode = "o1u o2a"
@@ -45,9 +45,6 @@ const (
 	KbeKernelFileName = "99-kbe.conf"
 )
 
-// # Purpose
-//
-// - Map of dnfapt CLI to install
 var KbeDnfaptCliConfigMap = config.CustomCLIConfigMap{
 	"crio": {
 		Name:      "crio",

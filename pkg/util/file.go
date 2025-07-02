@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/errorx"
 )
 
@@ -93,7 +94,7 @@ func FileExists(path string) (bool, error) {
 //   - The complete file is written atomically (all-or-nothing)
 //   - Parent directories must exist (does not create directories)
 //   - Uses 0644 file permissions by default
-func SaveToFile(path string, data []byte) (string, error) {
+func SaveToFile(data []byte, path string) (string, error) {
 	// manage argument
 	if path == "" {
 		// msg := fmt.Sprintf("path is empty (%s)", path)
@@ -232,29 +233,39 @@ func IsMemoryContentAnExe(data []byte) (bool, error) {
 // # Purpose
 //
 // decompresses a tgz file into a destination folder
-func UntargzFile(srcTgzPath string, destFolder string) error {
-	// Check destination is an absolute path
-	if !strings.HasPrefix(destFolder, "/") {
-		return errors.New("destination directory must be an absolute path starting with '/'")
+func UnTgz(srcTgzPath string, destFolder string) error {
+	// check arg
+	if srcTgzPath == "" {
+		return fmt.Errorf("❌ Error: Source file is empty")
 	}
-	// Check srcTgzPath is an absolute path
-	if !strings.HasPrefix(srcTgzPath, "/") {
-		return errors.New("srcTgzPath must be an absolute path starting with '/'")
+	if destFolder == "" {
+		return fmt.Errorf("❌ Error: Destination folder is empty")
 	}
 
-	// Check destination directory exists
+	// Check absolute path
+	if !strings.HasPrefix(srcTgzPath, "/") {
+		return fmt.Errorf("❌ Error: srcTgzPath must be an absolute path starting with '/'")
+	}
+	if !strings.HasPrefix(destFolder, "/") {
+		return fmt.Errorf("❌ Error: destination directory must be an absolute path starting with '/'")
+	}
+
+	// Create dest folder if not exist
 	if err := os.MkdirAll(destFolder, 0755); err != nil {
 		return err
 	}
 
-	// Prepare the command: tar -C destFolder -xzf tgzPath
-	cmd := exec.Command("tar", "-C", destFolder, "-xzf", srcTgzPath)
-
-	// Run the command and wait for it to finish
-	if err := cmd.Run(); err != nil {
-		return err
+	// check folder exists
+	if _, err := os.Stat(destFolder); os.IsNotExist(err) {
+		return fmt.Errorf("❌ Error: Destination folder does not exist")
 	}
 
+	// play cli
+	cli := fmt.Sprintf("tar -C %s -xzf %s", destFolder, srcTgzPath)
+	_, err := RunCLILocal2(cli)
+	if err != nil {
+		return fmt.Errorf("❌ Error: %s : %s", err, cli)
+	}
 	return nil
 }
 
@@ -461,4 +472,41 @@ func MvFolder(srcPath, dstPath string, permission os.FileMode, forceOverwrite bo
 	}
 
 	return true, nil
+}
+
+func GetFileType(absPath string) (config.UrlType, error) {
+	// check arg
+	if absPath == "" {
+		return "", fmt.Errorf("❌ Error : no file provided")
+	}
+
+	// check file exists
+	_, err := FileExists(absPath)
+	if err != nil {
+		return "", err
+	}
+	// get file type
+	cli := fmt.Sprintf("file --brief %s", absPath)
+	output, err := RunCLILocal(cli)
+	if err != nil {
+		return "", err
+	}
+
+	// parse
+	fileInfo := strings.ToLower(output)
+
+	// UseCase
+	switch {
+	case strings.Contains(fileInfo, "executable"):
+		return config.UrlExe, nil
+	case strings.Contains(fileInfo, "gzip compressed"):
+		return config.UrlTgz, nil
+	case strings.Contains(fileInfo, "git"):
+		return config.UrlGit, nil
+	case strings.Contains(fileInfo, "go source"):
+		return config.UrlGo, nil
+	default:
+		// do nothing
+	}
+	return "", nil
 }

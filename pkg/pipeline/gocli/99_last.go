@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
 )
 
 // # Purpose
@@ -18,18 +19,27 @@ import (
 // # Notes
 //
 // - No need to close the channel. Only senders should close the channel
-func lastStep(in <-chan PipelineData) error {
-	// logx.L.Info("Enter lastStep")
-	// loop over each item of type PipelineData in the channel
+func lastStep(in <-chan PipelineData, vms []string) error {
+	// common loop
 	for data := range in {
-		// if an error exits
 		if data.Err != nil {
 			logx.L.Debugf("[%s] Pipeline error : %v", data.Config.Name, data.Err)
 			continue
 		}
-		// if no error exits : log information - one per structure
-		logx.L.Infof("[%s] Received Pipeline Data", data.Config.Name)
+		logx.L.Infof("[%s] [%S] Received Pipeline Data", data.Config.Name, data.HostName)
 		fmt.Println(data.String())
+	}
+
+	// specific actions: for each vm display the PATH to all CLI(s) installed
+	for _, vm := range vms {
+		// play code
+		path, err := util.GetSubdirRemote("/usr/local/bin", vm)
+		// error
+		if err != nil {
+			return err
+		}
+		// success
+		logx.L.Infof("[%s] export PATH=%s:$PATH", vm, path)
 	}
 	return nil
 }

@@ -78,36 +78,52 @@ func GetPublicFile(url string) ([]byte, error) {
 	return body, nil
 }
 
-// out, err := os.Create(srcPath)
-// if err != nil {
-// 	fmt.Println("File creation error:", err)
-// 	return
-// }
-// defer out.Close()
+// getFile performs the basic HTTP GET operation
+// (private because it's our internal building block)
+func getFile2(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, fmt.Errorf("❌ Error: failed to get URL: %w", err)
+	}
+	defer resp.Body.Close()
 
-// _, err = io.Copy(out, resp.Body)
-// if err != nil {
-// 	fmt.Println("File save error:", err)
-// 	return
-// }
+	// check
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("❌ Error: unexpected status code: %d for URL: %s", resp.StatusCode, url)
+	}
 
-// 1. Download file
-// err = os.WriteFile(srcPath, data, 0644)
-// if err != nil {
-// 	fmt.Println("write error:", err)
-// 	return
-// }
+	// check
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return errorx.ByteError("Get Response Body from URL (%s), even status code is 200", url, err)
+	}
+	// success
+	return body, nil
+}
 
-// // 2. Make file executable
-// err = os.Chmod(srcPath, 0755)
-// if err != nil {
-// 	fmt.Println("chmod error:", err)
-// 	return
-// }
+// gets a file and handles local-specific concerns
+func GetFileLocal(url string, path string) (string, error) {
 
-// // 3. Move file to final destination (requires root privileges)
-// err = os.Rename(srcPath, dstPath)
-// if err != nil {
-// 	fmt.Println("move error:", err)
-// 	return
-// }
+	// get file in memory
+	data, err := getFile2(url)
+	if err != nil {
+		return "", err
+	}
+
+	// save file from memory to FS
+	_, err = SaveToFile(data, path)
+	if err != nil {
+		return "", err
+	}
+	return path, nil
+}
+
+// gets a file and handles local-specific concerns
+func GetFileRemote(url string, path string, vm string) ([]byte, error) {
+	cli := fmt.Sprintf("luc util url get %s %s --local", url, path)
+	_, err := RunCLIRemote2(cli, vm)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}

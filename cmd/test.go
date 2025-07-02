@@ -28,7 +28,9 @@ var testCmd = &cobra.Command{
 
 		// ListOvhVm()
 		// ListMapKey()
-		installGoCli()
+		// installGoCli()
+		// getPath()
+		fmt.Println(configi.KbeGoCliConfigMap)
 
 	},
 }
@@ -82,4 +84,13 @@ func ListMapKey() {
 	listKey := util.GetMapKeys(configi.KindGoCliConfigMap)
 	logx.L.Infof("🔹 as slice:      %s", listKey)
 	logx.L.Infof("🔹 as StringList: %s", util.GetStringfromSliceWithSpace(listKey))
+}
+
+func getPath() {
+	logx.L.Info("get path")
+	path, err := util.GetSubdirRemote("/usr/local/bin", "o1u")
+	if err != nil {
+		logx.L.Errorf("%s", err)
+	}
+	logx.L.Infof("path: %s", path)
 }

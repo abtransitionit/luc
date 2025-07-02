@@ -19,17 +19,15 @@ import (
 //
 // - No need to close the channel. Only senders should close the channel
 func lastStep(in <-chan PipelineData) error {
-	// logx.L.Info("Enter lastStep")
-	// loop over each item of type PipelineData in the channel
+	// common loop
 	for data := range in {
-		// if an error exits
 		if data.Err != nil {
-			logx.L.Debugf("[%s] Pipeline error : %v", data.Config.Name, data.Err)
+			logx.L.Debugf("[%s] Pipeline error : %v", data.ServiceName, data.Err)
 			continue
 		}
-		// if no error exits : log information - one per structure
-		logx.L.Infof("[%s] Received Pipeline Data", data.Config.Name)
+		logx.L.Infof("Received Pipeline Data")
 		fmt.Println(data.String())
 	}
+
 	return nil
 }

@@ -7,15 +7,15 @@ import (
 
 type PipelineData struct {
 	Config       config.CLIConfig // Full config (e.g., luc, helm, etc.)
+	CliName      string           // shorter way to get name
+	HostName     string           // Full config (e.g., luc, helm, etc.)
 	GenericUrl   string           // Url as it appears in the ConfigMap
-	AppUrl       string           // Url after app specific placeholders are replaced
-	HostUrl      string           // Url after host specific placeholders are replaced
+	HostUrl      string           // Url after placeholders are replaced
 	MemoryFile   []byte           // In-memory file content	after curl is successful
-	ArtifactName string           // artifact name as it appears in the specific URL
-	ArtifactPath string           // Path to saved artifact on the host FS after it is curled
-	FofTmpPath   string           // file Or folder Path after CLI artefact is unzip (Tgz, Exe) or git clone (Git)
+	ArtName      string           // artifact name as it appears in the specific URL
+	ArtPath1     string           // Path to saved artifact on the host FS after it is curled
+	ArtPath2     string           // Path to saved artifact on the host FS after it is curled
 	ArtifactType string           // guessed filetype : Exe or Tgz
-	CliName      string           //
 	Version      string           //
 	DstFolder    string           //
 	Err          error            // If any step fails
@@ -30,15 +30,15 @@ func (obj PipelineData) String() string {
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{
-		{"gocli name", obj.Config.Name},
+		{"Host name", obj.HostName},
+		{"gocli name", obj.CliName},
 		{"CLI version", obj.Version},
 		{"Generic Url", obj.GenericUrl},
-		{"App Url", obj.AppUrl},
 		{"Host Url", obj.HostUrl},
-		{"Artifact Name", obj.ArtifactName},
-		{"Artifact Path", obj.ArtifactPath},
+		{"Artifact Name", obj.ArtName},
+		{"Artifact Tmp Path 1", obj.ArtPath1},
+		{"Artifact Tmp Path 2", obj.ArtPath2},
 		{"Artifact Guessed Type", obj.ArtifactType},
-		{"Artifact FofTmpPath", obj.FofTmpPath},
 		{"Dst Folder", obj.DstFolder},
 		{"Error", func() string {
 			if obj.Err != nil {

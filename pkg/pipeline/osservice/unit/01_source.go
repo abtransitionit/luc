@@ -9,7 +9,6 @@ import (
 
 	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/util"
 )
 
 // # Purpose
@@ -17,19 +16,19 @@ import (
 // - This stage create an instance of the structure to be pipelined
 // - 1 instance of the structure per item in the cliMap (e.g 9 cli => 9 instances)
 // - This stage will send (out chan<-) each instance into the channel
-func source(out chan<- PipelineData, vms []string, cliMap config.CustomCLIConfigMap) {
-	// close channel when this code ended
+// close channel when this code ended
+func source(out chan<- PipelineData, vms []string, osServiceMap string) {
 	// closing it make it available for next stage, because it is defined outside
 	defer close(out)
 
 	// define var
 	nbVm := len(vms)
-	nbCli := len(cliMap)
+	nbService := len(osServiceMap)
 
 	// log
 	logx.L.Debugf("defining instances to be pipelined")
 	logx.L.Debugf("Vms        to provision:  %d : %s", nbVm, vms)
-	logx.L.Debugf("CLI(s) to install per VM: %d : %s", nbCli, util.GetMapKeys(cliMap))
+	logx.L.Debugf("Services(s) to install per VM: %d : %s", nbVm, nbService)
 
 	// loop over each CLI
 	for _, item := range cliMap {

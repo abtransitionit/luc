@@ -10,7 +10,7 @@ import (
 )
 
 // Description
-var provisionSDesc = "deploy a Kind cluster on a VM."
+var provisionSDesc = "deploy a Kind cluster on remote Linux VM(s)."
 var provisionLDesc = provisionSDesc + ` xxx.`
 
 // provision Command

@@ -30,9 +30,6 @@ const (
 	ApparmorFilePath = "/etc/apparmor.d/usr.local.bin.rootlesskit.rootlesskit"
 )
 
-// # Purpose
-//
-// - List of go CLI to install
 var KindDaCliConfigMap = config.CustomCLIConfigMap{
 	"uidmap": {
 		Name:    "uidmap",
@@ -43,6 +40,19 @@ var KindDaCliConfigMap = config.CustomCLIConfigMap{
 // # Purpose
 //
 // - List of go CLI to install
+// var KindGoCliConfigMap = config.CustomCLIConfigMap{
+// 	"nerdctl": {
+// 		Name:      "nerdctl",
+// 		Version:   "2.1.2",
+// 		DstFolder: "/usr/local/bin",
+// 	},
+// 	"slirp4netns": {
+// 		Name:      "slirp4netns",
+// 		Version:   "1.3.3",
+// 		DstFolder: "/usr/local/bin",
+// 	},
+// }
+
 var KindGoCliConfigMap = config.CustomCLIConfigMap{
 	"cni": {
 		Name:      "cni",

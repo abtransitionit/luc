@@ -4,30 +4,28 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package util
 
 import (
-	"github.com/abtransitionit/luc/cmd/util/ovh"
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var ovhSDesc = "manage OVH objects."
-var ovhLDesc = ovhSDesc + ` xxx.`
+var urlSDesc = "manage URLs."
+var urlLDesc = urlSDesc + ` xxx.`
 
 // delete Command
-var ovhCmd = &cobra.Command{
-	Use:   "ovh",
-	Short: ovhSDesc,
-	Long:  ovhLDesc,
+var urlCmd = &cobra.Command{
+	Use:   "url",
+	Short: urlSDesc,
+	Long:  urlLDesc,
 	// define the set of phases for this cmd
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.L.Infof("%s", ovhSDesc)
+		logx.L.Infof("%s", urlSDesc)
 		cmd.Help()
 	},
 }
 
 func init() {
-	ovhCmd.AddCommand(ovh.ListvmCmd)
-	ovhCmd.AddCommand(ovh.CplucCmd)
+	urlCmd.AddCommand(getCmd)
 }
 
 // list ovh vm

@@ -15,7 +15,7 @@ var ProvisionPhases = []phase.Phase{
 	phase.SetPhase("cpluc", cpLuc, CpLucDescription),
 	phase.SetPhase("upgrade", upgrade, UpgradeDescription),
 	phase.SetPhase("dapack", daPack, DaPackDescription),
-	phase.SetPhase("gocli", goCli, GoCliDescription),
+	// phase.SetPhase("gocli", goCli, GoCliDescription),
 
 	// phase.SetPhase("update", update, UpdateDescription),
 	// phase.SetPhase("reboot", reboot, RebootDescription),
