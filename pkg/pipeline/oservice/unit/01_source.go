@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package gocli
+package unit
 
 import (
 	"fmt"
@@ -11,14 +11,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-// # Purpose
-//
-// - This stage create an instance of the structure to be pipelined
-// - 1 instance of the structure per item in the cliMap (e.g 9 cli => 9 instances)
-// - This stage will send (out chan<-) each instance into the channel
-// close channel when this code ended
 func source(out chan<- PipelineData, vms []string, osServiceMap string) {
-	// closing it make it available for next stage, because it is defined outside
 	defer close(out)
 
 	// define var

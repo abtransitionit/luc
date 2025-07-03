@@ -34,8 +34,8 @@ func getArtifact(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) 
 			case config.UrlGit:
 				// TODO
 			default:
-				data.Err = fmt.Errorf("[%s] ❌ Unsupported or not yet managed UrlType :  '%s'", data.CliName, data.Config.UrlType)
-				logx.L.Debugf("[%s] ❌ Error detected 2", data.CliName)
+				data.Err = fmt.Errorf("[%s] ❌ Unsupported or not yet managed UrlType :  '%s'", data.Config.Name, data.Config.UrlType)
+				logx.L.Debugf("[%s] ❌ Error detected 2", data.Config.Name)
 			}
 
 			out <- data

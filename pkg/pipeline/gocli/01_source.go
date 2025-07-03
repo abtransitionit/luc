@@ -53,7 +53,6 @@ func source(out chan<- PipelineData, vms []string, cliMap config.CustomCLIConfig
 			// define instance property - 1 per VMxCLI
 			data.HostName = vm
 			data.Config = cliConfig
-			data.CliName = cliConfig.Name
 			data.Version = item.Version
 			data.DstFolder = item.DstFolder
 			data.GenericUrl = cliConfig.Url

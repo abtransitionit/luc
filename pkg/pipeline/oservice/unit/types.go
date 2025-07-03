@@ -1,4 +1,4 @@
-package gocli
+package unit
 
 import (
 	"github.com/jedib0t/go-pretty/table"
@@ -7,6 +7,7 @@ import (
 type PipelineData struct {
 	HostName    string //
 	ServiceName string //
+	UnitFile    string //
 	Err         error  // If any stage fails
 }
 

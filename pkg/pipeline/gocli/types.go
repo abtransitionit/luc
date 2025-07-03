@@ -6,9 +6,8 @@ import (
 )
 
 type PipelineData struct {
-	Config       config.CLIConfig // Full config (e.g., luc, helm, etc.)
-	CliName      string           // shorter way to get name
 	HostName     string           // Full config (e.g., luc, helm, etc.)
+	Config       config.CLIConfig // Full config (e.g., luc, helm, etc.)
 	GenericUrl   string           // Url as it appears in the ConfigMap
 	HostUrl      string           // Url after placeholders are replaced
 	MemoryFile   []byte           // In-memory file content	after curl is successful
@@ -31,7 +30,7 @@ func (obj PipelineData) String() string {
 
 	t.AppendRows([]table.Row{
 		{"Host name", obj.HostName},
-		{"gocli name", obj.CliName},
+		{"Go CLI name", obj.Config.Name},
 		{"CLI version", obj.Version},
 		{"Generic Url", obj.GenericUrl},
 		{"Host Url", obj.HostUrl},

@@ -51,7 +51,7 @@ func unTgz(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) {
 func helperUnTgz(data PipelineData) PipelineData {
 
 	// set instance property
-	uniqPath := filepath.Join("/tmp", fmt.Sprintf("%s_%d", data.CliName, time.Now().UnixNano()))
+	uniqPath := filepath.Join("/tmp", fmt.Sprintf("%s_%d", data.Config.Name, time.Now().UnixNano()))
 	data.ArtPath2 = uniqPath
 
 	// Log
