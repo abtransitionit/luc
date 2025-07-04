@@ -33,21 +33,22 @@ func concurrentlyCopyFile(in <-chan PipelineData, out chan<- PipelineData, nbWor
 			}
 
 			// copy file to /tmp
-			cmd := fmt.Sprintf("scp %s %s:%s", data.SrcFile, data.Node, data.DstFile)
-			_, err := util.RunCLILocal(cmd)
+			cli := fmt.Sprintf("scp %s %s:%s", data.SrcFile, data.Node, data.DstFile)
+			_, err := util.RunCLILocal(cli)
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("❌ error detected")
 			}
+
 			// sudo move file with luc EXCEPT if we must move LUC itself
 			cliName := filepath.Base(data.DstFile)
 			if cliName == "luc" {
-				cmd = fmt.Sprintf(`sudo mv %s "/usr/local/bin/" && chmod +x /usr/local/bin/luc`, data.DstFile)
+				cli = fmt.Sprintf(`sudo mv %s "/usr/local/bin/" && chmod +x /usr/local/bin/luc`, data.DstFile)
 			} else {
-				cmd = fmt.Sprintf(`luc util mvfile %s "/usr/local/bin/" 0755 true`, data.DstFile)
+				cli = fmt.Sprintf(`luc util mvfile %s "/usr/local/bin/" 0755 true`, data.DstFile)
 			}
 			// play CLI
-			_, err = util.RunCLIRemote(cmd, data.Node)
+			_, err = util.RunCLIRemote(cli, data.Node)
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("❌ error detected")

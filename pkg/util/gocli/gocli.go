@@ -57,7 +57,7 @@ func RInstallC(vm string, cliConfig *config.CustomCLIConfig) (bool, error) {
 	// fmt.Println(cliConfig)
 	// logx.L.Info("Installing Go CLI in %s:", vm, cliConfig)
 	// // Play CLI
-	// _, err := util.RunCLIRemote2(cli, vm)
+	// _, err := util.RunCLIRemote(cli, vm)
 	// if err != nil {
 	// 	return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
 	// }

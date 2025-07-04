@@ -37,6 +37,15 @@ var KindDaCliConfigMap = config.CustomCLIConfigMap{
 	},
 }
 
+var KindServiceMap = config.OsServiceConfigMap{
+	"apparmor": {
+		Name:    "apparmor",
+		SName:   "apparmor.service",
+		Content: ApparmorServiceConf,
+		Path:    ApparmorFilePath,
+	},
+}
+
 // # Purpose
 //
 // - List of go CLI to install

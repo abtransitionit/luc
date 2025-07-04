@@ -9,13 +9,14 @@ import (
 )
 
 func ReloadAndApplyService(action string, listServiceName ...string) error {
+
 	// get property
 	osType, err := GetLocalProperty("ostype")
 	if err != nil {
 		return err
 	}
 
-	// manage only linux
+	// manage linux only
 	if osType != "linux" {
 		return fmt.Errorf("unsupported OS type: %s (only linux is supported)", osType)
 	}
@@ -65,7 +66,7 @@ func StatusService(listServiceName ...string) (map[string]string, error) {
 		return nil, err
 	}
 
-	// works on linux only
+	// manage linux only
 	if osType != "linux" {
 		return nil, fmt.Errorf("unsupported OS type: %s (only linux is supported)", osType)
 	}
@@ -78,6 +79,7 @@ func StatusService(listServiceName ...string) (map[string]string, error) {
 			// return results, fmt.Errorf("status check failed for %s: %w", service, err)
 			return nil, err
 		}
+
 		// Add to map
 		results[service] = out
 	}
@@ -94,16 +96,16 @@ func StatusService(listServiceName ...string) (map[string]string, error) {
 // 	return nil
 // }
 
-func CreateServiceFileRemote(stringContent string, filePath string, vm string) error {
-	cli := fmt.Sprintf(`luc util oservice cfile %s`, filePath)
-	_, err := RunCLIRemote2(cli, vm)
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// func CreateServiceFileRemote(stringContent string, filePath string, vm string) error {
+// 	cli := fmt.Sprintf(`luc util oservice cfile %s %s`, stringContent, filePath)
+// 	_, err := RunCLIRemote(cli, vm)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
-func CreateServiceFileLocal(stringContent string, filePath string) error {
+func CreateServiceFile(stringContent string, filePath string) error {
 
 	// get property
 	osType, err := GetLocalProperty("ostype")

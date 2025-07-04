@@ -26,6 +26,15 @@ const (
 	// etc.
 )
 
+type OsServiceConfig struct {
+	Name    string
+	SName   string
+	Content string
+	Path    string
+}
+
+type OsServiceConfigMap map[string]OsServiceConfig
+
 type CLIConfig struct {
 	Name    string
 	Tag     string
@@ -68,6 +77,11 @@ type CLIConfigMap map[string]CLIConfig
 //   - If the CLI name does not exist in the map, the returned boolean will be `false` and the CLIConfig will be zero-valued.
 func GetCLIConfig(cliName string) (CLIConfig, bool) {
 	c, ok := SharedCliConfigMap[cliName]
+	return c, ok
+}
+
+func GetOsServiceConfig(serviceName string, serviceMap OsServiceConfigMap) (OsServiceConfig, bool) {
+	c, ok := serviceMap[serviceName]
 	return c, ok
 }
 
@@ -321,6 +335,24 @@ func (obj CustomCLIConfigMap) String() string {
 			item.Name,
 			item.Version,
 			item.DstFolder,
+		})
+	}
+
+	return t.Render()
+}
+
+// pretty print
+func (obj OsServiceConfigMap) String() string {
+	t := table.NewWriter()
+	t.SetStyle(table.StyleLight)
+	t.SetTitle("CLI Custom Config Map")
+	t.AppendHeader(table.Row{"Service Name", "Name used", "Path"})
+
+	for _, item := range obj {
+		t.AppendRow(table.Row{
+			item.Name,
+			item.SName,
+			item.Path,
 		})
 	}
 

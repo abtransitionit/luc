@@ -59,7 +59,7 @@ func helperUnTgz(data PipelineData) PipelineData {
 
 	// play code
 	cli := fmt.Sprintf("luc util utgz %s %s --local", data.ArtPath1, data.ArtPath2)
-	_, err := util.RunCLIRemote2(cli, data.HostName)
+	_, err := util.RunCLIRemote(cli, data.HostName)
 	if err != nil {
 		logx.L.Debugf("[%s][%s] ❌ Error detected 1", data.Config.Name, data.HostName)
 		data.Err = err

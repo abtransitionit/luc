@@ -30,19 +30,31 @@ var getCmd = &cobra.Command{
 		path := args[1]
 
 		if localFlag {
-			_, err := util.GetFileLocal(url, path)
+			// play cli
+			_, err := util.GetFile(url, path)
+
+			// errror
 			if err != nil {
 				return err
 			}
+
+			// success
 			logx.L.Infof("✅ downloaded object in locale memory.")
 			return nil
 		}
 
 		if remoteFlag != "" {
-			_, err := util.GetFileRemote(url, path, remoteFlag)
+			// play cli
+			cli := fmt.Sprintf("luc util url get %s %s --local", url, path)
+			_, err := util.RunCLIRemote(cli, remoteFlag)
+
+			// error
 			if err != nil {
+				logx.L.Debugf("❌ Error detected 1")
 				return err
 			}
+
+			// success
 			logx.L.Infof("✅ [%s] downloaded object in remote memory.", remoteFlag)
 			return nil
 		}
@@ -61,30 +73,3 @@ func init() {
 		return nil
 	}
 }
-
-// func HandleLocal(url string) error {
-
-// 	// download
-// 	_, err := util.GetPublicFile(url)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// }
-
-// func HandleRemote(url, host string) error {
-// 	cli := fmt.Sprintf("luc util url get %s --local", url)
-
-// 	// check vm is ssh reachable
-// 	_, err := util.IsSshConfiguredVmSshReachable(host)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// remote download
-// 	_, err = util.RunCLIRemote2(cli, host)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }

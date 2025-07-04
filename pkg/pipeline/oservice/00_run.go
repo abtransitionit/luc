@@ -1,17 +1,18 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package unit
+package oservice
 
 import (
 	"strings"
 
+	"github.com/abtransitionit/luc/pkg/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
 const RunPipelineDescription = "Create Linux OS service(s) unit files on VMs."
 
-func RunPipeline(vmList string, osServiceMap string) (string, error) {
+func RunPipeline(vmList string, osServiceMap config.OsServiceConfigMap) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
 
 	// define var
@@ -19,10 +20,14 @@ func RunPipeline(vmList string, osServiceMap string) (string, error) {
 
 	// Define the pipeline channels
 	ch01 := make(chan PipelineData)
-	chOutLast := ch01
+	ch02 := make(chan PipelineData)
+	ch03 := make(chan PipelineData)
+	chOutLast := ch03
 
 	// aync stage (i.e running concurrently/in parallel)
 	go source(ch01, vms, osServiceMap) // define instances to send to the pipeline
+	go createUnit(ch01, ch02)          // define instances to send to the pipeline
+	go statusService(ch02, ch03)       // define instances to send to the pipeline
 
 	// final sequential step. collects all instances in the pipeline and build a sumary
 	err := lastStep(chOutLast)

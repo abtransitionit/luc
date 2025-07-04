@@ -4,24 +4,29 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kind
 
 import (
-	"fmt"
-
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/abtransitionit/luc/pkg/pipeline/oservice"
 )
 
 const ServiceDescription = "configure OS services on Kind VMs."
 
 func service(arg ...string) (string, error) {
-
-	// Create the service file for apparmor
-	if err := util.CreateServiceFileRemote(config.ApparmorServiceConf, config.ApparmorFilePath, config.KindVm); err != nil {
-		logx.L.Debugf("❌ Errod detected 1")
-		return "", fmt.Errorf("%s", err)
+	_, err := oservice.RunPipeline(config.KindVm, config.KindServiceMap)
+	if err != nil {
+		logx.L.Debugf("%s", err)
+		return "", err
 	}
 	return "", nil
 }
+
+// // Create the service file for apparmor remotly
+// cli := fmt.Sprintf(`luc util oservice cfile %s %s --remote --force`, config.ApparmorServiceConf, config.ApparmorFilePath)
+
+// if err := util.CreateServiceFileRemote(config.ApparmorServiceConf, config.ApparmorFilePath, config.KindVm); err != nil {
+// 	logx.L.Debugf("❌ Errod detected 1")
+// 	return "", fmt.Errorf("%s", err)
+// }
 
 // // define the user service file path for containerd
 // containerdServiceFilePath := "/etc/systemd/system/containerd.service"

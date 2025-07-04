@@ -330,7 +330,7 @@ func GetLocalProperty(property string) (string, error) {
 //	}
 func GetRemoteProperty(property string, vm string) (string, error) {
 	cmd := fmt.Sprintf(`luc util getprop %s`, property)
-	return RunCLIRemote2(cmd, vm)
+	return RunCLIRemote(cmd, vm)
 }
 
 func ShowMapProperty() {

@@ -40,7 +40,7 @@ func GetSubdirLocal(basePath string) (string, error) {
 
 	// play code
 	cli := fmt.Sprintf(`find %s -type d | sort | paste -sd\;`, basePath)
-	path, err := RunCLILocal2(cli)
+	path, err := RunCLILocal(cli)
 	if err != nil {
 		return "", err
 	}
@@ -60,7 +60,7 @@ func GetSubdirRemote(basePath string, vm string) (string, error) {
 
 	// play code
 	cli := fmt.Sprintf(`find %s -type d | sort | paste -sd\;`, basePath)
-	path, err := RunCLIRemote2(cli, vm)
+	path, err := RunCLIRemote(cli, vm)
 	if err != nil {
 		return "", err
 	}

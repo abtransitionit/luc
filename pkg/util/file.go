@@ -262,7 +262,7 @@ func UnTgz(srcTgzPath string, destFolder string) error {
 
 	// play cli
 	cli := fmt.Sprintf("tar -C %s -xzf %s", destFolder, srcTgzPath)
-	_, err := RunCLILocal2(cli)
+	_, err := RunCLILocal(cli)
 	if err != nil {
 		return fmt.Errorf("❌ Error: %s : %s", err, cli)
 	}

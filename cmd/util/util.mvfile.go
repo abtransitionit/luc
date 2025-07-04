@@ -63,7 +63,7 @@ var mvfileCmd = &cobra.Command{
 
 		if remoteFlag != "" {
 			cli := fmt.Sprintf("luc util mvfile %s %s %s %s --local", src, dst, permStr, isRootStr)
-			if _, err := util.RunCLIRemote2(cli, remoteFlag); err != nil {
+			if _, err := util.RunCLIRemote(cli, remoteFlag); err != nil {
 				return err
 			}
 			// success
@@ -106,7 +106,7 @@ func init() {
 // 	}
 
 // 	// remote download
-// 	_, err = util.RunCLIRemote2(cli, host)
+// 	_, err = util.RunCLIRemote(cli, host)
 // 	if err != nil {
 // 		return err
 // 	}

@@ -56,7 +56,10 @@ func helperExeTgz(data PipelineData) PipelineData {
 	logx.L.Debugf("[%s] downloading artifact for UrlType '%s'", data.Config.Name, data.Config.UrlType)
 
 	// play code
-	_, err := util.GetFileRemote(data.HostUrl, data.ArtPath1, data.HostName)
+	cli := fmt.Sprintf("luc util url get %s %s --local", data.HostUrl, data.ArtPath1)
+	_, err := util.RunCLIRemote(cli, data.HostName)
+
+	// error
 	if err != nil {
 		logx.L.Debugf("[%s] [%s] ❌ Error detected during download", data.Config.Name, data.HostName)
 		data.Err = err

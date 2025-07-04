@@ -60,7 +60,7 @@ func helperMvExe(data PipelineData) PipelineData {
 
 	// play code
 	cli := fmt.Sprintf("luc util mvfile %s %s %o %t --local", data.ArtPath1, dstPath, 0755, true)
-	_, err := util.RunCLIRemote2(cli, data.HostName)
+	_, err := util.RunCLIRemote(cli, data.HostName)
 	if err != nil {
 		logx.L.Debugf("[%s][%s] ❌ Error detected 1", data.Config.Name, data.HostName)
 		data.Err = err
@@ -82,7 +82,7 @@ func helperMvTgz(data PipelineData) PipelineData {
 
 	// play code
 	cli := fmt.Sprintf("luc util mvdir %s %s %o %t %t --local", data.ArtPath2, dstPath, 0755, true, true)
-	_, err := util.RunCLIRemote2(cli, data.HostName)
+	_, err := util.RunCLIRemote(cli, data.HostName)
 	if err != nil {
 		logx.L.Debugf("[%s][%s] ❌ Error detected 2", data.Config.Name, data.HostName)
 		data.Err = err

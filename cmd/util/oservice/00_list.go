@@ -19,6 +19,13 @@ var OsServiceCmd = &cobra.Command{
 	Long:  osServiceLDesc,
 }
 
+// var for child
+var forceFlag bool
+var remoteFlag string
+var localFlag bool
+
 func init() {
 	OsServiceCmd.AddCommand(cFileCmd)
+	OsServiceCmd.AddCommand(startCmd)
+	OsServiceCmd.AddCommand(statusCmd)
 }

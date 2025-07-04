@@ -102,28 +102,32 @@ func getFile2(url string) ([]byte, error) {
 }
 
 // gets a file and handles local-specific concerns
-func GetFileLocal(url string, path string) (string, error) {
+func GetFile(url string, path string) (string, error) {
 
 	// get file in memory
 	data, err := getFile2(url)
+	/// error
 	if err != nil {
 		return "", err
 	}
 
 	// save file from memory to FS
 	_, err = SaveToFile(data, path)
+	/// error
 	if err != nil {
 		return "", err
 	}
+
+	// success
 	return path, nil
 }
 
-// gets a file and handles local-specific concerns
-func GetFileRemote(url string, path string, vm string) ([]byte, error) {
-	cli := fmt.Sprintf("luc util url get %s %s --local", url, path)
-	_, err := RunCLIRemote2(cli, vm)
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
+// // gets a file and handles local-specific concerns
+// func GetFileRemote(url string, path string, vm string) ([]byte, error) {
+// 	cli := fmt.Sprintf("luc util url get %s %s --local", url, path)
+// 	_, err := RunCLIRemote(cli, vm)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return nil, nil
+// }

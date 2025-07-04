@@ -17,8 +17,8 @@ var cFileLDesc = cFileSDesc + `xxx`
 
 // Definition
 var cFileCmd = &cobra.Command{
-	Use:   "cfile [FILE PATH]",
-	Args:  cobra.ExactArgs(1), // Requires exactly 1 arguments
+	Use:   "cfile [STRING] [FILE PATH]",
+	Args:  cobra.ExactArgs(2), // Requires exactly 1 arguments
 	Short: cFileSDesc,
 	Long:  cFileLDesc,
 	// Code to play
@@ -30,23 +30,17 @@ var cFileCmd = &cobra.Command{
 			logx.L.Infof("also check --help for more details")
 			return
 		}
-		// get input
-		filePath := args[0]
 
 		// use caases
 		if localFlag {
-			helperFlagLocal(filePath)
+			helperCFileFlagLocal(args)
 		}
 		if remoteFlag != "" {
-			helperFlagRemote(filePath)
+			helperCFileFlagRemote(args)
 		}
 
 	},
 }
-
-var forceFlag bool
-var remoteFlag string
-var localFlag bool
 
 func init() {
 	cFileCmd.Flags().BoolVar(&forceFlag, "force", false, "Force execution is mandatory")
@@ -62,15 +56,27 @@ func init() {
 
 }
 
-func helperFlagLocal(filePath string) {
-	logx.L.Info("saving a service unit file locally %s", filePath)
+func helperCFileFlagLocal(args []string) {
+	content := args[0]
+	filePath := args[1]
+	logx.L.Debugf("saving a service unit file locally %s", filePath)
+	err := util.CreateServiceFile(content, filePath)
+	if err != nil {
+		logx.L.Debugf("%s", err)
+		return
+	}
+
 }
 
-func helperFlagRemote(filePath string) {
-	logx.L.Info("saving a service unit file remotely with RLUC %s", filePath)
-	cli := fmt.Sprintf(`luc util oservice cfile %s --local --force`, remoteFlag)
-	_, err := util.RunCLIRemote2(cli, remoteFlag)
+func helperCFileFlagRemote(args []string) {
+	content := args[0]
+	filePath := args[1]
+
+	logx.L.Debugf("saving a service unit file remotely with RLUC %s", filePath)
+	cli := fmt.Sprintf(`luc util oservice cfile %s %s --local --force`, content, filePath)
+	_, err := util.RunCLIRemote(cli, remoteFlag)
 	if err != nil {
-		logx.L.Error(err)
+		logx.L.Debugf("%s", err)
+		return
 	}
 }

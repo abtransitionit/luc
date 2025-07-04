@@ -41,7 +41,7 @@ var utgzCmd = &cobra.Command{
 		if remoteFlag != "" {
 			// paly code
 			cli := fmt.Sprintf("luc util utgz %s %s --local", src, dst)
-			if _, err := util.RunCLIRemote2(cli, remoteFlag); err != nil {
+			if _, err := util.RunCLIRemote(cli, remoteFlag); err != nil {
 				return err
 			}
 			// success
@@ -84,7 +84,7 @@ func init() {
 // 	}
 
 // 	// remote download
-// 	_, err = util.RunCLIRemote2(cli, host)
+// 	_, err = util.RunCLIRemote(cli, host)
 // 	if err != nil {
 // 		return err
 // 	}
