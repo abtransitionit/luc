@@ -12,23 +12,23 @@ import (
 )
 
 // Description
-var bdLucSDesc = "building and deploying luc"
-var bdLucLDesc = bdLucSDesc + `:
-- build luc locally from GIT folder for current platform
-- deploy it locally to final path
+var bdrLucSDesc = "building and remote deploying luc"
+var bdrLucLDesc = bdrLucSDesc + `:
+- build luc locally from GIT folder for another platform
+- deploy it remotley to one or more VMs
 
 Example usage:
 
-luc cli go bdLuc --force
+luc cli go bdrLuc --remote o1u o2a --force
 `
 
 // root Command
-var bdLucCmd = &cobra.Command{
-	Use:   "bdluc",
-	Short: bdLucSDesc,
-	Long:  bdLucLDesc,
+var bdrLucCmd = &cobra.Command{
+	Use:   "bdrLuc",
+	Short: bdrLucSDesc,
+	Long:  bdrLucLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.L.Debugf(bdLucSDesc)
+		logx.L.Debugf(bdrLucSDesc)
 
 		// If no flags and no args => show help and return
 		if !cmd.Flags().Changed("force") && len(args) == 0 {
@@ -42,7 +42,6 @@ var bdLucCmd = &cobra.Command{
 			logx.L.Infof("also check --help for more details")
 			return
 		}
-
 		// define var
 		LucGitProjectFolder := config.LucGitProjectFolder
 		LucBinaryPath := config.LucBinaryPath
@@ -64,10 +63,7 @@ var bdLucCmd = &cobra.Command{
 }
 
 func init() {
-	bdLucCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Mandatory to use this command")
-	bdLucCmd.Flags().StringVar(&osTypeFlag, "os", "", "Target OS for cross-compilation (e.g., linux, windows, darwin)")
-	bdLucCmd.Flags().StringVar(&osArchFlag, "arch", "", "Target architecture for cross-compilation (e.g., amd64, arm64)")
-
+	bdrLucCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Mandatory to use this command")
 }
 
 // // launch this pipeline

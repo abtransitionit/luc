@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package gox
 
 import (
+	"runtime"
+
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util/gocli"
 	"github.com/spf13/cobra"
@@ -24,7 +26,9 @@ var buildLDesc = buildSDesc + `:
 
 Example usage:
 
-luc cli go build --path /var/tmp/luc --out /tmp/toto --force
+luc cli go build --path /var/tmp/luc --out /tmp/luc --force
+
+luc cli go build --path /var/tmp/luc --out /tmp/luc-linux-amd64 --ostype linux --osarch amd64 --force
 `
 
 // root Command
@@ -49,8 +53,18 @@ var buildCmd = &cobra.Command{
 			return
 		}
 
+		// define platform
+		osType := osTypeFlag
+		if osType == "" {
+			osType = runtime.GOOS
+		}
+		osArch := osArchFlag
+		if osArch == "" {
+			osArch = runtime.GOARCH
+		}
+
 		// Build the CLI
-		binaryPath, err := gocli.GoBuild(pathFlag, outFlag)
+		binaryPath, err := gocli.GoBuildXPtf(pathFlag, outFlag, osType, osArch)
 
 		// error
 		if err != nil {
@@ -65,8 +79,7 @@ var buildCmd = &cobra.Command{
 func init() {
 	buildCmd.Flags().StringVarP(&pathFlag, "path", "p", "", "Absolute folder path to the go project folder (containing the file go.mod)")
 	buildCmd.Flags().StringVar(&outFlag, "out", "", "Absolute file path of the output binary")
-	buildCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation and force execution")
+	buildCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Mandatory to use this command")
+	buildCmd.Flags().StringVar(&osTypeFlag, "ostype", "", "Target OS for cross-compilation (e.g., linux, windows, darwin)")
+	buildCmd.Flags().StringVar(&osArchFlag, "osarch", "", "Target architecture for cross-compilation (e.g., amd64, arm64)")
 }
-
-// buildCmd.Flags().StringVar(&archFlag, "arch", "", "The cpu arch: must be arm or amd")
-// buildCmd.Flags().StringVar(&osFlag, "os", "", "The OS type must be linux or darwin")

@@ -23,6 +23,21 @@ import (
 
 func GoBuild(srcProjectFolderPath string, dstBinaryFilePath string) (string, error) {
 
+	// get property
+	osType, err := util.GetPropertyLocal("ostype")
+	if err != nil {
+		return "", err
+	}
+	osArch, err := util.GetPropertyLocal("osarch")
+	if err != nil {
+		return "", err
+	}
+
+	return GoBuildXPtf(srcProjectFolderPath, dstBinaryFilePath, osType, osArch)
+
+}
+func GoBuildXPtf(srcProjectFolderPath string, dstBinaryFilePath string, osType string, osArch string) (string, error) {
+
 	// check source path
 	if srcProjectFolderPath == "" {
 		return "", fmt.Errorf("❌ Error: source project folder path not provided")
@@ -55,14 +70,15 @@ func GoBuild(srcProjectFolderPath string, dstBinaryFilePath string) (string, err
 	// build command
 	cli = fmt.Sprintf(`
 		cd %s && 
-		go build -o %s && 
+		GOOS=%s GOARCH=%s go build -o %s && 
 		cd -`,
 		srcProjectFolderPath,
+		osType, osArch,
 		dstBinaryFilePath,
 	)
 	// error
 	if _, err := util.RunCLILocal(cli); err != nil {
-		return "", fmt.Errorf("❌ Build failed: %v", err)
+		return "", fmt.Errorf("❌ Error: Build failed: %v", err)
 	}
 
 	// success

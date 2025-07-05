@@ -51,8 +51,8 @@ var runCmd = &cobra.Command{
 
 func init() {
 	runCmd.Flags().StringVarP(&pathFlag, "path", "p", "", "Path to the go project folder (containing the file go.mod/main.go)")
-	runCmd.Flags().StringVar(&archFlag, "arch", "", "The cpu arch: must be arm or amd")
-	runCmd.Flags().StringVar(&osFlag, "os", "", "The OS type: must be linux or darwin")
+	runCmd.Flags().StringVar(&osArchFlag, "arch", "", "The cpu arch: must be arm or amd")
+	runCmd.Flags().StringVar(&osTypeFlag, "os", "", "The OS type: must be linux or darwin")
 	runCmd.Flags().StringVar(&outFlag, "out", "", "Path of the output binary")
 	runCmd.MarkFlagRequired("path") // This makes the flag mandatory
 }

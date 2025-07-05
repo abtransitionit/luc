@@ -4,31 +4,32 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package gox
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/util"
 	"github.com/abtransitionit/luc/pkg/util/gocli"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var bdLucSDesc = "building and deploying luc"
-var bdLucLDesc = bdLucSDesc + `:
-- build luc locally from GIT folder for current platform
-- deploy it locally to final path
+var bdrLucSDesc = "building Luc locally and deploying it remotley "
+var bdrLucLDesc = bdrLucSDesc + `:
+- build luc locally from local GIT folder for linux/amd64 platform
+- deploy it to linux/amd64 VM(s)
 
 Example usage:
 
-luc cli go bdLuc --force
+luc cli go bdrLuc --force --remote o1u o2a
 `
 
 // root Command
-var bdLucCmd = &cobra.Command{
-	Use:   "bdluc",
-	Short: bdLucSDesc,
-	Long:  bdLucLDesc,
+var bdrLucCmd = &cobra.Command{
+	Use:   "bdrluc",
+	Short: bdrLucSDesc,
+	Long:  bdrLucLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.L.Debugf(bdLucSDesc)
+		logx.L.Debugf(bdrLucSDesc)
 
 		// If no flags and no args => show help and return
 		if !cmd.Flags().Changed("force") && len(args) == 0 {
@@ -44,30 +45,29 @@ var bdLucCmd = &cobra.Command{
 		}
 
 		// define var
+		osType := "linux"
+		osArch := "amd64"
 		LucGitProjectFolder := config.LucGitProjectFolder
-		LucBinaryPath := config.LucBinaryPath
-		LucBinaryTmpPtfPath := config.LucBinaryTmpPtfPath
+		// LucBinaryPath := config.LucBinaryPath
+		LucBinaryXptTmpfPath := fmt.Sprintf("/tmp/luc-%s-%s", osType, osArch)
 
 		// build
-		if _, err := gocli.GoBuild(LucGitProjectFolder, LucBinaryTmpPtfPath); err != nil {
+		if _, err := gocli.GoBuildXPtf(LucGitProjectFolder, LucBinaryXptTmpfPath, osType, osArch); err != nil {
 			logx.L.Debugf("%s", err)
 			return
 		}
 
-		// deploy
-		if _, err := util.MvFile(LucBinaryTmpPtfPath, LucBinaryPath, 0755, true); err != nil {
-			logx.L.Debugf("%s", err)
-			return
-		}
-		logx.L.Debugf("builded and deployed LUC to %s", LucBinaryPath)
+		// // deploy
+		// if _, err := util.MvFile(LucBinaryTmpPtfPath, LucBinaryPath, 0755, true); err != nil {
+		// 	logx.L.Debugf("%s", err)
+		// 	return
+		// }
+		logx.L.Debugf("builded and deployed LUC to %s", LucBinaryXptTmpfPath)
 	},
 }
 
 func init() {
-	bdLucCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Mandatory to use this command")
-	bdLucCmd.Flags().StringVar(&osTypeFlag, "os", "", "Target OS for cross-compilation (e.g., linux, windows, darwin)")
-	bdLucCmd.Flags().StringVar(&osArchFlag, "arch", "", "Target architecture for cross-compilation (e.g., amd64, arm64)")
-
+	bdrLucCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Mandatory to use this command")
 }
 
 // // launch this pipeline
