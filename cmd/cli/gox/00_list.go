@@ -22,6 +22,8 @@ var GoCmd = &cobra.Command{
 }
 
 var forceFlag bool
+var archFlag string
+var osFlag string
 
 //	func init() {
 //		goCmd.Flags().BoolP("show", "s", false, "show CLI config map")
