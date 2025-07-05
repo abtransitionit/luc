@@ -23,7 +23,7 @@ func createUnit(in <-chan PipelineData, out chan<- PipelineData) {
 		// remote create service file
 		logx.L.Debugf("[%s] [%s] create service file", data.HostName, data.Config.Name)
 		cli := fmt.Sprintf(`luc util oservice cfile '%s' %s --local --force`, data.Config.Content, data.Config.Path)
-		_, err := util.RunCLIRemote(cli, data.HostName)
+		_, err := util.RunCLIRemote(data.HostName, cli)
 
 		// error
 		if err != nil {

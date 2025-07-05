@@ -9,6 +9,7 @@ import (
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/abtransitionit/luc/pkg/util/gocli"
 	"github.com/spf13/cobra"
 )
 
@@ -17,23 +18,23 @@ var LucBinaryPath = config.LucBinaryPath
 var LucBinaryTmpPtfPath = config.LucBinaryTmpPtfPath
 
 // Description
-var cplucSDesc = "building and deploying luc"
-var cplucLDesc = cplucSDesc + fmt.Sprintf(`:
+var bdLucSDesc = "building and deploying luc"
+var bdLucLDesc = bdLucSDesc + fmt.Sprintf(`:
 - build luc locally from GIT folder %s for current platform
 - deploy it locally to %s
 
 Example usage:
 
-luc cli go cpluc --force
+luc cli go bdLuc --force
 `, LucGitProjectFolder, LucBinaryPath)
 
 // root Command
-var cplucCmd = &cobra.Command{
-	Use:   "cpluc",
-	Short: cplucSDesc,
-	Long:  cplucLDesc,
+var bdLucCmd = &cobra.Command{
+	Use:   "bdluc",
+	Short: bdLucSDesc,
+	Long:  bdLucLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		logx.L.Debugf(cplucSDesc)
+		logx.L.Debugf(bdLucSDesc)
 
 		// If no flags and no args => show help and return
 		if !cmd.Flags().Changed("force") && len(args) == 0 {
@@ -49,7 +50,7 @@ var cplucCmd = &cobra.Command{
 		}
 
 		// build
-		if _, err := util.GoBuild(LucGitProjectFolder, LucBinaryTmpPtfPath); err != nil {
+		if _, err := gocli.GoBuild(LucGitProjectFolder, LucBinaryTmpPtfPath); err != nil {
 			logx.L.Debugf("%s", err)
 			return
 		}
@@ -64,7 +65,7 @@ var cplucCmd = &cobra.Command{
 }
 
 func init() {
-	cplucCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation and force execution")
+	bdLucCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation and force execution")
 }
 
 // // launch this pipeline

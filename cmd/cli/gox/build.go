@@ -5,7 +5,7 @@ package gox
 
 import (
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/abtransitionit/luc/pkg/util/gocli"
 	"github.com/spf13/cobra"
 )
 
@@ -15,13 +15,12 @@ var (
 )
 
 // Description
-var buildSDesc = "Building a GO project locally."
+var buildSDesc = "Building the binary from a GO project folder"
 
 // "Building Locally (for the current platform) a Go binary from a local GIT project folder."
 
-var buildLDesc = buildSDesc + ` 
-- for the current platform
-- from a local GIT folder.
+var buildLDesc = buildSDesc + `: 
+- Build the Go binary locally for the current platform
 
 Example usage:
 
@@ -51,7 +50,7 @@ var buildCmd = &cobra.Command{
 		}
 
 		// Build the CLI
-		binaryPath, err := util.GoBuild(pathFlag, outFlag)
+		binaryPath, err := gocli.GoBuild(pathFlag, outFlag)
 
 		// error
 		if err != nil {
@@ -64,8 +63,8 @@ var buildCmd = &cobra.Command{
 }
 
 func init() {
-	buildCmd.Flags().StringVarP(&pathFlag, "path", "p", "", "Absolute path to the go project folder (containing the file go.mod)")
-	buildCmd.Flags().StringVar(&outFlag, "out", "", "Absolute path of the output binary")
+	buildCmd.Flags().StringVarP(&pathFlag, "path", "p", "", "Absolute folder path to the go project folder (containing the file go.mod)")
+	buildCmd.Flags().StringVar(&outFlag, "out", "", "Absolute file path of the output binary")
 	buildCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Bypass confirmation and force execution")
 }
 

@@ -157,7 +157,7 @@ func RunCLILocal(command string, liveOutput ...bool) (stdout string, err error) 
 // 	return stdout, nil
 // }
 
-func RunCLIRemote(command string, vm string, liveOutput ...bool) (stdout string, err error) {
+func RunCLIRemote(vm string, command string, liveOutput ...bool) (stdout string, err error) {
 	// Set default value for liveOutput
 	live := false
 	if len(liveOutput) > 0 {

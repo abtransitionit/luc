@@ -46,7 +46,7 @@ var getCmd = &cobra.Command{
 		if remoteFlag != "" {
 			// play cli
 			cli := fmt.Sprintf("luc util url get %s %s --local", url, path)
-			_, err := util.RunCLIRemote(cli, remoteFlag)
+			_, err := util.RunCLIRemote(remoteFlag, cli)
 
 			// error
 			if err != nil {

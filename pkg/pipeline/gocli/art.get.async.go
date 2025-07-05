@@ -57,7 +57,7 @@ func helperExeTgz(data PipelineData) PipelineData {
 
 	// play code
 	cli := fmt.Sprintf("luc util url get %s %s --local", data.HostUrl, data.ArtPath1)
-	_, err := util.RunCLIRemote(cli, data.HostName)
+	_, err := util.RunCLIRemote(data.HostName, cli)
 
 	// error
 	if err != nil {

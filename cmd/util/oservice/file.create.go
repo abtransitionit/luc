@@ -74,7 +74,7 @@ func helperCFileFlagRemote(args []string) {
 
 	logx.L.Debugf("saving a service unit file remotely with RLUC %s", filePath)
 	cli := fmt.Sprintf(`luc util oservice cfile %s %s --local --force`, content, filePath)
-	_, err := util.RunCLIRemote(cli, remoteFlag)
+	_, err := util.RunCLIRemote(remoteFlag, cli)
 	if err != nil {
 		logx.L.Debugf("%s", err)
 		return

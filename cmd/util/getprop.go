@@ -29,6 +29,9 @@ var getpropCmd = &cobra.Command{
 			return
 		}
 
+		// Handle --remote flag
+		remoteFlag, _ := cmd.Flags().GetString("remote")
+
 		// manage arg
 		if len(args) < 1 {
 			cmd.Help()
@@ -40,14 +43,19 @@ var getpropCmd = &cobra.Command{
 
 		// get the property parameters if any
 		parameters := []string{}
-
-		// manage property parameters
 		if len(args) > 1 {
 			parameters = args[1:]
 		}
 
-		// cli
-		propertyValue, err := util.GetPropertyLocal(propertyName, parameters...)
+		var propertyValue string
+		var err error
+		if remoteFlag != "" {
+			// cli remote
+			propertyValue, err = util.GetPropertyRemote(remoteFlag, propertyName, parameters...)
+		} else {
+			// cli local
+			propertyValue, err = util.GetPropertyLocal(propertyName, parameters...)
+		}
 
 		// error
 		if err != nil {
@@ -63,6 +71,7 @@ var getpropCmd = &cobra.Command{
 func init() {
 	// phase.CmdInit(getpropCmd)
 	getpropCmd.Flags().BoolP("show", "s", false, "List available property name")
+	getpropCmd.Flags().StringP("remote", "r", "", "Remote VM name")
 
 }
 

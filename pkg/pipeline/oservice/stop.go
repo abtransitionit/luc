@@ -25,7 +25,7 @@ func stopService(in <-chan PipelineData, out chan<- PipelineData) {
 		// remote start service
 		logx.L.Debugf("[%s] [%s] stoping service", vm, data.Config.Name)
 		cli := fmt.Sprintf(`luc util oservice stop %s --local --force`, data.Config.SName)
-		_, err := util.RunCLIRemote(cli, vm)
+		_, err := util.RunCLIRemote(vm, cli)
 
 		// error
 		if err != nil {

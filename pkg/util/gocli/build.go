@@ -2,12 +2,14 @@
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
 
-package util
+package gocli
 
 import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/abtransitionit/luc/pkg/util"
 )
 
 // # Purpose
@@ -46,7 +48,7 @@ func GoBuild(srcProjectFolderPath string, dstBinaryFilePath string) (string, err
 
 	// Clean up old builds (optional: improve later as per TODO)
 	cli := fmt.Sprintf(`rm -rf %s &> /dev/null`, dstBinaryFilePath)
-	if _, err := RunCLILocal(cli); err != nil {
+	if _, err := util.RunCLILocal(cli); err != nil {
 		return "", fmt.Errorf("❌ Cleanup failed: %v", err)
 	}
 
@@ -59,7 +61,7 @@ func GoBuild(srcProjectFolderPath string, dstBinaryFilePath string) (string, err
 		dstBinaryFilePath,
 	)
 	// error
-	if _, err := RunCLILocal(cli); err != nil {
+	if _, err := util.RunCLILocal(cli); err != nil {
 		return "", fmt.Errorf("❌ Build failed: %v", err)
 	}
 

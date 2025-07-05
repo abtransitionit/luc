@@ -48,7 +48,7 @@ func concurrentlyCopyFile(in <-chan PipelineData, out chan<- PipelineData, nbWor
 				cli = fmt.Sprintf(`luc util mvfile %s "/usr/local/bin/" 0755 true`, data.DstFile)
 			}
 			// play CLI
-			_, err = util.RunCLIRemote(cli, data.Node)
+			_, err = util.RunCLIRemote(data.Node, cli)
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("❌ error detected")

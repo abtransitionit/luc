@@ -41,7 +41,7 @@ var utgzCmd = &cobra.Command{
 		if remoteFlag != "" {
 			// paly code
 			cli := fmt.Sprintf("luc util utgz %s %s --local", src, dst)
-			if _, err := util.RunCLIRemote(cli, remoteFlag); err != nil {
+			if _, err := util.RunCLIRemote(remoteFlag, cli); err != nil {
 				return err
 			}
 			// success
@@ -63,30 +63,3 @@ func init() {
 		return nil
 	}
 }
-
-// func HandleLocal(url string) error {
-
-// 	// download
-// 	_, err := util.GetPublicFile(url)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// }
-
-// func HandleRemote(url, host string) error {
-// 	cli := fmt.Sprintf("luc util url get %s --local", url)
-
-// 	// check vm is ssh reachable
-// 	_, err := util.IsSshConfiguredVmSshReachable(host)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// remote download
-// 	_, err = util.RunCLIRemote(cli, host)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }

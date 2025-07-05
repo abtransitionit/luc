@@ -33,7 +33,7 @@ func RUpgrade(vm string, osFamily string) (bool, error) {
 		return false, fmt.Errorf("❌ Error/Warning: unsupported Linux OS Family: %s", osFamily)
 	}
 	// Play CLI
-	_, err := util.RunCLIRemote(cli, vm)
+	_, err := util.RunCLIRemote(vm, cli)
 	if err != nil {
 		return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
 	}
@@ -93,7 +93,7 @@ func RInstallP(vm string, osFamily string, packageName string) (bool, error) {
 		return false, fmt.Errorf("❌ Error/Warning: unsupported Linux OS Family: %s", osFamily)
 	}
 	// Play CLI
-	_, err := util.RunCLIRemote(cli, vm)
+	_, err := util.RunCLIRemote(vm, cli)
 	if err != nil {
 		return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
 	}
@@ -128,7 +128,7 @@ func RInstallR(vm string, osFamily string, packageName string) (bool, error) {
 		return false, fmt.Errorf("❌ Error/Warning: unsupported Linux OS Family: %s", osFamily)
 	}
 	// Play CLI
-	_, err := util.RunCLIRemote(cli, vm)
+	_, err := util.RunCLIRemote(vm, cli)
 	if err != nil {
 		return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
 	}

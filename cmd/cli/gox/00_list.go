@@ -32,5 +32,5 @@ func init() {
 	GoCmd.AddCommand(buildCmd)
 	GoCmd.AddCommand(runCmd)
 	GoCmd.AddCommand(isdkCmd)
-	GoCmd.AddCommand(cplucCmd)
+	GoCmd.AddCommand(bdLucCmd)
 }

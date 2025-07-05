@@ -68,7 +68,7 @@ var mvdirCmd = &cobra.Command{
 
 		if remoteFlag != "" {
 			cli := fmt.Sprintf("luc util mvdir %s %s %s %s %s --local", src, dst, permStr, doOverwriteStr, isRootStr)
-			if _, err := util.RunCLIRemote(cli, remoteFlag); err != nil {
+			if _, err := util.RunCLIRemote(remoteFlag, cli); err != nil {
 				return err
 			}
 			// success
@@ -90,30 +90,3 @@ func init() {
 		return nil
 	}
 }
-
-// func HandleLocal(url string) error {
-
-// 	// download
-// 	_, err := util.GetPublicFile(url)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// }
-
-// func HandleRemote(url, host string) error {
-// 	cli := fmt.Sprintf("luc util url get %s --local", url)
-
-// 	// check vm is ssh reachable
-// 	_, err := util.IsSshConfiguredVmSshReachable(host)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// remote download
-// 	_, err = util.RunCLIRemote(cli, host)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }

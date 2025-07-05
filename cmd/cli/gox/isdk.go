@@ -30,6 +30,19 @@ var isdkCmd = &cobra.Command{
 			},
 		}
 
+		// If no flags and no args => show help and return
+		if !cmd.Flags().Changed("force") && len(args) == 0 {
+			cmd.Help()
+			return
+		}
+
+		// force flag is mandatory to use this command
+		if !forceFlag {
+			logx.L.Infof("use --force to run this command.")
+			logx.L.Infof("also check --help for more details")
+			return
+		}
+
 		// launch a pipeleine
 		_, err := gocli.RunPipeline(listVm, GoCliCustomConfigMap)
 		if err != nil {

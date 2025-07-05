@@ -75,7 +75,7 @@ func helperStatusFlagRemote(args []string) {
 	serviceName := args[0]
 	logx.L.Infof("start an os service rmotely")
 	cli := fmt.Sprintf(`luc util oservice start %s --local --force`, serviceName)
-	_, err := util.RunCLIRemote(cli, remoteFlag)
+	_, err := util.RunCLIRemote(remoteFlag, cli)
 	if err != nil {
 		logx.L.Debugf("%s", err)
 		return
