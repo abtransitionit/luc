@@ -28,4 +28,5 @@ func init() {
 	OsServiceCmd.AddCommand(cFileCmd)
 	OsServiceCmd.AddCommand(startCmd)
 	OsServiceCmd.AddCommand(statusCmd)
+	OsServiceCmd.AddCommand(stopCmd)
 }

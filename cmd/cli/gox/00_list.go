@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package cli
+package gox
 
 import (
 	"github.com/spf13/cobra"
@@ -12,7 +12,7 @@ var goSDesc = "manage GO CLI/App(s)."
 var goLDesc = goSDesc + ` xxx.`
 
 // root Command
-var goCmd = &cobra.Command{
+var GoCmd = &cobra.Command{
 	Use:   "go",
 	Short: goSDesc,
 	Long:  goLDesc,
@@ -21,6 +21,14 @@ var goCmd = &cobra.Command{
 	},
 }
 
+var forceFlag bool
+
+//	func init() {
+//		goCmd.Flags().BoolP("show", "s", false, "show CLI config map")
+//	}
 func init() {
-	goCmd.Flags().BoolP("show", "s", false, "show CLI config map")
+	GoCmd.AddCommand(buildCmd)
+	GoCmd.AddCommand(runCmd)
+	GoCmd.AddCommand(isdkCmd)
+	GoCmd.AddCommand(cplucCmd)
 }

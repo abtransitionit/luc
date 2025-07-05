@@ -8,7 +8,9 @@ import (
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-// List SSH reachable OVH VMs
+// # Purpose
+//
+// - List SSH reachable OVH VMs
 //
 // # Usage
 //

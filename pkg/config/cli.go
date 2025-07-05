@@ -37,20 +37,20 @@ var SharedCliConfigMap = CLIConfigMap{
 		GitUrl:  "https://github.com/spf13/cobra-cli",
 		UrlType: UrlGo,
 	},
-	"luc": {
-		Name: "luc",
-		// Tag:     "0.0.1",
-		Url:     "https://github.com/abtransitionit/$NAME/releases/download/v$TAG-main/$NAME-$OS-$ARCH",
-		DocUrl:  "https://github.com/abtransitionit/luc",
-		GitUrl:  "https://github.com/abtransitionit/luc",
-		UrlType: UrlExe,
-	},
 	"containerd": {
 		Name: "containerd",
 		// Tag:     "2.1.1",
 		Url:     "https://github.com/$NAME/$NAME/releases/download/v$TAG/$NAME-$TAG-$OS-$ARCH.tar.gz",
 		DocUrl:  "https://github.com/containerd/nerdctl/blob/main/docs/command-reference.md",
 		GitUrl:  "https://github.com/containerd/nerdctl",
+		UrlType: UrlTgz,
+	},
+	"go": {
+		Name: "go",
+		// Tag:     "1.24.4",
+		Url:     "https://go.dev/dl/$TAG.$TAG.$OS-$ARCH.tar.gz",
+		DocUrl:  "https://go.dev/dl/",
+		GitUrl:  "https://github.com/golang/go",
 		UrlType: UrlTgz,
 	},
 	"helm": {
@@ -86,6 +86,14 @@ var SharedCliConfigMap = CLIConfigMap{
 		Url:     "https://dl.k8s.io/release/$TAG/bin/$OS/$ARCH/$NAME",
 		DocUrl:  "https://kubernetes.io/docs/reference/kubectl/",
 		GitUrl:  "https://github.com/kubernetes/kubectl",
+		UrlType: UrlExe,
+	},
+	"luc": {
+		Name: "luc",
+		// Tag:     "0.0.1",
+		Url:     "https://github.com/abtransitionit/$NAME/releases/download/v$TAG-main/$NAME-$OS-$ARCH",
+		DocUrl:  "https://github.com/abtransitionit/luc",
+		GitUrl:  "https://github.com/abtransitionit/luc",
 		UrlType: UrlExe,
 	},
 	"nerdctl": {

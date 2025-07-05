@@ -59,7 +59,7 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
 			data.RebootStatus = "false"
 
 			// get property
-			kernelVersion, err := util.GetRemoteProperty("oskversion", data.HostName)
+			kernelVersion, err := util.GetPropertyRemote("oskversion", data.HostName)
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("[%s] ❌ Error detected 3", data.HostName)

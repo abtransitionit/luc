@@ -67,7 +67,8 @@ func helperStatusFlagLocal(args []string) {
 		logx.L.Debugf("%s", err)
 		return
 	}
-	logx.L.Debugf("⚠️ ⚠️ %s", result)
+	fmt.Println("⚠️ ⚠️")
+	fmt.Println(result)
 }
 
 func helperStatusFlagRemote(args []string) {

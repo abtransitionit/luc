@@ -38,12 +38,12 @@ func source(out chan<- PipelineData, vms []string, osServiceMap config.OsService
 			}
 
 			// get some OS property
-			oSFamily, err := util.GetRemoteProperty("osfamily", vm)
+			oSFamily, err := util.GetPropertyRemote(vm, "osfamily")
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("[%s] ❌ Error detected 1", vm)
 			}
-			oSType, err := util.GetRemoteProperty("ostype", vm)
+			oSType, err := util.GetPropertyRemote(vm, "ostype")
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("[%s] ❌ Error detected 1", vm)

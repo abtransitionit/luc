@@ -20,19 +20,19 @@ func setUrlSpec(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 		// Get some properties
-		uname, err := util.GetRemoteProperty("uname", data.HostName)
+		uname, err := util.GetPropertyRemote(data.HostName, "uname")
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("[%s] ❌ Error detected 1", data.HostName)
 		}
 
-		osArch, err := util.GetRemoteProperty("osarch", data.HostName)
+		osArch, err := util.GetPropertyRemote(data.HostName, "osarch")
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("[%s] ❌ Error detected 2", data.HostName)
 		}
 
-		osType, err := util.GetRemoteProperty("ostype", data.HostName)
+		osType, err := util.GetPropertyRemote(data.HostName, "ostype")
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("[%s] ❌ Error detected 3", data.HostName)

@@ -33,31 +33,31 @@ func source(out chan<- PipelineData, vms []string, packages []string) {
 		data := PipelineData{}
 
 		// get some OS property
-		osFamily, err := util.GetRemoteProperty("osfamily", vm)
+		osFamily, err := util.GetPropertyRemote("osfamily", vm)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
 		}
 
-		osDistro, err := util.GetRemoteProperty("osdistro", vm)
+		osDistro, err := util.GetPropertyRemote("osdistro", vm)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("[%s] ❌ Error detected 2", vm)
 		}
 
-		hostType, err := util.GetRemoteProperty("host", vm)
+		hostType, err := util.GetPropertyRemote("host", vm)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("[%s] ❌ Error detected 3", vm)
 		}
 
-		osVersion, err := util.GetRemoteProperty("osversion", vm)
+		osVersion, err := util.GetPropertyRemote("osversion", vm)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("[%s] ❌ Error detected 4", vm)
 		}
 
-		kernelVersion, err := util.GetRemoteProperty("oskversion", vm)
+		kernelVersion, err := util.GetPropertyRemote("oskversion", vm)
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("[%s] ❌ Error detected 5", vm)

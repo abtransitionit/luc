@@ -39,7 +39,7 @@ func rUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
 
 			// set reboot status
 			logx.L.Debugf("[%s] getting reboot status", data.HostName)
-			rebootStatus, err := util.GetRemoteProperty("rebootstatus", data.HostName)
+			rebootStatus, err := util.GetPropertyRemote("rebootstatus", data.HostName)
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("[%s] ❌ Error detected 2", data.HostName)

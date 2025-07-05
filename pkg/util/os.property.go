@@ -19,35 +19,98 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
-type PropertyHandler func() (string, error)
+type PropertyHandler func(...string) (string, error)
 
 // map a string to a function
 var OsPropertyMap = map[string]PropertyHandler{
-	"cpu":          getCpu,
-	"cgroup":       getCgroupVersion,
-	"init":         getInitSystem,
-	"host":         getHost,
-	"netip":        getNetIp,
-	"netgateway":   getNetGateway,
-	"osuser":       getOsUser,
-	"ostype":       getOsType, // e.g. linux, windows, darwin
-	"osarch":       getOsArch,
-	"osversion":    getOsVersion,
-	"osdistro":     getOsDistro,
-	"oskversion":   getOsKernelVersion,
-	"osfamily":     getOsFamily,
-	"path":         getPath,
-	"ram":          getRam,
-	"selstatus":    getSelinuxStatus,
-	"selmode":      getSelinuxMode,
-	"uuid":         getUuid,
-	"uname":        getUnameM,
-	"selinfos":     getSelinuxInfos,
-	"osinfos":      getOsInfos,
-	"rebootstatus": getReboot,
+	"cpu":            getCpu,
+	"cgroup":         getCgroupVersion,
+	"init":           getInitSystem,
+	"host":           getHost,
+	"netip":          getNetIp,
+	"netgateway":     getNetGateway,
+	"osuser":         getOsUser,
+	"ostype":         getOsType, // e.g. linux, windows, darwin
+	"osarch":         getOsArch,
+	"osversion":      getOsVersion,
+	"osdistro":       getOsDistro,
+	"oskversion":     getOsKernelVersion,
+	"osfamily":       getOsFamily,
+	"path":           getPath,
+	"ram":            getRam,
+	"selstatus":      getSelinuxStatus,
+	"selmode":        getSelinuxMode,
+	"uuid":           getUuid,
+	"uname":          getUnameM,
+	"selinfos":       getSelinuxInfos,
+	"serviceStatus":  getServiceStatus,
+	"serviceEnabled": getServiceEnabled,
+	"serviceinfos":   getServiceInfos,
+	"osinfos":        getOsInfos,
+	"rebootstatus":   getReboot,
 }
 
-func getUnameM() (string, error) {
+func getServiceInfos(params ...string) (string, error) {
+	if len(params) < 1 {
+		return "", fmt.Errorf("service name required")
+	}
+	// get service
+	serviceName := params[0]
+
+	// get
+	isActive, err := getServiceStatus(serviceName)
+	if err != nil {
+		return "", fmt.Errorf("serviceStatus: %v", err)
+	}
+
+	// get
+	isEnabled, err := getServiceEnabled(serviceName)
+	if err != nil {
+		return "", fmt.Errorf("serviceEnabled: %v", err)
+	}
+
+	// return
+	return fmt.Sprintf("%-6s / %-6s", isActive, isEnabled), nil
+
+}
+
+func getServiceEnabled(params ...string) (string, error) {
+	if len(params) < 1 {
+		return "", fmt.Errorf("service name required")
+	}
+	service := params[0]
+	cli := fmt.Sprintf("systemctl is-enabled %s", service)
+
+	return RunCLILocal(cli)
+}
+
+func getServiceStatus(params ...string) (string, error) {
+
+	// manage argument
+	if len(params) < 1 {
+		return "", fmt.Errorf("service name required")
+	}
+	// get service name
+	service := params[0]
+
+	// play cli
+	cli := fmt.Sprintf("systemctl is-active %s", service)
+	output, err := RunCLILocal(cli)
+
+	// in theses case the cli returns err = nil
+	if output == "active" || output == "inactive" || output == "failed" {
+		return output, nil
+	}
+
+	// manage other real errors
+	if err != nil {
+		return "", err
+	}
+
+	return strings.TrimSpace(string(output)), nil
+}
+
+func getUnameM(_ ...string) (string, error) {
 	cli := "uname -m"
 	output, err := RunCLILocal(cli)
 	if err != nil {
@@ -56,7 +119,7 @@ func getUnameM() (string, error) {
 	return strings.TrimSpace(output), nil
 }
 
-func getReboot() (string, error) {
+func getReboot(_ ...string) (string, error) {
 	// Ensure we're on Linux
 	osType, err := getOsType()
 	if err != nil {
@@ -92,7 +155,7 @@ func getReboot() (string, error) {
 	return strings.TrimSpace(output), nil
 }
 
-func getHost() (string, error) {
+func getHost(_ ...string) (string, error) {
 	osType, err := getOsType()
 	if err != nil {
 		return "", err
@@ -108,7 +171,7 @@ func getHost() (string, error) {
 	return out, nil
 }
 
-func getCpu() (string, error) {
+func getCpu(_ ...string) (string, error) {
 	output, err := cpu.Info()
 	if err != nil {
 		return "", err
@@ -116,7 +179,7 @@ func getCpu() (string, error) {
 	return fmt.Sprintf("%v", output[0].Cores), nil
 }
 
-func getInitSystem() (string, error) {
+func getInitSystem(_ ...string) (string, error) {
 	output, err := RunCLILocal("ps -p 1 -o comm=")
 	if err != nil {
 		return "", fmt.Errorf("getting init > %v", err)
@@ -127,7 +190,7 @@ func getInitSystem() (string, error) {
 	return "initd (likely cgroup v1)", nil
 }
 
-func getRam() (string, error) {
+func getRam(_ ...string) (string, error) {
 	output, err := mem.VirtualMemory()
 	if err != nil {
 		return "", err
@@ -135,7 +198,7 @@ func getRam() (string, error) {
 	return fmt.Sprintf("%v", output.Total/(1024*1024*1024)), nil
 }
 
-func getOsUser() (string, error) {
+func getOsUser(_ ...string) (string, error) {
 	output, err := user.Current()
 	if err != nil {
 		return "", err
@@ -143,11 +206,11 @@ func getOsUser() (string, error) {
 	return output.Username, nil
 }
 
-func getOsType() (string, error) {
+func getOsType(_ ...string) (string, error) {
 	return runtime.GOOS, nil
 }
 
-func getOsVersion() (string, error) {
+func getOsVersion(_ ...string) (string, error) {
 	info, err := host.Info()
 	if err != nil {
 		return "", err
@@ -155,7 +218,7 @@ func getOsVersion() (string, error) {
 	return info.PlatformVersion, nil
 }
 
-func getOsDistro() (string, error) {
+func getOsDistro(_ ...string) (string, error) {
 	info, err := host.Info()
 	if err != nil {
 		return "", err
@@ -163,7 +226,7 @@ func getOsDistro() (string, error) {
 	return info.Platform, nil
 }
 
-func getOsKernelVersion() (string, error) {
+func getOsKernelVersion(_ ...string) (string, error) {
 	info, err := host.Info()
 	if err != nil {
 		return "", err
@@ -171,7 +234,7 @@ func getOsKernelVersion() (string, error) {
 	return info.KernelVersion, nil
 }
 
-func getOsFamily() (string, error) {
+func getOsFamily(_ ...string) (string, error) {
 	info, err := host.Info()
 	if err != nil {
 		return "", err
@@ -179,11 +242,11 @@ func getOsFamily() (string, error) {
 	return info.PlatformFamily, nil
 }
 
-func getOsArch() (string, error) {
+func getOsArch(_ ...string) (string, error) {
 	return runtime.GOARCH, nil
 }
 
-func getOsInfos() (string, error) {
+func getOsInfos(_ ...string) (string, error) {
 	family, err := getOsFamily()
 	if err != nil {
 		return "", fmt.Errorf("osfamily: %v", err)
@@ -207,7 +270,7 @@ func getOsInfos() (string, error) {
 	return fmt.Sprintf("family: %-6s :: distro: %-10s :: OsVersion: %-6s :: OsKernelVersion: %s", family, distro, version, kernel), nil
 }
 
-func getPath() (string, error) {
+func getPath(_ ...string) (string, error) {
 	path := os.Getenv("PATH")
 	if path == "" {
 		return "", fmt.Errorf("PATH environment variable is not set")
@@ -215,14 +278,14 @@ func getPath() (string, error) {
 	return path, nil
 }
 
-func getSelinuxStatus() (string, error) {
+func getSelinuxStatus(_ ...string) (string, error) {
 	if selinux.GetEnabled() {
 		return "enabled", nil
 	}
 	return "disabled", nil
 }
 
-func getSelinuxMode() (string, error) {
+func getSelinuxMode(_ ...string) (string, error) {
 	switch selinux.EnforceMode() {
 	case selinux.Enforcing:
 		return "enforcing", nil
@@ -235,7 +298,7 @@ func getSelinuxMode() (string, error) {
 	}
 }
 
-func getSelinuxInfos() (string, error) {
+func getSelinuxInfos(_ ...string) (string, error) {
 	status, err := getSelinuxStatus()
 	if err != nil {
 		return "", fmt.Errorf("selstatus: %v", err)
@@ -249,7 +312,7 @@ func getSelinuxInfos() (string, error) {
 	return fmt.Sprintf("status: %-10s :: mode: %s", status, mode), nil
 }
 
-func getUuid() (string, error) {
+func getUuid(_ ...string) (string, error) {
 	cmd := "sudo cat /sys/class/dmi/id/product_uuid"
 	output, err := RunCLILocal(cmd)
 	if err != nil {
@@ -258,7 +321,7 @@ func getUuid() (string, error) {
 	return output, nil
 }
 
-func getCgroupVersion() (string, error) {
+func getCgroupVersion(_ ...string) (string, error) {
 	content, err := os.ReadFile("/proc/self/cgroup")
 	if err != nil {
 		return "", fmt.Errorf("getting cgroup > %w", err)
@@ -271,7 +334,7 @@ func getCgroupVersion() (string, error) {
 
 // return "", fmt.Errorf("getting net-ip > %s", cErr)
 
-func getNetIp() (string, error) {
+func getNetIp(_ ...string) (string, error) {
 	cmd := "curl -s ifconfig.me -4"
 	output, err := RunCLILocal(cmd)
 	if err != nil {
@@ -280,7 +343,7 @@ func getNetIp() (string, error) {
 	return output, nil
 }
 
-func getNetGateway() (string, error) {
+func getNetGateway(_ ...string) (string, error) {
 	cmd := "ip route get 2.2.2.2"
 	output, err := RunCLILocal(cmd)
 	if err != nil {
@@ -300,20 +363,20 @@ func GetOsPropertyMap() map[string]PropertyHandler {
 //	props := []string{"cpu", "ram", "osarch", "uuid", "cgroup"}
 //
 //	for _, prop := range props {
-//		value, err := util.GetLocalProperty(prop)
+//		value, err := util.GetPropertyLocal(prop)
 //		if err != nil {
 //			// logx.L.Debugf("%s", err)
 //			continue
 //		}
 //		fmt.Printf("prop: %s value: %s\n", prop, value)
 //	}
-func GetLocalProperty(property string) (string, error) {
-	handler, ok := OsPropertyMap[property]
+func GetPropertyLocal(property string, params ...string) (string, error) {
+	fn, ok := OsPropertyMap[property]
 	if !ok {
 		return "", fmt.Errorf("❌ unknown property requested: %s", property)
 	}
 
-	output, err := handler()
+	output, err := fn(params...)
 	if err != nil {
 		return "", fmt.Errorf("❌ error getting %s: %w", property, err)
 	}
@@ -321,16 +384,19 @@ func GetLocalProperty(property string) (string, error) {
 	return output, nil
 }
 
-// Idea - execute this function remotly
-// output, err := RunCLILocal(cli)
-// switch between local and remote transparently.
-//
-//	type CommandRunner interface {
-//	  Run(cmd string) (string, error)
-//	}
-func GetRemoteProperty(property string, vm string) (string, error) {
-	cmd := fmt.Sprintf(`luc util getprop %s`, property)
-	return RunCLIRemote(cmd, vm)
+func GetPropertyRemote(vm string, property string, params ...string) (string, error) {
+	cli := fmt.Sprintf(`luc util getprop %s`, property)
+
+	// Append optional params if any
+	if len(params) > 0 {
+		cli = fmt.Sprintf(`luc util getprop %s %s`, property, strings.Join(params, " "))
+	}
+
+	out, err := RunCLIRemote(cli, vm)
+	if err != nil {
+		return "", err
+	}
+	return out, nil
 }
 
 func ShowMapProperty() {

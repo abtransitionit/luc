@@ -45,7 +45,7 @@ func RUpgrade(vm string, osFamily string) (bool, error) {
 func Upgrade() (bool, error) {
 	var cli = ""
 	// get Li nux Os family
-	osFamily, err := util.GetLocalProperty("osfamily")
+	osFamily, err := util.GetPropertyLocal("osfamily")
 	if err != nil {
 		return false, err
 	}

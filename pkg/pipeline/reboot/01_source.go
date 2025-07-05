@@ -24,25 +24,25 @@ func source(out chan<- PipelineData, packageNameList ...string) {
 	logx.L.Debugf("defining data to be pipelined")
 
 	// get some OS property
-	osFamily, err := util.GetLocalProperty("osfamily")
+	osFamily, err := util.GetPropertyLocal("osfamily")
 	if err != nil {
 		data.Err = err
 		logx.L.Debugf("❌ Error detected")
 	}
 
-	osDistro, err := util.GetLocalProperty("osdistro")
+	osDistro, err := util.GetPropertyLocal("osdistro")
 	if err != nil {
 		data.Err = err
 		logx.L.Debugf("❌ Error detected")
 	}
 
-	hostType, err := util.GetLocalProperty("host")
+	hostType, err := util.GetPropertyLocal("host")
 	if err != nil {
 		data.Err = err
 		logx.L.Debugf("❌ Error detected")
 	}
 
-	osVersion, err := util.GetLocalProperty("osversion")
+	osVersion, err := util.GetPropertyLocal("osversion")
 	if err != nil {
 		data.Err = err
 		logx.L.Debugf("❌ Error detected")

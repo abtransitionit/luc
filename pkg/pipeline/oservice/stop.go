@@ -10,7 +10,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func startService(in <-chan PipelineData, out chan<- PipelineData) {
+func stopService(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
 
 	for data := range in {
@@ -23,8 +23,8 @@ func startService(in <-chan PipelineData, out chan<- PipelineData) {
 		vm := data.HostName
 
 		// remote start service
-		logx.L.Debugf("[%s] [%s] starting service", vm, data.Config.Name)
-		cli := fmt.Sprintf(`luc util oservice start %s --local --force`, data.Config.SName)
+		logx.L.Debugf("[%s] [%s] stoping service", vm, data.Config.Name)
+		cli := fmt.Sprintf(`luc util oservice stop %s --local --force`, data.Config.SName)
 		_, err := util.RunCLIRemote(cli, vm)
 
 		// error
@@ -36,7 +36,7 @@ func startService(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 
 		// success
-		logx.L.Debugf("[%s] [%s] started service", vm, data.Config.Name)
+		logx.L.Debugf("[%s] [%s] stoped service", vm, data.Config.Name)
 		out <- data
 	}
 }

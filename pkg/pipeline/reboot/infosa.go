@@ -18,7 +18,7 @@ func infoAfter(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 
 		// step 2: get property
-		osKernelVersion, err := util.GetLocalProperty("oskversion")
+		osKernelVersion, err := util.GetPropertyLocal("oskversion")
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("❌ Error detected")

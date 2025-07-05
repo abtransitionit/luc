@@ -11,7 +11,7 @@ import (
 func ReloadAndApplyService(action string, listServiceName ...string) error {
 
 	// get property
-	osType, err := GetLocalProperty("ostype")
+	osType, err := GetPropertyLocal("ostype")
 	if err != nil {
 		return err
 	}
@@ -57,11 +57,11 @@ func DisableService(listServiceName ...string) error {
 	return ReloadAndApplyService("disable", listServiceName...)
 }
 
-func StatusService(listServiceName ...string) (map[string]string, error) {
+func StatusListService(listServiceName ...string) (map[string]string, error) {
 	results := make(map[string]string)
 
 	// get property
-	osType, err := GetLocalProperty("ostype")
+	osType, err := GetPropertyLocal("ostype")
 	if err != nil {
 		return nil, err
 	}
@@ -86,29 +86,35 @@ func StatusService(listServiceName ...string) (map[string]string, error) {
 	return results, nil
 }
 
-// func RestartService(listServiceName ...string) error {
-// 	for _, serviceName := range listServiceName {
-// 		command := fmt.Sprintf("sudo systemctl restart %s", serviceName)
-// 		if _, err := RunCLILocal(command); err != nil {
-// 			return err
-// 		}
-// 	}
-// 	return nil
-// }
+func StatusService(serviceName string) (string, error) {
 
-// func CreateServiceFileRemote(stringContent string, filePath string, vm string) error {
-// 	cli := fmt.Sprintf(`luc util oservice cfile %s %s`, stringContent, filePath)
-// 	_, err := RunCLIRemote(cli, vm)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+	// get property
+	osType, err := GetPropertyLocal("ostype")
+	if err != nil {
+		return "", err
+	}
+
+	// manage linux only
+	if osType != "linux" {
+		return "", fmt.Errorf("unsupported OS type: %s (only linux is supported)", osType)
+	}
+
+	// Play CLI
+	command := fmt.Sprintf("systemctl --no-pager --full status %s", serviceName)
+	out, err := RunCLILocal(command)
+	if err != nil {
+		// return results, fmt.Errorf("status check failed for %s: %w", service, err)
+		return "", err
+	}
+
+	// success
+	return out, nil
+}
 
 func CreateServiceFile(stringContent string, filePath string) error {
 
 	// get property
-	osType, err := GetLocalProperty("ostype")
+	osType, err := GetPropertyLocal("ostype")
 	if err != nil {
 		return err
 	}
@@ -127,7 +133,7 @@ func CreateServiceFile(stringContent string, filePath string) error {
 func CreateUserServiceFile(stringContent string, filePath string) error {
 
 	// get property
-	osType, err := GetLocalProperty("ostype")
+	osType, err := GetPropertyLocal("ostype")
 	if err != nil {
 		return err
 	}

@@ -37,7 +37,7 @@ func RInstallC(vm string, cliConfig *config.CustomCLIConfig) (bool, error) {
 	}
 
 	// get vm:property
-	osType, err := util.GetRemoteProperty("ostype", vm)
+	osType, err := util.GetPropertyRemote("ostype", vm)
 	if err != nil {
 		return false, err
 	}

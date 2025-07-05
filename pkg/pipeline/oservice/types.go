@@ -41,10 +41,11 @@ func ServiceIsExcluded(key, item string) (bool, error) {
 }
 
 type PipelineData struct {
-	Config   config.OsServiceConfig
-	HostName string
-	OsFamily string // Rhel, Debian, fedora
-	Err      error
+	Config       config.OsServiceConfig
+	HostName     string
+	OsFamily     string // Rhel, Debian, fedora
+	ServiceInfos string
+	Err          error
 }
 
 // # Pupose
@@ -59,6 +60,7 @@ func (obj PipelineData) String() string {
 		{"Host name", obj.HostName},
 		{"OS   Family", obj.OsFamily},
 		{"Service name", obj.Config.Name},
+		{"Service infos", obj.ServiceInfos},
 		{"Name used", obj.Config.SName},
 		{"Error", func() string {
 			if obj.Err != nil {

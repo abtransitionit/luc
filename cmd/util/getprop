@@ -18,45 +18,31 @@ var getpropLDesc = getpropSDesc + ` xxx.`
 // provision Command
 var getpropCmd = &cobra.Command{
 	Use:   "getprop [PROPERTY NAME]",
+	Args:  cobra.ExactArgs(1), // Requires exactly 1 arguments
 	Short: getpropSDesc,
 	Long:  getpropLDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// Handle --show flag
-		showFlag, _ := cmd.Flags().GetBool("show")
-		if showFlag {
+		// handle arguments
+		if len(args) == 1 {
+			propertyName := args[0]
+			propertyValue, err := util.GetPropertyLocal(propertyName)
+			if err != nil {
+				logx.L.Debugf("%s", err)
+				return
+			}
+			// logx.L.Infof("value for property '%s': %s", propertyName, propertyValue)
+			fmt.Println(propertyValue)
+			return
+		}
+
+		// handle flag = --show
+		if cmd.Flag("show").Value.String() == "true" {
 			util.ShowMapProperty()
 			return
-		}
-
-		// manage arg
-		if len(args) < 1 {
+		} else {
 			cmd.Help()
-			return
 		}
-
-		// get the property
-		propertyName := args[0]
-
-		// get the property parameters if any
-		parameters := []string{}
-
-		// manage property parameters
-		if len(args) > 1 {
-			parameters = args[1:]
-		}
-
-		// cli
-		propertyValue, err := util.GetPropertyLocal(propertyName, parameters...)
-
-		// error
-		if err != nil {
-			logx.L.Debugf("%s", err)
-			return
-		}
-		// success
-		fmt.Println(propertyValue)
-
 	},
 }
 

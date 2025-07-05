@@ -16,12 +16,12 @@ var (
 )
 
 // Description
-var buildSDesc = "Build a GO project."
+var buildSDesc = "Build a GO project locally."
 var buildLDesc = buildSDesc + ` xxx.`
 
 // root Command
 var buildCmd = &cobra.Command{
-	Use:   "build",
+	Use:   "build [GIT FOLDER] [OUTPUT FOLDER] [BINARY NAME]",
 	Short: buildSDesc,
 	Long:  buildLDesc,
 	Run: func(cmd *cobra.Command, args []string) {

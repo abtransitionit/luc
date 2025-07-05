@@ -4,8 +4,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package oservice
 
 import (
-	"fmt"
-
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 )
@@ -20,10 +18,9 @@ func statusService(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 
-		// remote start service
-		logx.L.Debugf("[%s] [%s] getting service status", data.HostName, data.Config.Name)
-		cli := fmt.Sprintf(`luc util oservice status %s --local --force`, data.Config.SName)
-		result, err := util.RunCLIRemote(cli, data.HostName)
+		// get OS service properties
+		logx.L.Debugf("[%s] [%s] geting service status", data.HostName, data.Config.Name)
+		serviceInfos, err := util.GetPropertyRemote(data.HostName, "serviceinfos", data.Config.Name)
 
 		// error
 		if err != nil {
@@ -34,9 +31,8 @@ func statusService(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 
 		// success
+		data.ServiceInfos = serviceInfos
 		logx.L.Debugf("[%s] [%s] got service status", data.HostName, data.Config.Name)
-		logx.L.Debugf(" ⚠️ %s", result)
-
 		out <- data
 	}
 }

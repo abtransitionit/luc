@@ -50,7 +50,7 @@ func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int, vm
 
 			// set reboot status
 			logx.L.Debugf("[%s] getting reboot status", data.HostName)
-			rebootStatus, err := util.GetRemoteProperty("rebootstatus", data.HostName)
+			rebootStatus, err := util.GetPropertyRemote(data.HostName, "rebootstatus")
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("[%s] ❌ Error detected 2", data.HostName)
@@ -61,7 +61,7 @@ func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int, vm
 			data.RebootStatus = rebootStatus
 
 			// get property
-			kernelVersion, err := util.GetRemoteProperty("oskversion", data.HostName)
+			kernelVersion, err := util.GetPropertyRemote(data.HostName, "oskversion")
 			if err != nil {
 				data.Err = err
 				logx.L.Debugf("[%s] ❌ Error detected 3", data.HostName)

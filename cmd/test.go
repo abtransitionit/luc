@@ -59,7 +59,7 @@ func installGoCli() {
 	}
 
 	// get vm property
-	osFamily, err := util.GetRemoteProperty("osfamily", vm)
+	osFamily, err := util.GetPropertyRemote(vm, "osfamily")
 	if err != nil {
 		logx.L.Errorf("%s", err)
 	}
