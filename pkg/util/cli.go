@@ -116,7 +116,7 @@ func RunCLILocal(command string, liveOutput ...bool) (stdout string, err error) 
 
 		err = cmd.Run()
 		if err != nil {
-			return "", fmt.Errorf("command failed: %v", err)
+			return "", fmt.Errorf("❌ Error: command failed: %v", err)
 		}
 		return "", nil // No captured output in live mode
 	} else {
@@ -129,7 +129,7 @@ func RunCLILocal(command string, liveOutput ...bool) (stdout string, err error) 
 		stdout = strings.TrimSpace(out.String())
 
 		if err != nil {
-			return stdout, fmt.Errorf("command failed: %v\noutput:\n%s", err, stdout)
+			return stdout, fmt.Errorf("❌ Error: command failed: %v\noutput:\n%s", err, stdout)
 		}
 		return stdout, nil
 	}

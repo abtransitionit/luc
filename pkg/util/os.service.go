@@ -150,13 +150,20 @@ func CreateUserServiceFile(stringContent string, filePath string) error {
 	return nil
 }
 
-// Enable user services to start after a reboot
-func EnableUserService(username string) error {
-	command := fmt.Sprintf("sudo loginctl enable-linger %s", username)
-	_, err := RunCLILocal(command)
-	if err != nil {
+// Enable for the current user services to runs after a logout
+func EnableLinger() error {
+	cli := "loginctl enable-linger"
+	if _, err := RunCLILocal(cli); err != nil {
 		return err
-		// return fmt.Errorf("failed to enable lingering for user %s: %w", username, err)
+	}
+	return nil
+}
+
+// Disable for the current user services to runs after a logout
+func DissableLinger() error {
+	cli := "loginctl disable-linger"
+	if _, err := RunCLILocal(cli); err != nil {
+		return err
 	}
 	return nil
 }

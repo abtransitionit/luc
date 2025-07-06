@@ -17,6 +17,8 @@ var ProvisionPhases = []phase.Phase{
 	phase.SetPhase("dapack", daPack, DaPackDescription),
 	phase.SetPhase("gocli", goCli, GoCliDescription),
 	phase.SetPhase("service", service, ServiceDescription),
+	phase.SetPhase("linger", linger, LingerDescription),
+	phase.SetPhase("path", path, PathDescription),
 	// phase.SetPhase("rc", rc, RcDescription),
 	// phase.SetPhase("create", create, CreateDescription),
 	// phase.SetPhase("check", check, CheckDescription),

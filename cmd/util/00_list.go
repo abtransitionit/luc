@@ -31,6 +31,7 @@ var UtilCmd = &cobra.Command{
 	},
 }
 
+var forceFlag bool
 var remoteFlag string
 var localFlag bool
 

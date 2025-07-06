@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package linger
+package path
 
 import (
 	"strings"
@@ -31,38 +31,15 @@ func source(out chan<- PipelineData, vms []string) {
 			continue
 		}
 
-		oSFamily, err := util.GetPropertyRemote(vm, "osfamily")
+		PathTree, err := util.GetPropertyRemote(vm, "pathtree", "/usr/local/bin")
 		if err != nil {
 			data.Err = err
 			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
-		}
-
-		oSType, err := util.GetPropertyRemote(vm, "ostype")
-		if err != nil {
-			data.Err = err
-			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
-		}
-		oSUser, err := util.GetPropertyRemote(vm, "osuser")
-		if err != nil {
-			data.Err = err
-			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
-		}
-		UserLinger, err := util.GetPropertyRemote(vm, "userlinger", oSUser)
-		if err != nil {
-			data.Err = err
-			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
-		}
-
-		// avoid creating instance for Os type not manage
-		if strings.ToLower(strings.TrimSpace(oSType)) != "linux" {
-			continue
 		}
 
 		// define instance property - 1 per VmxService
 		data.HostName = vm
-		data.OsFamily = oSFamily
-		data.osUser = oSUser
-		data.LingerStatus = UserLinger
+		data.Path = PathTree
 
 		// log and send
 		logx.L.Debugf("[%s] send instance to the pipeline", vm)

@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package linger
+package oservice
 
 import (
 	"fmt"
@@ -22,10 +22,10 @@ func lastStep(in <-chan PipelineData) error {
 	// common loop
 	for data := range in {
 		if data.Err != nil {
-			logx.L.Debugf("[%s] [%s] Pipeline error : %v", data.HostName, data.osUser, data.Err)
+			logx.L.Debugf("[%s] [%s] Pipeline error : %v", data.Config.Name, data.HostName, data.Err)
 			continue
 		}
-		logx.L.Infof("[%s] [%s] Received Pipeline Data", data.HostName, data.osUser)
+		logx.L.Infof("[%s] [%s] Received Pipeline Data", data.Config.Name, data.HostName)
 		fmt.Println(data.String())
 	}
 

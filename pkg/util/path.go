@@ -31,7 +31,7 @@ import (
 //	    log.Fatal(err)
 //	}
 //	fmt.Println("export PATH=" + pathStr + ":$PATH")
-func GetSubdirLocal(basePath string) (string, error) {
+func GetListChuldDirLocal(basePath string) (string, error) {
 
 	// check arg
 	if basePath == "" {
@@ -73,12 +73,17 @@ func GetSubdirRemote(basePath string, vm string) (string, error) {
 //
 // # Parameters
 //
-// - a colon-separated set of paths
+// - a semi-colon separated set of paths
 //
 // # Returns
 //
 // - the updated PATH string and an error if any.
-func UpdPath(srcPath string) (string, error) {
+//
+// # Note
+//
+// - Does not add the path if it not exists
+
+func UpdatePath(srcPath string) (string, error) {
 	if srcPath == "" {
 		return "", fmt.Errorf("no source path provided")
 	}

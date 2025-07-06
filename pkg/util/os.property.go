@@ -27,6 +27,7 @@ var OsPropertyMap = map[string]PropertyHandler{
 	"cgroup":         getCgroupVersion,
 	"init":           getInitSystem,
 	"host":           getHost,
+	"userlinger":     getLinger,
 	"netip":          getNetIp,
 	"netgateway":     getNetGateway,
 	"osuser":         getOsUser,
@@ -36,20 +37,44 @@ var OsPropertyMap = map[string]PropertyHandler{
 	"osdistro":       getOsDistro,
 	"oskversion":     getOsKernelVersion,
 	"osfamily":       getOsFamily,
+	"osinfos":        getOsInfos,
 	"path":           getPath,
+	"pathext":        getPathExtend,
+	"pathtree":       getPathTree,
 	"ram":            getRam,
 	"selstatus":      getSelinuxStatus,
 	"selmode":        getSelinuxMode,
-	"uuid":           getUuid,
-	"uname":          getUnameM,
 	"selinfos":       getSelinuxInfos,
 	"serviceStatus":  getServiceStatus,
 	"serviceEnabled": getServiceEnabled,
 	"serviceinfos":   getServiceInfos,
-	"osinfos":        getOsInfos,
 	"rebootstatus":   getReboot,
+	"uuid":           getUuid,
+	"uname":          getUnameM,
 }
 
+func getLinger(params ...string) (string, error) {
+	if len(params) < 1 {
+		return "", fmt.Errorf("user name required")
+	}
+
+	// get input
+	OsUserName := params[0]
+
+	// play test cli - same as testing if cli : loginctl exists
+	cli := fmt.Sprintf(`loginctl show-user %s`, OsUserName)
+	if _, err := RunCLILocal(cli); err != nil {
+		return "", err
+	}
+	// now grep is safe
+	cli = fmt.Sprintf(`loginctl show-user %s | grep -i linger | cut -d= -f2`, OsUserName)
+	output, err := RunCLILocal(cli)
+	if err != nil {
+		return "", err
+	}
+	// success
+	return output, nil
+}
 func getServiceInfos(params ...string) (string, error) {
 	if len(params) < 1 {
 		return "", fmt.Errorf("service name required")
@@ -270,12 +295,45 @@ func getOsInfos(_ ...string) (string, error) {
 	return fmt.Sprintf("family: %-6s :: distro: %-10s :: OsVersion: %-6s :: OsKernelVersion: %s", family, distro, version, kernel), nil
 }
 
+func getPathTree(params ...string) (string, error) {
+	if len(params) < 1 {
+		return "", fmt.Errorf("base path name required")
+	}
+
+	// get input
+	basePath := params[0]
+
+	// play code
+	cli := fmt.Sprintf(`find %s -type d | sort | paste -sd\;`, basePath)
+	path, err := RunCLILocal(cli)
+	if err != nil {
+		return "", err
+	}
+	return path, nil
+}
+
 func getPath(_ ...string) (string, error) {
 	path := os.Getenv("PATH")
 	if path == "" {
 		return "", fmt.Errorf("PATH environment variable is not set")
 	}
 	return path, nil
+}
+
+func getPathExtend(params ...string) (string, error) {
+	if len(params) < 1 {
+		return "", fmt.Errorf("semi-colon separated paths required")
+	}
+
+	path := os.Getenv("PATH")
+	if path == "" {
+		return "", fmt.Errorf("PATH environment variable is not set")
+	}
+	pathExtend, err := UpdatePath(params[0])
+	if err != nil {
+		return "", err
+	}
+	return pathExtend, nil
 }
 
 func getSelinuxStatus(_ ...string) (string, error) {

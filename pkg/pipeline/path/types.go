@@ -1,18 +1,16 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package linger
+package path
 
 import (
 	"github.com/jedib0t/go-pretty/table"
 )
 
 type PipelineData struct {
-	HostName     string
-	OsFamily     string // Rhel, Debian, fedora
-	osUser       string
-	LingerStatus string
-	Err          error
+	HostName string
+	Path     string
+	Err      error
 }
 
 // # Pupose
@@ -25,9 +23,7 @@ func (obj PipelineData) String() string {
 
 	t.AppendRows([]table.Row{
 		{"Host name", obj.HostName},
-		{"OS   Family", obj.OsFamily},
-		{"user name", obj.osUser},
-		{"linger status", obj.LingerStatus},
+		{"PATH", obj.Path},
 		{"Error", func() string {
 			if obj.Err != nil {
 				return obj.Err.Error()

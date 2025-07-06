@@ -15,24 +15,6 @@ const ServiceDescription = "configure OS services."
 func service(arg ...string) (string, error) {
 	// filePath := "/tmp/usr.local.bin.rootlesskit.rootlesskit"
 
-	// build a tree PATH
-	basePath := "/usr/local/bin"
-	logx.L.Debugf("building tree path from: '%s'", basePath)
-	treePath, err := util.BuildPath(basePath)
-	if err != nil {
-		logx.L.Debugf("❌ Error detected 7")
-		return "", err
-	}
-
-	// update PATH with this tree path
-	// logx.L.Debugf("parevious $PATH is : '%s'", envPath)
-	// logx.L.Debugf("updating envar $PATH with : '%s'", treePath)
-	updatedPath, err := util.UpdPath(treePath)
-	if err != nil {
-		logx.L.Debugf("❌ Error detected 8")
-		return "", err
-	}
-
 	// set env var
 	err = os.Setenv("PATH", updatedPath)
 	if err != nil {
@@ -51,61 +33,6 @@ func service(arg ...string) (string, error) {
 	// SUCCESS
 	return "Service file created and AppArmor restarted successfully", nil
 }
-
-// // Create the service file for apparmor remotly
-// cli := fmt.Sprintf(`luc util oservice cfile %s %s --remote --force`, config.ApparmorServiceConf, config.ApparmorFilePath)
-
-// if err := util.CreateServiceFileRemote(config.ApparmorServiceConf, config.ApparmorFilePath, config.KindVm); err != nil {
-// 	logx.L.Debugf("❌ Errod detected 1")
-// 	return "", fmt.Errorf("%s", err)
-// }
-
-// // define the user service file path for containerd
-// containerdServiceFilePath := "/etc/systemd/system/containerd.service"
-// // Create the service file for containerd
-// if err := util.CreateUserServiceFile(config.ContainerdUserServiceConf, containerdServiceFilePath); err != nil {
-// 	logx.L.Debugf("❌ Errod detected 1")
-// 	return "", fmt.Errorf("%s", err)
-// }
-// // get property
-// envPath, err := util.GetLocalProperty("path")
-// if err != nil {
-// 	logx.L.Debugf("❌ Error detected 4")
-// 	return "", err
-// }
-
-// filePath := "/tmp/usr.local.bin.rootlesskit.rootlesskit"
-
-// 	// get properties
-// 	osFamily, err := util.GetLocalProperty("osfamily")
-// 	if err != nil {
-// 		logx.L.Debugf("❌ Error detected 10")
-// 		return "", err
-// 	}
-
-// 	osUser, err := util.GetLocalProperty("osuser")
-// 	if err != nil {
-// 		logx.L.Debugf("❌ Error detected 11")
-// 		return "", err
-// 	}
-
-// 	// check OS family
-// 	if osFamily == "debian" {
-// 		// Restart the services only for ubuntu
-// 		logx.L.Debugf("restarting service apparmor")
-// 		if err := util.RestartService("apparmor.service"); err != nil {
-// 			logx.L.Debugf("❌ Errod detected 12")
-// 			return "", err
-// 		}
-// 	}
-
-// 	// Enable lingering for a non root user : i.e can start services : eg. needed to start containerd
-// 	logx.L.Debugf("enabling lingering for user %s", osUser)
-// 	if err := util.EnableUserService(osUser); err != nil {
-// 		logx.L.Debugf("❌ Error detected 13")
-// 		return "", err
-// 	}
-// 	logx.L.Infof("enabled lingering for user %-5s", osUser)
 
 // 	// set PATH to installed CLI(s)
 // 	helperSetPath()

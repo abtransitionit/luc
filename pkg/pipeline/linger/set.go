@@ -4,13 +4,11 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package linger
 
 import (
-	"fmt"
-
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func startService(in <-chan PipelineData, out chan<- PipelineData) {
+func enableLinger(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
 
 	for data := range in {
@@ -21,22 +19,31 @@ func startService(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 		// get instance property
 		vm := data.HostName
+		user := data.osUser
 
-		// remote start service
-		logx.L.Debugf("[%s] [%s] starting service", vm, data.Config.Name)
-		cli := fmt.Sprintf(`luc util oservice start %s --local --force`, data.Config.SName)
-		_, err := util.RunCLIRemote(vm, cli)
-
-		// error
-		if err != nil {
-			logx.L.Debugf("[%s][%s] ❌ Error detected 1", vm, data.Config.Name)
+		// TODO: weird: explicit the user. remote enable linger for current user (aka. sudo user)
+		logx.L.Debugf("[%s] [%s] enabling linger for user ", vm, user)
+		cli := `luc util oservice linger --local --force`
+		if _, err := util.RunCLIRemote(vm, cli); err != nil {
+			logx.L.Debugf("[%s][%s] ❌ Error detected 1", vm, user)
 			data.Err = err
 			out <- data
 			continue
 		}
 
+		// get property
+		lingerStatus, err := util.GetPropertyRemote(vm, "userlinger", user)
+		if err != nil {
+			logx.L.Debugf("[%s][%s] ❌ Error detected 2", vm, user)
+			data.Err = err
+			out <- data
+			continue
+		}
+
+		// set instance property
+		data.LingerStatus = lingerStatus
 		// success
-		logx.L.Debugf("[%s] [%s] started service", vm, data.Config.Name)
+		logx.L.Debugf("[%s] [%s] enabled linger for user", vm, user)
 		out <- data
 	}
 }

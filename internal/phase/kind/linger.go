@@ -20,13 +20,6 @@ func linger(arg ...string) (string, error) {
 	return "", nil
 }
 
-// // get property
-// osUser, err := util.GetLocalProperty("osuser")
-// if err != nil {
-// 	logx.L.Debugf("❌ Error detected 3")
-// 	return "", err
-// }
-
 // // Enable lingering for the user
 // logx.L.Debugf("enabling lingering for user %s", osUser)
 // if err := util.EnableUserService(osUser); err != nil {
