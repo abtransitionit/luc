@@ -27,7 +27,8 @@ func getPath(in <-chan PipelineData, out chan<- PipelineData) {
 		var pathExtend string
 		var err error
 		logx.L.Debugf("[%s] updating envar PATH with tree path", vm)
-		cli := fmt.Sprintf(`luc util getprop pathext %s --local`, data.Path)
+		logx.L.Debugf("data.Path is : %s", data.Path)
+		cli := fmt.Sprintf(`luc util getprop pathext '%s' `, data.Path)
 		if pathExtend, err = util.RunCLIRemote(vm, cli); err != nil {
 			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
 			data.Err = err

@@ -304,7 +304,7 @@ func getPathTree(params ...string) (string, error) {
 	basePath := params[0]
 
 	// play code
-	cli := fmt.Sprintf(`find %s -type d | sort | paste -sd\;`, basePath)
+	cli := fmt.Sprintf(`find %s -type d | sort | paste -sd\:`, basePath)
 	path, err := RunCLILocal(cli)
 	if err != nil {
 		return "", err
@@ -321,15 +321,19 @@ func getPath(_ ...string) (string, error) {
 }
 
 func getPathExtend(params ...string) (string, error) {
+	// check arg
 	if len(params) < 1 {
 		return "", fmt.Errorf("semi-colon separated paths required")
 	}
-
+	// get property
 	path := os.Getenv("PATH")
 	if path == "" {
 		return "", fmt.Errorf("PATH environment variable is not set")
 	}
-	pathExtend, err := UpdatePath(params[0])
+	// get extension
+	extension := params[0]
+
+	pathExtend, err := UpdatePath(extension)
 	if err != nil {
 		return "", err
 	}
