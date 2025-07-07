@@ -11,7 +11,7 @@ import (
 
 const RunPipelineDescription = "Create Linux OS service(s) unit files on VMs."
 
-func RunPipeline(vmList string) (string, error) {
+func RunPipeline(vmList string, pathFile string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
 
 	// define var
@@ -23,8 +23,8 @@ func RunPipeline(vmList string) (string, error) {
 	chOutLast := ch02
 
 	// aync stage (i.e running concurrently/in parallel)
-	go source(ch01, vms)   // define instances to send to the pipeline
-	go getPath(ch01, ch02) // define instances to send to the pipeline
+	go source(ch01, vms, pathFile) // define instances to send to the pipeline
+	go getPath(ch01, ch02)         // define instances to send to the pipeline
 
 	// final sequential step. collects all instances in the pipeline and build a sumary
 	err := lastStep(chOutLast)

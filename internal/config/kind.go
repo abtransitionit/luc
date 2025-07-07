@@ -12,6 +12,7 @@ const (
 	// KindVm        = "o1u o2a"
 	KindVm        = "o1u"
 	KindDnfaptCli = "uidmap"
+	KindPathFile  = "/var/tmp/path"
 
 	// Apparmor service configuration file content
 	ApparmorServiceConf = `

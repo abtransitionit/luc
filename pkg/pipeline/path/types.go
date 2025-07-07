@@ -12,9 +12,10 @@ import (
 )
 
 type PipelineData struct {
-	HostName string
-	Path     string
-	Err      error
+	HostName    string
+	Path        string
+	TmpFilePath string
+	Err         error
 }
 
 // # Pupose
@@ -31,6 +32,7 @@ func (obj PipelineData) String() string {
 	t.AppendRows([]table.Row{
 		{"Host name", obj.HostName},
 		{"PATH", strings.Join(paths, "\n")},
+		{"File PATH", obj.TmpFilePath},
 		{"Error", func() string {
 			if obj.Err != nil {
 				return obj.Err.Error()

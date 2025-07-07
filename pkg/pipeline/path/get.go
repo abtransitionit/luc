@@ -16,6 +16,7 @@ func getPath(in <-chan PipelineData, out chan<- PipelineData) {
 	for data := range in {
 		// get instance property
 		vm := data.HostName
+		tmpPath := data.TmpFilePath
 
 		if data.Err != nil {
 			out <- data
@@ -26,8 +27,7 @@ func getPath(in <-chan PipelineData, out chan<- PipelineData) {
 		// Update envar PATH
 		var pathExtend string
 		var err error
-		logx.L.Debugf("[%s] updating envar PATH with tree path", vm)
-		logx.L.Debugf("data.Path is : %s", data.Path)
+		logx.L.Debugf("[%s] creating envar PATH with tree path", vm)
 		cli := fmt.Sprintf(`luc util getprop pathext '%s' `, data.Path)
 		if pathExtend, err = util.RunCLIRemote(vm, cli); err != nil {
 			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
@@ -36,10 +36,19 @@ func getPath(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 
+		// save path to file
+		logx.L.Debugf("[%s] persisting envar PATH to file", vm)
+		cli = fmt.Sprintf(`luc util strfile '%s' %s false --force`, pathExtend, tmpPath)
+		if _, err = util.RunCLIRemote(vm, cli); err != nil {
+			logx.L.Debugf("[%s] ❌ Error detected 2", vm)
+			data.Err = err
+			out <- data
+			continue
+		}
 		// set instance property
 		data.Path = pathExtend
 		// success
-		logx.L.Debugf("[%s] updated envvar PATH", vm)
+		logx.L.Debugf("[%s] saved envar PATH to file", vm)
 		out <- data
 	}
 }

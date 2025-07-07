@@ -22,13 +22,13 @@ var strFileCmd = &cobra.Command{
 	// Args:  cobra.ExactArgs(3), // Requires exactly 2 argument
 	Short: strfileSDesc,
 	Long:  strfileLDesc,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 
 		// Handle --show flag
 		showFlag, _ := cmd.Flags().GetBool("show")
 		if showFlag {
 			util.ShowMapProperty()
-			return
+			return nil
 		}
 
 		// Handle --remote flag
@@ -37,14 +37,14 @@ var strFileCmd = &cobra.Command{
 		// manage arg
 		if len(args) < 3 {
 			cmd.Help()
-			return
+			return nil
 		}
 
 		// manage flag - foce flag is mandatory to use this command
 		if !forceFlag {
 			logx.L.Infof("use --force to run this command.")
 			logx.L.Infof("also check --help for more details")
-			return
+			return fmt.Errorf("use --force to run this command.")
 		}
 
 		// get raw inputs
@@ -57,7 +57,7 @@ var strFileCmd = &cobra.Command{
 		IsRoot, err := strconv.ParseBool(IsRootRaw)
 		if err != nil {
 			logx.L.Debugf("%s", err)
-			return
+			return err
 		}
 
 		// Play cli
@@ -73,9 +73,9 @@ var strFileCmd = &cobra.Command{
 		// error
 		if err != nil {
 			logx.L.Debugf("%s", err)
-			return
+			return err
 		}
-
+		return nil
 	},
 }
 

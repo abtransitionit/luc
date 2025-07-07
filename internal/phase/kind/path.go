@@ -12,7 +12,7 @@ import (
 const PathDescription = "configure OS PATH envvar."
 
 func path(arg ...string) (string, error) {
-	_, err := pathp.RunPipeline(config.KindVm)
+	_, err := pathp.RunPipeline(config.KindVm, config.KindPathFile)
 	if err != nil {
 		logx.L.Debugf("%s", err)
 		return "", err

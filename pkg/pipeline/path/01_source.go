@@ -10,7 +10,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func source(out chan<- PipelineData, vms []string) {
+func source(out chan<- PipelineData, vms []string, pathFile string) {
 	defer close(out)
 
 	// define var
@@ -40,6 +40,7 @@ func source(out chan<- PipelineData, vms []string) {
 		// define instance property - 1 per VmxService
 		data.HostName = vm
 		data.Path = PathTree
+		data.TmpFilePath = pathFile
 
 		// log and send
 		logx.L.Debugf("[%s] send instance to the pipeline", vm)
