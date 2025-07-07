@@ -1,0 +1,56 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package kind
+
+import (
+	"os"
+
+	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
+)
+
+const ServiceDescription = "configure OS services."
+
+func service(arg ...string) (string, error) {
+	// filePath := "/tmp/usr.local.bin.rootlesskit.rootlesskit"
+
+	// set env var
+	err = os.Setenv("PATH", updatedPath)
+	if err != nil {
+		logx.L.Debugf("❌ Error detected 9")
+		return "", err
+	}
+
+	// Play CLI
+	cli := "containerd-rootless-setuptool.sh install"
+	_, err = util.RunCLILocal(cli)
+	if err != nil {
+		logx.L.Debugf("❌ Error detected 10")
+		return "", err
+	}
+
+	// SUCCESS
+	return "Service file created and AppArmor restarted successfully", nil
+}
+
+// 	// set PATH to installed CLI(s)
+// 	helperSetPath()
+
+// 	// Play CLI
+// 	cli := "containerd-rootless-setuptool.sh install"
+// 	_, err = util.RunCLILocal(cli)
+// 	if err != nil {
+// 		logx.L.Debugf("❌ Error detected 17")
+// 		return "", err
+// 	}
+
+// func helperSetPath() (string, error) {
+
+// 	// set env var
+// 	err = os.Setenv("PATH", updatedPath)
+// 	if err != nil {
+// 		logx.L.Debugf("❌ Error detected 16")
+// 		return "", err
+// 	}
+// 	return "", nil
