@@ -9,9 +9,9 @@ import (
 	pathp "github.com/abtransitionit/luc/pkg/pipeline/path"
 )
 
-const PathDescription = "configure OS PATH envvar."
+const RcDescription = "configure User RC files."
 
-func path(arg ...string) (string, error) {
+func rc(arg ...string) (string, error) {
 	_, err := pathp.RunPipeline(config.KindVm, config.KindPathFile)
 	if err != nil {
 		logx.L.Debugf("%s", err)

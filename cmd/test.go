@@ -30,7 +30,8 @@ var testCmd = &cobra.Command{
 		// ListMapKey()
 		// installGoCli()
 		// getPath()
-		fmt.Println(configi.KbeGoCliConfigMap)
+		// fmt.Println(configi.KbeGoCliConfigMap)
+		addLineToFileRemote()
 
 	},
 }
@@ -93,4 +94,51 @@ func getPath() {
 		logx.L.Errorf("%s", err)
 	}
 	logx.L.Infof("path: %s", path)
+}
+
+// test the method locally
+func addLineToFile() {
+	customRcFilePath := "$HOME/.profile.luc"
+	RcFilePath := "$HOME/.bashrc"
+	line := "source " + customRcFilePath
+
+	if _, err := util.AddLineToFile(RcFilePath, line); err != nil {
+		logx.L.Debugf("Error:", err)
+	}
+
+	logx.L.Infof("Line added or already present.")
+
+}
+
+// test local the call via luc util
+func addLineToFileLocal() {
+	customRcFilePath := "$HOME/.profile.luc"
+	RcFilePath := "$HOME/.bashrc"
+	line := "source " + customRcFilePath
+
+	cli := fmt.Sprintf(`luc util linefile %q %s --force`, line, RcFilePath)
+
+	if _, err := util.RunCLILocal(cli); err != nil {
+		logx.L.Debugf("Error: %s", err)
+	}
+
+	logx.L.Infof("Line added or already present.")
+
+}
+
+func addLineToFileRemote() {
+	customRcFilePath := "'$HOME/.profile.luc'"
+	RcFilePath := "'$HOME/.bashrc'"
+	line := fmt.Sprintf("source %s", customRcFilePath)
+
+	cli := fmt.Sprintf(`luc util linefile %q %s --force --remote o1u`, line, RcFilePath)
+
+	// logx.L.Debugf("Running CLI: %s", cli) // For debug
+
+	if _, err := util.RunCLILocal(cli); err != nil {
+		logx.L.Debugf("Error: %s", err)
+	}
+
+	logx.L.Infof("Line added or already present.")
+
 }

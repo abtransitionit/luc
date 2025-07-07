@@ -44,12 +44,12 @@ var strFileCmd = &cobra.Command{
 		if !forceFlag {
 			logx.L.Infof("use --force to run this command.")
 			logx.L.Infof("also check --help for more details")
-			return fmt.Errorf("use --force to run this command.")
+			return fmt.Errorf("use --force to run this command")
 		}
 
 		// get raw inputs
 		fileContent := args[0]
-		filePtah := args[1]
+		filePath := args[1]
 		IsRootRaw := args[2]
 
 		var err error
@@ -63,11 +63,11 @@ var strFileCmd = &cobra.Command{
 		// Play cli
 		if remoteFlag != "" {
 			// cli remote
-			cli := fmt.Sprintf(`luc util strfile %s %s %s --force`, fileContent, filePtah, IsRootRaw)
+			cli := fmt.Sprintf(`luc util strfile %s %s %s --force`, fileContent, filePath, IsRootRaw)
 			_, err = util.RunCLIRemote(remoteFlag, cli)
 		} else {
 			// cli local
-			_, err = util.SaveStringToFile(fileContent, filePtah, IsRoot)
+			_, err = util.SaveStringToFile(fileContent, filePath, IsRoot)
 		}
 
 		// error

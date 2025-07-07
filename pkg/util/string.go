@@ -10,6 +10,52 @@ import (
 	"strings"
 )
 
+// # purpose
+//
+// - add a line to a file if it not exists
+func AddLineToFile(filePath string, line string) (string, error) {
+
+	// Check arg
+	if filePath == "" {
+		return "", fmt.Errorf("no file path provided")
+	}
+	if line == "" {
+		return "", fmt.Errorf("no line provided")
+	}
+
+	// Check file exists
+	_, err := os.Stat(filePath)
+	if os.IsNotExist(err) {
+		return "", fmt.Errorf("file does not exist: %s", filePath)
+	}
+
+	// Check if the line exists
+	cli := fmt.Sprintf(`grep -Fxq %q %s`, line, filePath)
+	_, err = RunCLILocal(cli)
+
+	// If grep finds the line, do nothing
+	if err == nil {
+		return "", nil
+	}
+	// If the file doesn't exist or line not found, continue (grep returns non-zero exit code)
+	// If it's a different kind of error, return it
+	if !strings.Contains(err.Error(), "command failed") {
+		// return fmt.Errorf("error checking line in %s: %w", filePath, err)
+		return "", err
+	}
+
+	// Append the line to the file
+	cli = fmt.Sprintf(`echo %q >> %s`, line, filePath)
+
+	// error
+	if _, err = RunCLILocal(cli); err != nil {
+		return "", err
+	}
+
+	// success
+	return "", nil
+}
+
 // # Purpose
 //
 // deletes the left spaces on a multiline string and returns it
