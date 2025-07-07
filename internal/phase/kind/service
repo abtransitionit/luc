@@ -45,7 +45,29 @@ func service(arg ...string) (string, error) {
 // 		return "", err
 // 	}
 
+// 	// SUCCESS
+// 	return "Service file created and AppArmor restarted successfully", nil
+// }
+
 // func helperSetPath() (string, error) {
+// 	// build the PATH to installed CLI(s)
+// 	basePath := "/usr/local/bin"
+// 	logx.L.Debugf("building tree path from: '%s'", basePath)
+// 	path, err := util.GetSubdirLocal(basePath)
+// 	// error
+// 	if err != nil {
+// 		logx.L.Debugf("❌ Error detected 14")
+// 		return "", err
+// 	}
+
+// 	// update variable PATH with this path
+// 	// logx.L.Debugf("parevious $PATH is : '%s'", envPath)
+// 	// logx.L.Debugf("updating envar $PATH with : '%s'", path)
+// 	updatedPath, err := util.UpdPath(path)
+// 	if err != nil {
+// 		logx.L.Debugf("❌ Error detected 15")
+// 		return "", err
+// 	}
 
 // 	// set env var
 // 	err = os.Setenv("PATH", updatedPath)

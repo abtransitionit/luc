@@ -28,8 +28,7 @@ func lastStep(in <-chan PipelineData) error {
 		}
 		logx.L.Infof("[%s] Received Pipeline Data", vm)
 		fmt.Println(data.String())
-		fmt.Println("export PATH=\"" + data.Path + "\"")
-
 	}
+
 	return nil
 }

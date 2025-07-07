@@ -1,0 +1,26 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package cli
+
+import (
+	"github.com/abtransitionit/luc/pkg/phase"
+	"github.com/abtransitionit/luc/pkg/pipeline/gocli"
+	"github.com/spf13/cobra"
+)
+
+// Description
+var cobraSDesc = "Install the binary cli cobra-cli from official github."
+var cobraLDesc = cobraSDesc + ` xxx.`
+
+// root Command
+var cobraCmd = &cobra.Command{
+	Use:   "cobra [phase name]",
+	Short: cobraSDesc,
+	Long:  cobraLDesc,
+	Run:   phase.CmdRun(gocli.Phases, cobraSDesc),
+}
+
+func init() {
+	phase.CmdInit(cobraCmd)
+}

@@ -1,6 +1,8 @@
 
 # Luc  
-**L**inux **U**nified **C**ontrol is a universal Linux Operations CLI (**C**ommand **L**ine **I**nterface). A lightweight `Go`-powered toolkit for Linux platform management.
+**L**inux **U**nified **C**ontrol is a universal Linux Operations CLI (**C**ommand **L**ine **I**nterface). A lightweight `Go`-powered toolkit for Linux platform management. 
+
+As a practical implementation, [KBE](https://github.com/abtransitionit/kbe) is a tool built on top of LUC, leveraging parts of its codebase published as a public `go` module.
 
 [![LICENSE](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://choosealicense.com/licenses/apache-2.0/)
 ![Go Version](https://img.shields.io/badge/go-%3E%3D1.21-blue)
@@ -134,7 +136,7 @@ Track version updates and changes:
 
 This project implements a full CI/CD workflow, designed with best practices in mind:
 
-- Uses **GitHub Actions** to fully automate the **build**, **tag** and **release** lifecycle.
+- Uses **GitHub Actions** to fully automate the **tag**, **build**  and **release** lifecycle.
 - Employs a **modular pipeline architecture** that emphasizes easy maintenance, scalability, and clear separation of concerns.
 * Promotes **faster debugging**, **high-quality delivery**, and **reusability** of components across multiple projects.
 

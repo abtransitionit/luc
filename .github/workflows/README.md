@@ -1,7 +1,20 @@
-# The build process
-- Create/Add/Upodate Tag after a push on `main`
-- Build 
-  - The principal artifact with checks around the tag
-  - Then, the other plaform artifacts without checks if the principal artifact is in success
--   
+# Tips
+## Activate/deactivate the pipeline
+- Rename the file `tag.yaml` to `tag`  
   
+
+# Todo
+Should adopt a per release file
+```
+/
+├── releases/
+│   ├── v0.1.0.md
+│   ├── v0.2.0.md
+│   └── template.md
+├── ...
+```
+
+Then in release.yaml:
+```yaml
+body_path: releases/${{ env.TAG_NAME }}.md
+```  

@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 
 package config
 
+import "github.com/abtransitionit/luc/pkg/config"
+
 const (
 	K8sVersion = "1.32.0"
 )
@@ -11,10 +13,13 @@ const (
 	// KBE version
 	KbeVersion = K8sVersion // follow up kubernetes version
 
-	// KBE nodes
-	KbeListNodeList = "o1u o2a o3r o5d o6f"
-	KbeNodeCplane   = "o1u"
-	KbeListWorker   = "o1u"
+	// where to install KBE
+	// KbeListNode = "o1u o2a o3r o5d o6f" // o6f generate error
+	// KbeListNode = "o1u o2a o3r o4f o5d"
+	KbeListNode = "o1u o2a"
+	// KbeListNode       = "o1u"
+	KbeListNodeCplane = "o1u"
+	KbeListNodeWorker = "o1u"
 
 	// KBE CLI
 	KbeKubeadmCliVersion = K8sVersion
@@ -39,3 +44,29 @@ const (
 	// OS Kernel
 	KbeKernelFileName = "99-kbe.conf"
 )
+
+var KbeDnfaptCliConfigMap = config.CustomCLIConfigMap{
+	"crio": {
+		Name:      "crio",
+		Version:   "1.7.1",
+		DstFolder: "/usr/local/bin", // default: /opt/cni/bin
+	},
+}
+
+var KbeGoCliConfigMap = config.CustomCLIConfigMap{
+	"kubeadm": {
+		Name:      "kubeadm",
+		Version:   KbeVersion,
+		DstFolder: "/usr/local/bin",
+	},
+	"kubectl": {
+		Name:      "kubectl",
+		Version:   KbeVersion,
+		DstFolder: "/usr/local/bin",
+	},
+	"helm": {
+		Name:      "helm",
+		Version:   "3.17.3",
+		DstFolder: "/usr/local/bin",
+	},
+}

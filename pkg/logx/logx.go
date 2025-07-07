@@ -16,7 +16,6 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 //     - logx.L.Infof("installing %s", packageName)
 //     - logx.L.Errorf("failed to start: %v", err)
 //     - ...
-
 package logx
 
 import (
@@ -114,13 +113,15 @@ func prodConfig() zap.Config {
 //
 //	"main.go:023       handleRequest"
 func fixedWidthCallerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
-	// file := filepath.Base(caller.File)
 	file := caller.TrimmedPath()
-
-	// Extract just the function name
-	// funcName := caller.Function
-
 	funcParts := strings.Split(caller.Function, ".")
 	funcName := funcParts[len(funcParts)-1]
-	enc.AppendString(fmt.Sprintf("%10s:%03d %32s", file, caller.Line, funcName))
+	fileWidth := 30
+	funcWidth := 20
+	enc.AppendString(fmt.Sprintf("%-*s %-*s", fileWidth, file, funcWidth, funcName))
 }
+
+// file := filepath.Base(caller.File)
+// Extract just the function name
+// funcName := caller.Function
+// enc.AppendString(fmt.Sprintf("%10s:%3d %12s", file, caller.Line, funcName))

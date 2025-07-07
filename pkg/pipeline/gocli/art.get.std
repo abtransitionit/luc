@@ -1,0 +1,55 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package gocli
+
+import (
+	"fmt"
+
+	"github.com/abtransitionit/luc/pkg/config"
+	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
+)
+
+func getArtifact(in <-chan PipelineData, out chan<- PipelineData) {
+	defer close(out)
+
+	for data := range in {
+		if data.Err != nil {
+			out <- data
+			logx.L.Debugf("❌ Previous error detected")
+			continue
+		}
+
+		// use cases
+		switch data.Config.UrlType {
+		case config.UrlExe, config.UrlTgz:
+			data = helperExeTgz(data)
+		case config.UrlGit:
+			// TODO
+		default:
+			data.Err = fmt.Errorf("[%s] ❌ Unsupported or not yet managed UrlType :  '%s'", data.CliName, data.Config.UrlType)
+			logx.L.Debugf("[%s] ❌ Error detected 2", data.CliName)
+		}
+
+		out <- data
+	}
+}
+
+func helperExeTgz(data PipelineData) PipelineData {
+
+	// log
+	logx.L.Debugf("[%s] downloading artifact for UrlType '%s'", data.Config.Name, data.Config.UrlType)
+
+	// play code
+	_, err := util.GetFileRemote(data.HostUrl, data.ArtPath1, data.HostName)
+	if err != nil {
+		logx.L.Debugf("[%s] [%s] ❌ Error detected during download", data.Config.Name, data.HostName)
+		data.Err = err
+		return data
+	}
+
+	// success
+	logx.L.Debugf("[%s] [%s] donwloaded artifact", data.Config.Name, data.HostName)
+	return data
+}

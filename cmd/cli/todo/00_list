@@ -1,0 +1,29 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package cli
+
+import (
+	"github.com/spf13/cobra"
+)
+
+// Description
+var cliSDesc = "Manage CLI/App/Tool/Package(s)."
+var cliLDesc = cliSDesc + ` xxx.`
+
+// root Command
+var CliCmd = &cobra.Command{
+	Use:   "cli",
+	Short: cliSDesc,
+	Long:  cliLDesc,
+}
+
+func init() {
+	CliCmd.AddCommand(goCmd)
+	CliCmd.AddCommand(daCmd)
+	CliCmd.AddCommand(pyCmd)
+	// CliCmd.AddCommand(installCmd)
+	//
+	CliCmd.Flags().BoolP("show", "s", false, "show CLI config map")
+
+}

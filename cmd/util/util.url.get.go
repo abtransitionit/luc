@@ -18,7 +18,7 @@ var getLDesc = getSDesc + ` xxx.`
 // delete Command
 var getCmd = &cobra.Command{
 	Use:   "get [URL] [PATH]",
-	Args:  cobra.ExactArgs(2), // Requires exactly 2 argument
+	Args:  cobra.ExactArgs(2), // Requires exactly one argument: the URL
 	Short: getSDesc,
 	Long:  getLDesc,
 	// define the set of phases for this cmd

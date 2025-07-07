@@ -12,19 +12,19 @@ import (
 )
 
 // Description
-var getpathSDesc = "create a PATH envar."
-var getpathLDesc = getpathSDesc + `
+var pathSDesc = "create a PATH envar."
+var pathLDesc = pathSDesc + `
 Example usage:
 
 luc util path /usr/local/bin;/usr/local/sbin/kind
 `
 
 // Definition
-var getPathCmd = &cobra.Command{
-	Use:   "getpath [semi-colon separated list of paths]",
+var pathCmd = &cobra.Command{
+	Use:   "path [semi-colon separated list of paths]",
 	Args:  cobra.ExactArgs(1), // Requires exactly one argument: the set of paths
-	Short: getpathSDesc,
-	Long:  getpathLDesc,
+	Short: pathSDesc,
+	Long:  pathLDesc,
 	// Code to play
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -55,11 +55,11 @@ var getPathCmd = &cobra.Command{
 }
 
 func init() {
-	getPathCmd.Flags().BoolVar(&forceFlag, "force", false, "Force execution is mandatory")
-	getPathCmd.Flags().StringVar(&remoteFlag, "remote", "", "Download remotely from a target host (e.g., o1u)")
-	getPathCmd.Flags().BoolVar(&localFlag, "local", false, "Download locally")
-	getPathCmd.MarkFlagsMutuallyExclusive("local", "remote")
-	getPathCmd.PreRunE = func(cmd *cobra.Command, args []string) error {
+	pathCmd.Flags().BoolVar(&forceFlag, "force", false, "Force execution is mandatory")
+	pathCmd.Flags().StringVar(&remoteFlag, "remote", "", "Download remotely from a target host (e.g., o1u)")
+	pathCmd.Flags().BoolVar(&localFlag, "local", false, "Download locally")
+	pathCmd.MarkFlagsMutuallyExclusive("local", "remote")
+	pathCmd.PreRunE = func(cmd *cobra.Command, args []string) error {
 		if remoteFlag == "" && !localFlag {
 			return fmt.Errorf("you must specify either --remote or --local")
 		}

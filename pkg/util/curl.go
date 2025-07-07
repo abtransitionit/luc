@@ -11,16 +11,15 @@ import (
 	"net/http"
 
 	"github.com/abtransitionit/luc/pkg/errorx"
-	"go.uber.org/zap"
 )
 
-// downloads a file in memory from a public URL and returns its contents.
+// # Purpose
 //
-// This function
+//   - Downloads a file form a public URL into memory and returns it as a byte slice.
 //   - performs an HTTP GET request.
 //
 // Parameters:
-//   - url: The HTTP/HTTPS URL of the file to download. Must be a valid URL.
+//   - url: The HTTPS URL of the file to download. Must be a valid URL.
 //
 // Returns:
 //   - []byte : the downloaded file on suuccee (nil on failure)
@@ -30,9 +29,9 @@ import (
 //
 //   - ([]byte, nil): On success
 //   - (nil, error) : On failure
-//   - Network errors
-//   - Non-200 HTTP status codes
-//   - Response body reading errors
+//     -- Network errors
+//     -- Non-200 HTTP status codes
+//     -- Response body reading errors
 //
 // Example usage:
 //
@@ -53,11 +52,9 @@ import (
 //   - There is a default 10-second timeout (via http.DefaultClient)
 //   - The response body is automatically closed after reading
 //   - The caller is responsible for handling the returned data.
-func GetPublicFile(log *zap.SugaredLogger, url string) ([]byte, error) {
+func GetPublicFile(url string) ([]byte, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		msg := fmt.Sprintf("Get URL : %s", url)
-		log.Debugf("❌ %s", msg)
 		return errorx.ByteError("Get URL", url, err)
 	}
 	// close the response body at the end
@@ -65,9 +62,8 @@ func GetPublicFile(log *zap.SugaredLogger, url string) ([]byte, error) {
 
 	// manage status code
 	if resp.StatusCode != http.StatusOK {
-		msg := fmt.Sprintf("bad HTTP status (%s) when getting URL (%s)", resp.Status, url)
-		log.Debugf("❌ %s", msg)
-		return errorx.ByteError("Get correct HTTP status code", resp.Status, errors.New(""))
+		msg := fmt.Sprintf("Get correct HTTP status code (%s) for url %s", resp.Status, url)
+		return errorx.ByteError(msg, "", errors.New(""))
 	}
 	// here: status code is 200
 
@@ -75,45 +71,53 @@ func GetPublicFile(log *zap.SugaredLogger, url string) ([]byte, error) {
 	body, err := io.ReadAll(resp.Body)
 	// handle system FAILURE
 	if err != nil {
-		msg := fmt.Sprintf("Get Response Body from URL (%s), even status code is 200", url)
-		log.Debugf("❌ %s", msg)
 		return errorx.ByteError("Get Response Body from URL (%s), even status code is 200", url, err)
 	}
 	// handle applogic SUCCESS - here file content exists
-	log.Infof("✅ data donwloaded into memory")
+	// log.Infof("✅ data donwloaded into memory")
 	return body, nil
 }
 
-// out, err := os.Create(srcPath)
-// if err != nil {
-// 	fmt.Println("File creation error:", err)
-// 	return
-// }
-// defer out.Close()
+// getFile performs the basic HTTP GET operation
+// (private because it's our internal building block)
+func getFile2(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, fmt.Errorf("❌ Error: failed to get URL: %w", err)
+	}
+	defer resp.Body.Close()
 
-// _, err = io.Copy(out, resp.Body)
-// if err != nil {
-// 	fmt.Println("File save error:", err)
-// 	return
-// }
+	// check
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("❌ Error: unexpected status code: %d for URL: %s", resp.StatusCode, url)
+	}
 
-// 1. Download file
-// err = os.WriteFile(srcPath, data, 0644)
-// if err != nil {
-// 	fmt.Println("write error:", err)
-// 	return
-// }
+	// check
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return errorx.ByteError("Get Response Body from URL (%s), even status code is 200", url, err)
+	}
+	// success
+	return body, nil
+}
 
-// // 2. Make file executable
-// err = os.Chmod(srcPath, 0755)
-// if err != nil {
-// 	fmt.Println("chmod error:", err)
-// 	return
-// }
+// gets a file and handles local-specific concerns
+func GetFile(url string, path string) (string, error) {
 
-// // 3. Move file to final destination (requires root privileges)
-// err = os.Rename(srcPath, dstPath)
-// if err != nil {
-// 	fmt.Println("move error:", err)
-// 	return
-// }
+	// get file in memory
+	data, err := getFile2(url)
+	/// error
+	if err != nil {
+		return "", err
+	}
+
+	// save file from memory to FS
+	_, err = SaveToFile(data, path)
+	/// error
+	if err != nil {
+		return "", err
+	}
+
+	// success
+	return path, nil
+}
