@@ -15,13 +15,13 @@ As a practical implementation, [KBE](https://github.com/abtransitionit/kbe) is a
 ## Why LUC
 
 - A single binary (download or build from source)
-- Manage resources for both **local OS** and **remote VMs**  
+- Manage resources for both **local OS** and **remote VMs** (as an agent)
 - Native support for **Rhel**, **Debian**, and derived distributions. 
 - Unified linux management of:
-  - Packages and package repositorires  
-  - services 
-  - kernel parameters and modules
-- Zero dependencies, remote-ready architecture
+  - packages, package repositorires, modules (dnf, apt, go, python, ...)
+  - OS services 
+  - OS kernel parameters and modules
+- Zero dependencies and remote-ready architecture
 - Go-Native Project Structure: Luc adheres to **standard Go project layout conventions** for maintainability and clarity:  
     | Directory | Purpose | Visibility |  
     |-|-|-|
