@@ -16,6 +16,7 @@ func RunPipeline(vmList string) (string, error) {
 	// define var
 	vms := strings.Fields(vmList) // convert ListAsString to slice ([]string)
 	nbVm := len(vms)
+	nbWorker := nbVm
 	// Define the pipeline channels
 	ch01 := make(chan PipelineData)
 	ch02 := make(chan PipelineData)
@@ -24,8 +25,8 @@ func RunPipeline(vmList string) (string, error) {
 
 	// aync stage
 	go source(ch01, vms) // define instances to send to the pipeline
-	go rUpgrade(ch01, ch02, nbVm)
-	go remoteReboot(ch02, ch03, nbVm)
+	go rUpgrade(ch01, ch02, nbWorker)
+	go remoteReboot(ch02, ch03, nbWorker)
 
 	// final sequential step. collects all instances in the pipeline and build a sumary
 	err := lastStep(chOutLast)

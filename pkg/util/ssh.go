@@ -177,7 +177,7 @@ func CheckSsh(arg ...string) (string, error) {
 	} // for
 
 	// check nodes are SSH reachable
-	logx.L.Info("check vms are SSH reachable")
+	logx.L.Info("checking vms are SSH reachable")
 	for _, node := range SliceNodes {
 		isSssReachable, err := IsSshConfiguredVmSshReachable(node)
 		if err != nil {
@@ -190,10 +190,10 @@ func CheckSsh(arg ...string) (string, error) {
 		NodeSshStatusMap[node] = nodeStatus
 
 	} // for
-	logx.L.Info("Display the results")
+
+	// success
+	logx.L.Info("checked vms")
 	fmt.Println((NodeSshStatusMap).String())
-	// ShowMapSshStatus()
-	// on SUCCESS
 	return "", nil
 }
 

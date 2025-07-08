@@ -47,7 +47,7 @@ var mvfileCmd = &cobra.Command{
 
 		// use arguments
 		if localFlag {
-			success, err := util.MvFile(src, dst, perm, isRoot)
+			success, err := util.MvFile2(src, dst, perm, isRoot)
 			// error
 			if err != nil {
 				return err

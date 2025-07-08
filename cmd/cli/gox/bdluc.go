@@ -55,7 +55,7 @@ var bdLucCmd = &cobra.Command{
 		}
 
 		// deploy
-		if _, err := util.MvFile(LucBinaryTmpPtfPath, LucBinaryPath, 0755, true); err != nil {
+		if _, err := util.MvFile2(LucBinaryTmpPtfPath, LucBinaryPath, 0755, true); err != nil {
 			logx.L.Debugf("%s", err)
 			return
 		}

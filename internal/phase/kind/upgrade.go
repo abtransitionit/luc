@@ -13,7 +13,6 @@ const UpgradeDescription = "provision OS nodes with latest dnfapt packages and r
 
 func upgrade(arg ...string) (string, error) {
 	logx.L.Info(UpgradeDescription)
-	// launch this pipeline
 	_, err := rupgrade.RunPipeline(config.KindVm)
 	if err != nil {
 		return "", err

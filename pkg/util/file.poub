@@ -1,0 +1,72 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+
+// # Purpose
+//
+// FileExists2 checks if a file exists and is accessible.
+// Returns:
+//   - (true, nil)  if the file exists
+//   - (false, nil) if the file doesn't exist (normal case)
+//   - (false, error) for permission issues or other system errors
+func FileExists3(path string) (bool, error) {
+	// define var
+	vm := "o1u"
+	// check file exists
+	cli := fmt.Sprintf(`test -f %s && echo true || echo false`, path)
+	result, err := RunCLIRemote(vm, cli)
+	if err != nil {
+		return false, fmt.Errorf("Failed to check remote file exists: %s", err)
+	}
+	return strings.ToLower(strings.TrimSpace(result)) == "true", nil
+
+}
+func FileExists2(path string) (bool, error) {
+	info, err := os.Stat(path)
+
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	if err != nil {
+		return false, fmt.Errorf("❌ Error checking file exists %s: %w", path, err)
+	}
+	if info.IsDir() {
+		return false, fmt.Errorf("❌ Path is a directory, not a file: %s", path)
+	}
+	return true, nil
+}
+
+// Why not just check err != nil?
+// Because there are many reasons a file operation might fail:
+
+// File doesn't exist (this is what we're checking for)
+
+// Permission denied
+
+// Path is a directory when expecting a file (or vice versa)
+
+// Network filesystem timeout
+
+// etc.
+func FileExists4(path string) (string, error) {
+	// check file exists
+	info, err := os.Stat(path)
+
+	// error
+	if os.IsNotExist(err) {
+		return "false", nil
+	}
+
+	// error
+	if err != nil {
+		return "false", fmt.Errorf("❌ Error: checking file exists %s: %w", path, err)
+	}
+
+	// error
+	if info.IsDir() {
+		return "false", fmt.Errorf("❌ Error: filepath is a directory not a file %s", path)
+	}
+	// success
+	return "true", nil
+}
+

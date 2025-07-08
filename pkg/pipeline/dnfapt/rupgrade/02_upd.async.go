@@ -11,8 +11,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/util/dnfapt"
 )
 
-func rUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
-	nbWorker := nbVm // as many workers as VM
+func rUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) {
 	var wg sync.WaitGroup
 	defer close(out)
 

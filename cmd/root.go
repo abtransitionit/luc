@@ -11,6 +11,7 @@ import (
 	"github.com/abtransitionit/luc/cmd/kbe"
 	"github.com/abtransitionit/luc/cmd/kind"
 	"github.com/abtransitionit/luc/cmd/util"
+	"github.com/abtransitionit/luc/test"
 	"github.com/spf13/cobra"
 )
 
@@ -49,5 +50,5 @@ func init() {
 	rootCmd.AddCommand(kind.KindCmd)
 	// rootCmd.AddCommand(local.LocalCmd)
 	//
-	rootCmd.AddCommand(testCmd)
+	rootCmd.AddCommand(test.TestCmd)
 }

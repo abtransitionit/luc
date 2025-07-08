@@ -16,7 +16,7 @@ const DaPackDescription = "provision Dnfapt Package"
 func daPack(arg ...string) (string, error) {
 	logx.L.Info(DaPackDescription)
 
-	// Build []string of the Map:key
+	// convert Map:key to []string
 	listPackage := ""
 	for key := range config.KindDaCliConfigMap {
 		listPackage += key + " "

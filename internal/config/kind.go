@@ -9,8 +9,8 @@ import "github.com/abtransitionit/luc/pkg/config"
 const (
 	// where to install kind
 	// KindVm = "o1u"
-	// KindVm        = "o1u o2a"
-	KindVm        = "o1u"
+	KindVm = "o1u o2a"
+	// KindVm        = "o1u"
 	KindDnfaptCli = "uidmap"
 	KindPathFile  = "/var/tmp/path"
 

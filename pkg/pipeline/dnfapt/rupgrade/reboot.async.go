@@ -12,8 +12,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbVm int) {
-	nbWorker := nbVm // as many workers as VM
+func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) {
 	var wg sync.WaitGroup
 	defer close(out)
 

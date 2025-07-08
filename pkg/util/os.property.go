@@ -433,12 +433,12 @@ func GetOsPropertyMap() map[string]PropertyHandler {
 //		fmt.Printf("prop: %s value: %s\n", prop, value)
 //	}
 func GetPropertyLocal(property string, params ...string) (string, error) {
-	fn, ok := OsPropertyMap[property]
+	fnPropertyHandler, ok := OsPropertyMap[property]
 	if !ok {
 		return "", fmt.Errorf("❌ unknown property requested: %s", property)
 	}
 
-	output, err := fn(params...)
+	output, err := fnPropertyHandler(params...)
 	if err != nil {
 		return "", fmt.Errorf("❌ error getting %s: %w", property, err)
 	}

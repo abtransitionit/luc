@@ -21,19 +21,20 @@ var ActionCmd = &cobra.Command{
 	Use:    "action",
 	Short:  actionSDesc,
 	Long:   ActionLDesc,
-	Run: func(cmd *cobra.Command, args []string) {
-		logx.L.Infof("%s", actionSDesc)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		// logx.L.Infof("%s", actionSDesc)
+
 		// Handle --show flag
 		showFlag, _ := cmd.Flags().GetBool("show")
 		if showFlag {
-			util.ShowActionMap()
-			return
+			util.ShowFnActionMap()
+			return nil
 		}
 
 		// No action provided: show help
 		if len(args) == 0 {
 			cmd.Help()
-			return
+			return nil
 		}
 
 		// get vm
@@ -48,15 +49,15 @@ var ActionCmd = &cobra.Command{
 		// Assign only if present
 		if len(args) > 1 {
 			param1 = args[1]
-			logx.L.Debugf("param1: %s", param1)
+			// logx.L.Debugf("param1: %s", param1)
 		}
 		if len(args) > 2 {
 			param2 = args[2]
-			logx.L.Debugf("param2: %s", param2)
+			// logx.L.Debugf("param2: %s", param2)
 		}
 		if len(args) > 3 {
 			param3 = args[3]
-			logx.L.Debugf("param3: %s", param3)
+			// logx.L.Debugf("param3: %s", param3)
 		}
 		//
 		var result string
@@ -64,26 +65,27 @@ var ActionCmd = &cobra.Command{
 
 		if vmName != "" {
 			// Remote execution
-			result, err = util.PlayActionRemote(vmName, action, param1, param2, param3)
+			result, err = util.PlayFnOnRemote(vmName, action, param1, param2, param3)
 		} else {
 			// Local execution
-			result, err = util.PlayActionLocal(action, param1, param2, param3)
+			result, err = util.PlayFnLocally(action, param1, param2, param3)
 		}
 
 		// error
 		if err != nil {
-			logx.L.Debugf("[%s] ❌ %v", action, err)
-			return
+			// logx.L.Debugf("[%s] %v", action, err)
+			// logx.L.Debugf("[%s] ❌ error detected", action)
+			return err
 		}
 
 		// success
 		fmt.Println(result)
-
+		return nil
 	},
 }
 
 func init() {
-	// phase.CmdInit(getpropCmd)
+	ActionCmd.AddCommand(getpropCmd)
 	ActionCmd.Flags().BoolP("show", "s", false, "List available property name")
 	ActionCmd.Flags().StringP("remote", "r", "", "Remote VM name")
 

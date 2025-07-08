@@ -25,6 +25,7 @@ const DisplayDescription = "display the desired KIND Cluster's configuration."
 
 func show(arg ...string) (string, error) {
 	logx.L.Info(DisplayDescription)
+
 	fmt.Println(CurrentClusterConfig)
 	return "", nil
 }

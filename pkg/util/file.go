@@ -22,8 +22,32 @@ import (
 
 // # Purpose
 //
-// checks if a folder exists and is accessible.
-// Returns:
+//   - checks if a regular file exists and is accessible.
+//
+// # Returns
+//
+//   - (true, nil)  file exists and is accessible
+//   - (false, nil) file not exists or is not accessible due to permission, special file, ...
+//
+// # Note
+//
+//   - TODO: should check os.IsNotExist(err)
+func IsFileExists(path string) (string, error) {
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return "false", fmt.Errorf("❌ Error: file does not exist: %s", path)
+		}
+		return "false", fmt.Errorf("❌ Error: file inaccessible: %v", err)
+	}
+	return "true", nil
+}
+
+// # Purpose
+//
+//   - checks if a folder exists and is accessible.
+//
+// # Returns
+//
 //   - (true, nil)  if the folder exists
 //   - (false, nil) if the folder doesn't exist (normal case)
 //   - (false, error) for permission issues or other system errors
@@ -37,25 +61,6 @@ func FolderExists(path string) (bool, error) {
 	}
 	// handle system FAILURE
 	return errorx.BoolError("check folder exists", path, err)
-}
-
-// # Purpose
-//
-// FileExists checks if a file exists and is accessible.
-// Returns:
-//   - (true, nil)  if the file exists
-//   - (false, nil) if the file doesn't exist (normal case)
-//   - (false, error) for permission issues or other system errors
-func FileExists(path string) (bool, error) {
-	info, err := os.Stat(path)
-	if err == nil {
-		return !info.IsDir(), nil // return  true nil
-	}
-	if os.IsNotExist(err) {
-		return false, nil
-	}
-	// handle system FAILURE
-	return errorx.BoolError("check file exists", path, err)
 }
 
 // # Purpose
@@ -283,7 +288,7 @@ func UnTgz(srcTgzPath string, destFolder string) error {
 //
 // # Example:
 //
-//	success, err := MvFile("/tmp/foo.txt", "/var/log/foo-renamed.txt")
+//	success, err := MvFile2("/tmp/foo.txt", "/var/log/foo-renamed.txt")
 //	if err != nil {
 //	    log.Fatal(err)
 //	}
@@ -294,7 +299,7 @@ func UnTgz(srcTgzPath string, destFolder string) error {
 // # Notes
 //
 // The helper function helperMvSudo is used when sudo is required
-func MvFile(srcFilePath, dstFilePath string, permission os.FileMode, pathIsRoot bool) (bool, error) {
+func MvFile2(srcFilePath, dstFilePath string, permission os.FileMode, pathIsRoot bool) (bool, error) {
 
 	// check source file path
 	if srcFilePath == "" {
@@ -355,6 +360,68 @@ func MvFile(srcFilePath, dstFilePath string, permission os.FileMode, pathIsRoot 
 	}
 	// success as non-root
 	return true, nil
+}
+func MvFile(srcFilePath, dstFilePath string, permission os.FileMode, pathIsRoot bool) (string, error) {
+
+	// check source file path
+	if srcFilePath == "" {
+		return "false", fmt.Errorf("❌ Error: source path not provided")
+	}
+	if !filepath.IsAbs(srcFilePath) {
+		return "false", fmt.Errorf("❌ Error: source path must be absolute: %s", srcFilePath)
+	}
+	srcInfo, err := os.Stat(srcFilePath)
+	if err != nil {
+		return "false", fmt.Errorf("❌ Error: source file does not exist: %w", err)
+	}
+	if !srcInfo.Mode().IsRegular() {
+		return "false", fmt.Errorf("❌ Error: source path is not a regular file: %s", srcFilePath)
+	}
+
+	// check destination file path
+	if dstFilePath == "" {
+		return "false", fmt.Errorf("❌ Error: destination file path not provided")
+	}
+	if !filepath.IsAbs(dstFilePath) {
+		return "false", fmt.Errorf("❌ Error: destination file path must be absolute: %s", dstFilePath)
+	}
+	dstDirPath := filepath.Dir(dstFilePath)
+	dstDirInfo, err := os.Stat(dstDirPath)
+	if err != nil {
+		return "false", fmt.Errorf("❌ Error: destination directory does not exist: %w", err)
+	}
+	if !dstDirInfo.IsDir() {
+		return "false", fmt.Errorf("❌ Error: destination parent path is not a directory: %s", dstDirPath)
+	}
+
+	// Perform actions as root user
+	if pathIsRoot {
+		// move
+		cli := fmt.Sprintf(`sudo mv "%s" "%s"`, srcFilePath, dstFilePath)
+		if _, err := RunCLILocal(cli); err != nil {
+			return "false", err
+		}
+		// set permissions
+		cli = fmt.Sprintf(`sudo chmod "%#o" "%s"`, permission, dstFilePath)
+		if _, err := RunCLILocal(cli); err != nil {
+			return "false", err
+		}
+		// success as root
+		return "true", nil
+	}
+
+	// Perform actions as non-root user
+
+	// move
+	if err := os.Rename(srcFilePath, dstFilePath); err != nil {
+		return "false", fmt.Errorf("failed to move file: %w", err)
+	}
+	// Set permissions
+	if err := os.Chmod(dstFilePath, permission); err != nil {
+		return "false", fmt.Errorf("failed to set source file permissions: %w", err)
+	}
+	// success as non-root
+	return "true", nil
 }
 
 // Helper function to move a file as sudo user from srcPath to dstPath
@@ -491,7 +558,7 @@ func GetFileType(absPath string) (config.UrlType, error) {
 	}
 
 	// check file exists
-	_, err := FileExists(absPath)
+	_, err := IsFileExists(absPath)
 	if err != nil {
 		return "", err
 	}
