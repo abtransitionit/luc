@@ -111,7 +111,7 @@ func PlayFnOnRemote(vm string, fnKey string, fnParameters ...string) (string, er
 	// get the instance
 	fnActionHandler, ok := FnActionMap[fnKey]
 	if !ok {
-		return "", fmt.Errorf("❌ unknown function key requested: %s", fnKey)
+		return "", fmt.Errorf("❌ Error: unknown function key requested: %s", fnKey)
 	}
 
 	// log and check parameters for that function
@@ -130,7 +130,7 @@ func PlayFnOnRemote(vm string, fnKey string, fnParameters ...string) (string, er
 	}
 
 	// define the cli
-	cli := fmt.Sprintf(`luc action %s %s`, fnKey, listParams)
+	cli := fmt.Sprintf(`luc do	 %s %s`, fnKey, listParams)
 
 	// // log
 	logx.L.Debugf("[%s] Running on remote CLI: %s", vm, cli)

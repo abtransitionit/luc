@@ -1,28 +1,27 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package action
+package do
 
 import (
 	"fmt"
 
-	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 	"github.com/spf13/cobra"
 )
 
 // Description
-var actionSDesc = "play functions locally or remotely."
-var ActionLDesc = actionSDesc + ` xxx.`
+var doSDesc = "play functions locally or remotely."
+var doLDesc = doSDesc + ` xxx.`
 
 // root Command
-var ActionCmd = &cobra.Command{
+var DoCmd = &cobra.Command{
 	Hidden: true, // available but not visible
-	Use:    "action",
-	Short:  actionSDesc,
-	Long:   ActionLDesc,
+	Use:    "do",
+	Short:  doSDesc,
+	Long:   doLDesc,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// logx.L.Infof("%s", actionSDesc)
+		// logx.L.Infof("%s", doSDesc)
 
 		// Handle --show flag
 		showFlag, _ := cmd.Flags().GetBool("show")
@@ -41,7 +40,7 @@ var ActionCmd = &cobra.Command{
 		vmName, _ := cmd.Flags().GetString("remote")
 		// get action
 		action := args[0]
-		logx.L.Debugf("action: %s", action)
+		// logx.L.Debugf("action: %s", action)
 		// get params
 		param1 := ""
 		param2 := ""
@@ -85,8 +84,8 @@ var ActionCmd = &cobra.Command{
 }
 
 func init() {
-	ActionCmd.AddCommand(getpropCmd)
-	ActionCmd.Flags().BoolP("show", "s", false, "List available property name")
-	ActionCmd.Flags().StringP("remote", "r", "", "Remote VM name")
+	DoCmd.AddCommand(getpropCmd)
+	DoCmd.Flags().BoolP("show", "s", false, "List available property name")
+	DoCmd.Flags().StringP("remote", "r", "", "Remote VM name")
 
 }

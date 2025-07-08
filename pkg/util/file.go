@@ -27,7 +27,7 @@ import (
 // # Returns
 //
 //   - (true, nil)  file exists and is accessible
-//   - (false, nil) file not exists or is not accessible due to permission, special file, ...
+//   - (false, error) file not exists, or permission issue, special file, or other system errors
 //
 // # Note
 //
@@ -40,6 +40,24 @@ func IsFileExists(path string) (string, error) {
 		return "false", fmt.Errorf("❌ Error: file inaccessible: %v", err)
 	}
 	return "true", nil
+}
+
+// # Purpose
+//
+//   - creates an empty regular file
+//
+// # Returns
+//
+//   - (true, nil)  if the file is successfully created
+//   - (false, error) for permission issues or other system errors
+func TouchFile(path string) (string, error) {
+	file, err := os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return "", fmt.Errorf("❌ Error: could not touch file %s: %w", path, err)
+	}
+	defer file.Close()
+
+	return fmt.Sprintf("✅ File touched: %s", path), nil
 }
 
 // # Purpose

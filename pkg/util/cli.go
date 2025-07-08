@@ -177,7 +177,7 @@ func RunCLIRemote(vm string, command string, liveOutput ...bool) (stdout string,
 
 		err = cmd.Run()
 		if err != nil {
-			return "", fmt.Errorf("remote command failed: %v", err)
+			return "", fmt.Errorf("❌ Error: remote command failed: %v", err)
 		}
 		return "", nil // No captured output in live mode
 	} else {
@@ -190,7 +190,7 @@ func RunCLIRemote(vm string, command string, liveOutput ...bool) (stdout string,
 		stdout = strings.TrimSpace(out.String())
 
 		if err != nil {
-			return stdout, fmt.Errorf("remote command failed: %v\noutput:\n%s", err, stdout)
+			return stdout, fmt.Errorf("❌ Error: remote command failed: %v\noutput:\n%s", err, stdout)
 		}
 		return stdout, nil
 	}

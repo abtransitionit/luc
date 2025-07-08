@@ -6,8 +6,8 @@ package cmd
 import (
 	"os"
 
-	"github.com/abtransitionit/luc/cmd/action"
 	"github.com/abtransitionit/luc/cmd/cli"
+	"github.com/abtransitionit/luc/cmd/do"
 	"github.com/abtransitionit/luc/cmd/kbe"
 	"github.com/abtransitionit/luc/cmd/kind"
 	"github.com/abtransitionit/luc/cmd/util"
@@ -43,7 +43,7 @@ func Execute() {
 
 func init() {
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.AddCommand(action.ActionCmd)
+	rootCmd.AddCommand(do.DoCmd)
 	rootCmd.AddCommand(util.UtilCmd)
 	rootCmd.AddCommand(cli.CliCmd)
 	rootCmd.AddCommand(kbe.KbeCmd)

@@ -1,0 +1,123 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package test
+
+import (
+	"fmt"
+
+	configi "github.com/abtransitionit/luc/internal/config"
+	utili "github.com/abtransitionit/luc/internal/util"
+	"github.com/abtransitionit/luc/pkg/config"
+	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
+)
+
+func MoveFileLocal() {
+	logx.L.Info("move file")
+
+}
+
+func installGoCli() {
+
+	// define vm
+	vm := "o1u"
+
+	// define 1 cli
+	cliConfig := config.CustomCLIConfig{
+		Name:      "runc",
+		Version:   "1.3.0",
+		DstFolder: "/usr/local/bin",
+	}
+
+	// get vm property
+	osFamily, err := util.GetPropertyRemote(vm, "osfamily")
+	if err != nil {
+		logx.L.Debugf("%s", err)
+	}
+
+	// log
+	logx.L.Infof("instal go cli on %s:%s", vm, osFamily)
+	fmt.Println(cliConfig)
+
+	// install cli(s) on VM
+	// gocli.RInstallC(vm, &cliConfig)
+
+}
+
+func ListOvhVm() {
+	logx.L.Info("List OVH Vm")
+	logx.L.Info("🔹 List : %s", utili.ListOvhVm())
+}
+
+func ListMapKey() {
+	logx.L.Info("List map:keys")
+	// list := []string{"a", "b", "c"}
+	listKey := util.GetMapKeys(configi.KindGoCliConfigMap)
+	logx.L.Infof("🔹 as slice:      %s", listKey)
+	logx.L.Infof("🔹 as StringList: %s", util.GetStringfromSliceWithSpace(listKey))
+}
+
+func getPath() {
+	logx.L.Info("get path")
+	path, err := util.GetSubdirRemote("/usr/local/bin", "o1u")
+	if err != nil {
+		logx.L.Debugf("%s", err)
+	}
+	logx.L.Infof("path: %s", path)
+}
+
+// test the method locally
+func addLineToFile() {
+	customRcFilePath := "$HOME/.profile.luc"
+	RcFilePath := "$HOME/.bashrc"
+	line := "source " + customRcFilePath
+
+	if _, err := util.AddLineToFile(RcFilePath, line); err != nil {
+		logx.L.Debugf("Error:", err)
+	}
+
+	logx.L.Infof("Line added or already present.")
+
+}
+
+// test local the call via luc util
+func addLineToFileLocal() {
+	customRcFilePath := "$HOME/.profile.luc"
+	RcFilePath := "$HOME/.bashrc"
+	line := "source " + customRcFilePath
+
+	cli := fmt.Sprintf(`luc util linefile %q %s --force`, line, RcFilePath)
+
+	if _, err := util.RunCLILocal(cli); err != nil {
+		logx.L.Debugf("Error: %s", err)
+	}
+
+	logx.L.Infof("Line added or already present.")
+
+}
+
+func addLineToFileRemote() {
+	customRcFilePath := "'$HOME/.profile.luc'"
+	RcFilePath := "'$HOME/.bashrc'"
+	line := fmt.Sprintf("source %s", customRcFilePath)
+
+	cli := fmt.Sprintf(`luc util linefile %q %s --force --remote o1u`, line, RcFilePath)
+
+	// logx.L.Debugf("Running CLI: %s", cli) // For debug
+
+	if _, err := util.RunCLILocal(cli); err != nil {
+		logx.L.Debugf("Error: %s", err)
+	}
+
+	logx.L.Infof("Line added or already present.")
+
+}
+
+// // check file exists
+// cli = fmt.Sprintf(`test -f %s && echo true || echo false`, srcFilePath)
+// result, err := util.RunCLIRemote(vm, cli)
+// if err != nil {
+// 	logx.L.Debugf("Failed to check remote file exists: %s", err)
+// 	return false
+// }
