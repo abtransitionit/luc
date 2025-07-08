@@ -1,6 +1,8 @@
 
 # Luc  
-**L**inux **U**nified **C**ontrol is a universal Linux Operations CLI (**C**ommand **L**ine **I**nterface). A lightweight `Go`-powered toolkit for Linux platform management. 
+**L**inux **U**nified **C**ontrol is a CLI (**C**ommand **L**ine **I**nterface):
+- written in `Go`
+- to manage `Linux` platform, VM, OS
 
 As a practical implementation, [KBE](https://github.com/abtransitionit/kbe) is a tool built on top of LUC, leveraging parts of its codebase published as a public `go` module.
 

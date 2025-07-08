@@ -89,7 +89,7 @@ func checkFileRemoteExists(vm string, fullPath string) bool {
 
 	// error
 	if err != nil {
-		logx.L.Debugf("Failed to check remote file exists: %s", err)
+		logx.L.Debugf("❌ Error: %s", err)
 		return false
 	}
 
