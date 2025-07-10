@@ -44,6 +44,23 @@ func IsFileExists(path string) (string, error) {
 
 // # Purpose
 //
+//   - deletes a file
+//
+// # Returns
+//
+//   - (true, nil)  if the file is successfully deleted
+//   - (false, error) for permission issues or other system errors
+func DeleteFile(path string) (string, error) {
+	err := os.Remove(path)
+	if err != nil {
+		return "", fmt.Errorf("❌ Error: could not delete file %s: %w", path, err)
+	}
+
+	return fmt.Sprintf("✅ deleted file: %s", path), nil
+}
+
+// # Purpose
+//
 //   - creates an empty regular file
 //
 // # Returns
@@ -57,7 +74,7 @@ func TouchFile(path string) (string, error) {
 	}
 	defer file.Close()
 
-	return fmt.Sprintf("✅ File touched: %s", path), nil
+	return fmt.Sprintf("✅ touched file: %s", path), nil
 }
 
 // # Purpose

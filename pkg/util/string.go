@@ -35,7 +35,7 @@ func AddLineToFile(filePath string, line string) (string, error) {
 
 	// If grep finds the line, do nothing
 	if err == nil {
-		return "", nil
+		return fmt.Sprintf("✅ done nothing, line already exists in file: %s", filePath), nil
 	}
 	// If the file doesn't exist or line not found, continue (grep returns non-zero exit code)
 	// If it's a different kind of error, return it
@@ -53,7 +53,7 @@ func AddLineToFile(filePath string, line string) (string, error) {
 	}
 
 	// success
-	return "", nil
+	return fmt.Sprintf("✅ added line to file : %s", filePath), nil
 }
 
 // # Purpose

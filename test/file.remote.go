@@ -13,8 +13,10 @@ import (
 )
 
 func checkFileRemoteExists(vm string, fullPath string) bool {
+	// Convert string to slice
+	fnParameters := []string{fullPath}
 	// check file exists
-	result, err := util.PlayFnOnRemote(vm, "IsFileExists", fullPath)
+	result, err := util.PlayFnOnRemote(vm, "IsFileExists", fnParameters)
 
 	// error
 	if err != nil {

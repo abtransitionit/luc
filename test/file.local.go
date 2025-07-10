@@ -11,8 +11,10 @@ import (
 )
 
 func checkFileLocalExits(fullPath string) bool {
+	// Convert string to slice
+	fnParameters := []string{fullPath}
 	// check file exists
-	result, err := util.PlayFnLocally("IsFileExists", fullPath)
+	result, err := util.PlayFnLocally("IsFileExists", fnParameters)
 
 	// error
 	if err != nil {

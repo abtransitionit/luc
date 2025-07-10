@@ -36,44 +36,25 @@ var DoCmd = &cobra.Command{
 			return nil
 		}
 
-		// get vm
+		// define var
 		vmName, _ := cmd.Flags().GetString("remote")
-		// get action
 		action := args[0]
-		// logx.L.Debugf("action: %s", action)
-		// get params
-		param1 := ""
-		param2 := ""
-		param3 := ""
-		// Assign only if present
-		if len(args) > 1 {
-			param1 = args[1]
-			// logx.L.Debugf("param1: %s", param1)
-		}
-		if len(args) > 2 {
-			param2 = args[2]
-			// logx.L.Debugf("param2: %s", param2)
-		}
-		if len(args) > 3 {
-			param3 = args[3]
-			// logx.L.Debugf("param3: %s", param3)
-		}
-		//
+		parameters := args[1:] // Pass all elements except the first one
+
+		// Play cli
 		var result string
 		var err error
 
 		if vmName != "" {
 			// Remote execution
-			result, err = util.PlayFnOnRemote(vmName, action, param1, param2, param3)
+			result, err = util.PlayFnOnRemote(vmName, action, parameters)
 		} else {
 			// Local execution
-			result, err = util.PlayFnLocally(action, param1, param2, param3)
+			result, err = util.PlayFnLocally(action, parameters)
 		}
 
 		// error
 		if err != nil {
-			// logx.L.Debugf("[%s] %v", action, err)
-			// logx.L.Debugf("[%s] ❌ error detected", action)
 			return err
 		}
 

@@ -16,9 +16,14 @@ import (
 )
 
 // type FnActionHandler func(...string) (string, error)
+//
+//	type FnActionHandler struct {
+//		Fn       func(...string) (string, error) // a function with that signature
+//		NbParams int                             // the number of parameters required by that function
+//	}
 type FnActionHandler struct {
-	Fn       func(...string) (string, error) // a function with that signature
-	NbParams int                             // the number of parameters required by that function
+	Fn       func([]string) (string, error) // a function with that signature
+	NbParams int                            // the number of parameters required by that function
 }
 
 var FnActionMap = map[string]FnActionHandler{
@@ -26,13 +31,26 @@ var FnActionMap = map[string]FnActionHandler{
 	"IsFileExists":     {Fn: IsFileExistsFn, NbParams: 1},
 	"MoveFile":         {Fn: MoveFileFn, NbParams: 4},
 	"SaveStringToFile": {Fn: SaveStringToFileFn, NbParams: 3},
+	"TouchFile":        {Fn: TouchFileFn, NbParams: 1},
+	"DeleteFile":       {Fn: DeleteFileFn, NbParams: 1},
 }
 
-func IsFileExistsFn(fnParameters ...string) (string, error) {
-	// check arg
-	if _, err := logAndCheckParams(1, fnParameters...); err != nil {
-		return "", err
-	}
+func TouchFileFn(fnParameters []string) (string, error) {
+
+	// get input
+	srcFilePath := fnParameters[0]
+
+	return TouchFile(srcFilePath)
+}
+func DeleteFileFn(fnParameters []string) (string, error) {
+
+	// get input
+	srcFilePath := fnParameters[0]
+
+	return DeleteFile(srcFilePath)
+}
+
+func IsFileExistsFn(fnParameters []string) (string, error) {
 
 	// get input
 	srcFilePath := fnParameters[0]
@@ -40,11 +58,7 @@ func IsFileExistsFn(fnParameters ...string) (string, error) {
 	return IsFileExists(srcFilePath)
 }
 
-func MoveFileFn(fnParameters ...string) (string, error) {
-	// check arg
-	if _, err := logAndCheckParams(4, fnParameters...); err != nil {
-		return "", err
-	}
+func MoveFileFn(fnParameters []string) (string, error) {
 
 	// get input
 	srcFilePath := fnParameters[0]
@@ -63,11 +77,7 @@ func MoveFileFn(fnParameters ...string) (string, error) {
 
 }
 
-func SaveStringToFileFn(fnParameters ...string) (string, error) {
-	// check arg
-	if _, err := logAndCheckParams(3, fnParameters...); err != nil {
-		return "", err
-	}
+func SaveStringToFileFn(fnParameters []string) (string, error) {
 
 	// get input
 	data := fnParameters[0]
@@ -77,11 +87,7 @@ func SaveStringToFileFn(fnParameters ...string) (string, error) {
 	return SaveStringToFile(data, path, isRootPath)
 }
 
-func AddLineToFileFn(fnParameters ...string) (string, error) {
-	// check arg
-	if _, err := logAndCheckParams(2, fnParameters...); err != nil {
-		return "", err
-	}
+func AddLineToFileFn(fnParameters []string) (string, error) {
 
 	// get input
 	filepath := fnParameters[0]
@@ -90,7 +96,7 @@ func AddLineToFileFn(fnParameters ...string) (string, error) {
 	return AddLineToFile(filepath, line)
 }
 
-func PlayFnLocally(fnKey string, fnParameters ...string) (string, error) {
+func PlayFnLocally(fnKey string, fnParameters []string) (string, error) {
 
 	// get the instance
 	fnActionHandler, ok := FnActionMap[fnKey]
@@ -99,14 +105,15 @@ func PlayFnLocally(fnKey string, fnParameters ...string) (string, error) {
 	}
 
 	// log and check parameters for that function
-	if _, err := logAndCheckParams(fnActionHandler.NbParams, fnParameters...); err != nil {
+	if _, err := logAndCheckParams(fnActionHandler.NbParams, fnParameters); err != nil {
 		return "", err
 	}
 
 	// execute the function locally
-	return fnActionHandler.Fn(fnParameters...)
+	return fnActionHandler.Fn(fnParameters)
 }
-func PlayFnOnRemote(vm string, fnKey string, fnParameters ...string) (string, error) {
+
+func PlayFnOnRemote(vm string, fnKey string, fnParameters []string) (string, error) {
 
 	// get the instance
 	fnActionHandler, ok := FnActionMap[fnKey]
@@ -115,14 +122,14 @@ func PlayFnOnRemote(vm string, fnKey string, fnParameters ...string) (string, er
 	}
 
 	// log and check parameters for that function
-	if _, err := logAndCheckParams(fnActionHandler.NbParams, fnParameters...); err != nil {
+	if _, err := logAndCheckParams(fnActionHandler.NbParams, fnParameters); err != nil {
 		return "", err
 	}
 
 	// create sequence of quoted paramaters
 	listParams := ""
 	for _, param := range fnParameters {
-		// skip empty parameters - due to the way parameters are passed via "luc action ...""
+		// skip empty parameters
 		if strings.TrimSpace(param) == "" {
 			continue
 		}
@@ -139,7 +146,7 @@ func PlayFnOnRemote(vm string, fnKey string, fnParameters ...string) (string, er
 	return RunCLIRemote(vm, cli)
 }
 
-func logAndCheckParams(nbRequired int, fnParameters ...string) (int, error) {
+func logAndCheckParams(nbRequired int, fnParameters []string) (int, error) {
 	nbParams := 0
 	for _, p := range fnParameters {
 		// skip empty parameters
@@ -149,18 +156,36 @@ func logAndCheckParams(nbRequired int, fnParameters ...string) (int, error) {
 		}
 	}
 	if nbParams < nbRequired {
-		return nbParams, fmt.Errorf("❌ Error: %d parameters are required", nbRequired)
+		return nbParams, fmt.Errorf("❌ Error: %d parameter(s) required", nbRequired)
 	}
 	return nbParams, nil
 }
+
+// func logAndCheckParams(nbRequired int, fnParameters []string) (int, error) {
+// 	nbParams := 0
+// 	for _, p := range fnParameters {
+// 		// skip empty parameters
+// 		if strings.TrimSpace(p) != "" {
+// 			// logx.L.Debugf("param: %s", p)
+// 			nbParams++
+// 		}
+// 	}
+// 	if nbParams < nbRequired {
+// 		return nbParams, fmt.Errorf("❌ Error: %d parameters are required", nbRequired)
+// 	}
+// 	return nbParams, nil
+// }
 
 // ShowFnActionMap displays the list of available remote functions.
 func ShowFnActionMap() {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 
+	// Set solid border style
+	t.SetStyle(table.StyleBold) // Solid lines (no dashed borders)
+
 	// Header
-	t.AppendHeader(table.Row{"Available Functions"})
+	t.AppendHeader(table.Row{"Available Functions", "Nb of Parameters"})
 
 	// Collect and sort keys
 	var functionKeys []string
@@ -171,7 +196,8 @@ func ShowFnActionMap() {
 
 	// Add each action as a row
 	for _, name := range functionKeys {
-		t.AppendRow(table.Row{name})
+		handler := FnActionMap[name]
+		t.AppendRow(table.Row{name, handler.NbParams})
 	}
 
 	t.Render()
