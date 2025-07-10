@@ -32,7 +32,7 @@ import (
 // # Note
 //
 //   - TODO: should check os.IsNotExist(err)
-func IsFileExists(path string) (string, error) {
+func CheckFileExists(path string) (string, error) {
 	if _, err := os.Stat(path); err != nil {
 		if os.IsNotExist(err) {
 			return "false", fmt.Errorf("❌ Error: file does not exist: %s", path)
@@ -593,7 +593,7 @@ func GetFileType(absPath string) (config.UrlType, error) {
 	}
 
 	// check file exists
-	_, err := IsFileExists(absPath)
+	_, err := CheckFileExists(absPath)
 	if err != nil {
 		return "", err
 	}

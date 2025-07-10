@@ -12,7 +12,7 @@ import (
 
 // # purpose
 //
-// - add a line to a file if it not exists
+// - add a line, at the end of an existing file ONLY if it not ALREADY exists
 func AddLineToFile(filePath string, line string) (string, error) {
 
 	// Check arg

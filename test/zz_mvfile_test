@@ -14,14 +14,21 @@ import (
 )
 
 func TestMvFile(t *testing.T) {
-	// create temporary folder
-	tmpDir := t.TempDir() // creates a temp directory that will be cleaned up automatically
-	// create temporary file inside that folder
-	tmpFile, err := os.CreateTemp(tmpDir, "mytempfile-*.txt") // creates a temp file inside that dir
+	// create temporary folder that will be cleaned up after the test folder
+	tmpDir01 := t.TempDir()
+	// tmpDir02 := t.TempDir()
+	// create temporary files that will be cleaned up after the test folder
+	tmpFile01, err := os.CreateTemp(tmpDir01, "mytempfile-*.txt") // creates a temp file inside that dir
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer tmpFile.Close()
+	defer tmpFile01.Close()
+	tmpFile02, err := os.CreateTemp(tmpDir01, "mytempfile-*.txt") // creates a temp file inside that dir
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tmpFile02.Close()
+
 	// log
 	t.Logf("tmpDir: %s", tmpDir)
 	t.Logf("tmpDir: %s", tmpFile.Name())

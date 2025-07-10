@@ -28,7 +28,7 @@ type FnActionHandler struct {
 
 var FnActionMap = map[string]FnActionHandler{
 	"AddLineToFile":    {Fn: AddLineToFileFn, NbParams: 2},
-	"IsFileExists":     {Fn: IsFileExistsFn, NbParams: 1},
+	"CheckFileExists":  {Fn: CheckFileExistsFn, NbParams: 1},
 	"MoveFile":         {Fn: MoveFileFn, NbParams: 4},
 	"SaveStringToFile": {Fn: SaveStringToFileFn, NbParams: 3},
 	"TouchFile":        {Fn: TouchFileFn, NbParams: 1},
@@ -51,12 +51,12 @@ func DeleteFileFn(fnParameters []string) (string, error) {
 	return DeleteFile(srcFilePath)
 }
 
-func IsFileExistsFn(fnParameters []string) (string, error) {
+func CheckFileExistsFn(fnParameters []string) (string, error) {
 
 	// get input
 	srcFilePath := fnParameters[0]
 
-	return IsFileExists(srcFilePath)
+	return CheckFileExists(srcFilePath)
 }
 
 func MoveFileFn(fnParameters []string) (string, error) {
