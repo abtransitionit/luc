@@ -42,6 +42,7 @@ func TouchFileFn(fnParameters []string) (string, error) {
 
 	return TouchFile(srcFilePath)
 }
+
 func DeleteFileFn(fnParameters []string) (string, error) {
 
 	// get input

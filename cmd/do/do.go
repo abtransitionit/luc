@@ -65,6 +65,8 @@ var DoCmd = &cobra.Command{
 }
 
 func init() {
+	DoCmd.SilenceUsage = true // do not show usage on error
+	// DoCmd.SilenceErrors = true
 	DoCmd.AddCommand(getpropCmd)
 	DoCmd.Flags().BoolP("show", "s", false, "List available property name")
 	DoCmd.Flags().StringP("remote", "r", "", "Remote VM name")

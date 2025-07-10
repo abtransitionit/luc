@@ -64,42 +64,6 @@ func CliRemoteExists(name, vm string) (bool, error) {
 	return strings.TrimSpace(output) != "", nil
 }
 
-// # Purpose
-//
-// runs a local linux shell CLI and returns its stdout, stderr, and any error.
-//
-// # Parameters
-//   - command: A shell command string (e.g., "ls -l /").
-//
-// # Returns
-//   - stdout: The trimmed standard output of the command.
-//   - err:    An error if the command failed to run or returned a non-zero exit code.
-//
-// # Usage
-//
-//	output, err := RunCLILocal("hostname")
-//	if err != nil {
-//	    fmt.Printf("Error: %v\n", err)
-//	} else {
-//	    fmt.Println("Hostname:", output)
-//	}
-// func RunCLILocal(command string) (stdout string, err error) {
-// 	cmd := exec.Command("bash", "-c", command)
-
-// 	var out bytes.Buffer
-// 	cmd.Stdout = &out
-// 	cmd.Stderr = &out
-
-// 	err = cmd.Run()
-// 	stdout = strings.TrimSpace(out.String())
-
-// 	if err != nil {
-// 		return stdout, fmt.Errorf("command failed: %v\noutput:\n%s", err, stdout)
-// 	}
-
-// 	return stdout, nil
-// }
-
 func RunCLILocal(command string, liveOutput ...bool) (stdout string, err error) {
 	// Set default value (false if not provided)
 	live := false
@@ -134,28 +98,6 @@ func RunCLILocal(command string, liveOutput ...bool) (stdout string, err error) 
 		return stdout, nil
 	}
 }
-
-// RunCLIRemote runs a shell command on a remote machine via SSH.
-// func RunCLIRemote(command string, vm string) (stdout string, err error) {
-// 	// Format SSH command: ssh user@host "command"
-// 	fullCmd := fmt.Sprintf(`ssh %s "%s"`, vm, command)
-
-// 	// cmd := exec.Command("bash", "-c", fullCmd)
-// 	cmd := exec.Command("sh", "-c", fullCmd)
-
-// 	var out bytes.Buffer
-// 	cmd.Stdout = &out
-// 	cmd.Stderr = &out
-
-// 	err = cmd.Run()
-// 	stdout = strings.TrimSpace(out.String())
-
-// 	if err != nil {
-// 		return stdout, fmt.Errorf("remote command failed: %v\noutput:\n%s", err, stdout)
-// 	}
-
-// 	return stdout, nil
-// }
 
 func RunCLIRemote(vm string, command string, liveOutput ...bool) (stdout string, err error) {
 	// Set default value for liveOutput
