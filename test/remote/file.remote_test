@@ -1,0 +1,155 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+
+package remote
+
+import (
+	"fmt"
+	"path/filepath"
+	"testing"
+
+	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestTouchFile_Nominal(t *testing.T) {
+	// Define var
+	vm := "o1u"
+	vm = "o2a"
+	remoteFilePath := "/tmp/testfile_remote.txt"
+
+	// run the function under test
+	cli := fmt.Sprintf("luc do TouchFile %s --remote %s", remoteFilePath, vm)
+	// t.Logf("⚠️ cli: %s", cli)
+	msg, err := util.RunCLILocal(cli)
+
+	// Assertions
+	assert.NoError(t, err)                                  // No error should occur while touching the file remotely
+	assert.Equal(t, "✅ touched file: "+remoteFilePath, msg) // check expected return vs actual return
+
+	// check file exists on the remote
+	cli = fmt.Sprintf("test -f %s && echo true || echo false", remoteFilePath)
+	existsMsg, err := util.RunCLIRemote(vm, cli)
+
+	assert.NoError(t, err)             // No error should occur during file existence check
+	assert.Equal(t, "true", existsMsg) // check expected return vs actual return (The remote file should exist)
+}
+
+const vm = "o1u" // example remote VM alias; adjust as needed
+
+func runRemoteCommand(t *testing.T, cmd string) (string, error) {
+	out, err := util.RunCLIRemote(vm, cmd)
+	if err != nil {
+		t.Logf("Remote command error: %v", err)
+	}
+	return out, err
+}
+
+func TestMvFile_Nominal(t *testing.T) {
+	tmpDir := "/tmp/testmvfile"
+	srcFile := filepath.Join(tmpDir, "source.txt")
+	dstFile := filepath.Join(tmpDir, "destination.txt")
+
+	// Clean before test
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
+
+	// Create source file remotely
+	content := "test content"
+	_, err := runRemoteCommand(t, fmt.Sprintf("echo '%s' > %s", content, srcFile))
+	assert.NoError(t, err, "should create remote source file")
+
+	// Run MvFile function remotely
+	msg, err := util.MvFile(srcFile, dstFile, 0644, false)
+	assert.NoError(t, err)
+	assert.Equal(t, "true", msg)
+
+	// Check destination exists
+	_, err = runRemoteCommand(t, fmt.Sprintf("test -f %s", dstFile))
+	assert.NoError(t, err, "destination file should exist")
+
+	// Check source no longer exists
+	_, err = runRemoteCommand(t, fmt.Sprintf("test ! -f %s", srcFile))
+	assert.NoError(t, err, "source file should be removed")
+
+	// Clean after test
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+}
+
+func TestMvFile_SourceFileMissing(t *testing.T) {
+	tmpDir := "/tmp/testmvfile"
+	srcFile := filepath.Join(tmpDir, "nonexistent.txt")
+	dstFile := filepath.Join(tmpDir, "destination.txt")
+
+	// Ensure clean environment
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
+
+	msg, err := util.MvFile(srcFile, dstFile, 0644, false)
+	assert.Error(t, err)
+	assert.Equal(t, "false", msg)
+
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+}
+
+func TestMvFile_SourcePathNotAbsolute(t *testing.T) {
+	tmpDir := "/tmp/testmvfile"
+	srcFile := "relative_source.txt" // relative path intentionally
+	dstFile := filepath.Join(tmpDir, "destination.txt")
+
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
+
+	msg, err := util.MvFile(srcFile, dstFile, 0644, false)
+	assert.Error(t, err)
+	assert.Equal(t, "false", msg)
+
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+}
+
+func TestMvFile_DestinationPathNotAbsolute(t *testing.T) {
+	tmpDir := "/tmp/testmvfile"
+	srcFile := filepath.Join(tmpDir, "source.txt")
+	dstFile := "relative_destination.txt" // relative dest path
+
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
+
+	_, err := runRemoteCommand(t, fmt.Sprintf("echo 'test content' > %s", srcFile))
+	assert.NoError(t, err, "create remote source file")
+
+	msg, err := util.MvFile(srcFile, dstFile, 0644, false)
+	assert.Error(t, err)
+	assert.Equal(t, "false", msg)
+
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+}
+
+func TestMvFile_DestinationDirMissing(t *testing.T) {
+	tmpDir := "/tmp/testmvfile"
+	srcFile := filepath.Join(tmpDir, "source.txt")
+	dstFile := filepath.Join(tmpDir, "nonexistent_dir", "destination.txt")
+
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
+
+	_, err := runRemoteCommand(t, fmt.Sprintf("echo 'test content' > %s", srcFile))
+	assert.NoError(t, err, "create remote source file")
+
+	msg, err := util.MvFile(srcFile, dstFile, 0644, false)
+	assert.Error(t, err)
+	assert.Equal(t, "false", msg)
+
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+}
+
+func TestMvFile_SourceNotARegularFile(t *testing.T) {
+	tmpDir := "/tmp/testmvfile"
+	srcDir := filepath.Join(tmpDir, "sourcedir")
+	dstFile := filepath.Join(tmpDir, "destination.txt")
+
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
+	runRemoteCommand(t, fmt.Sprintf("mkdir -p %s", srcDir))
+
+	msg, err := util.MvFile(srcDir, dstFile, 0644, false)
+	assert.Error(t, err)
+	assert.Equal(t, "false", msg)
+
+	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+}

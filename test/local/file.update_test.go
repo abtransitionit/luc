@@ -2,7 +2,7 @@
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
 
-package test
+package local
 
 import (
 	"os"
@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLocalAddLineToFile_Nominal(t *testing.T) {
+func TestAddLineToFile_Nominal(t *testing.T) {
 	// create inputs for the test
 	tmpDir := t.TempDir()
 	testFilePath := filepath.Join(tmpDir, "testfile.txt")
@@ -36,7 +36,7 @@ func TestLocalAddLineToFile_Nominal(t *testing.T) {
 	assert.Contains(t, string(content), "new line")                         // File content should contain the new line
 }
 
-func TestLocalAddLineToFile_LineAlreadyExists(t *testing.T) {
+func TestAddLineToFile_LineAlreadyExists(t *testing.T) {
 	// create inputs for the test
 	tmpDir := t.TempDir()
 	testFilePath := filepath.Join(tmpDir, "testfile.txt")
@@ -54,7 +54,7 @@ func TestLocalAddLineToFile_LineAlreadyExists(t *testing.T) {
 	assert.Equal(t, "✅ done nothing, line already exists in file: "+testFilePath, msg) // compare expected return vs actual return
 }
 
-func TestLocalAddLineToFile_FileNotExist(t *testing.T) {
+func TestAddLineToFile_FileNotExist(t *testing.T) {
 	// use a non-existing file path
 	nonExistentFile := "/nonexistent/path.txt"
 
@@ -66,7 +66,7 @@ func TestLocalAddLineToFile_FileNotExist(t *testing.T) {
 	assert.Empty(t, msg) // compare expected return vs actual return (The returned message should be empty)
 }
 
-func TestLocalAddLineToFile_EmptyFilePath(t *testing.T) {
+func TestAddLineToFile_EmptyFilePath(t *testing.T) {
 	// run the function under test with empty path
 	msg, err := util.AddLineToFile("", "some line")
 
@@ -75,7 +75,7 @@ func TestLocalAddLineToFile_EmptyFilePath(t *testing.T) {
 	assert.Empty(t, msg) // compare expected return vs actual return (The returned message should be empty)
 }
 
-func TestLocalAddLineToFile_EmptyLine(t *testing.T) {
+func TestAddLineToFile_EmptyLine(t *testing.T) {
 	// create inputs for the test
 	tmpDir := t.TempDir()
 	testFilePath := filepath.Join(tmpDir, "testfile.txt")

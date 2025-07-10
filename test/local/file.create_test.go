@@ -2,7 +2,7 @@
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
 
-package test
+package local
 
 import (
 	"os"
@@ -64,7 +64,7 @@ func TestDeleteFile_Nominal(t *testing.T) {
 }
 
 func TestDeleteFile_Error(t *testing.T) {
-	// use an intentionally invalid path (to simulate folder not exist or permission issues)
+	// create inputs for the test (intentionally invalid path (to simulate folder not exist or permission issues))
 	invalidPath := "/invalid_dir/nonexistentfile.txt"
 
 	// run the function under test

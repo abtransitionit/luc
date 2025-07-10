@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/jedib0t/go-pretty/table"
 )
 
@@ -141,7 +140,7 @@ func PlayFnOnRemote(vm string, fnKey string, fnParameters []string) (string, err
 	cli := fmt.Sprintf(`luc do	 %s %s`, fnKey, listParams)
 
 	// // log
-	logx.L.Debugf("[%s] Running on remote CLI: %s", vm, cli)
+	// logx.L.Debugf("[%s] Running on remote CLI: %s", vm, cli)
 
 	// execute the function remotely
 	return RunCLIRemote(vm, cli)
