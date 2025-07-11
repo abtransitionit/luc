@@ -19,7 +19,7 @@ const vm = "o1u" // example remote VM alias; adjust as needed
 func runRemoteCommand(t *testing.T, cmd string) (string, error) {
 	out, err := util.RunCLIRemote(vm, cmd)
 	if err != nil {
-		t.Logf("Remote command error: %v", err)
+		t.Logf("yoyo %s", err)
 	}
 	return out, err
 }
