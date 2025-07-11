@@ -8,26 +8,28 @@ TestFolderPath="$(dirname $(go env GOMOD))/test" # Test folder for this GO proje
 
 
 # get normalized input
-UserInput=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+Input01=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 
-# Determine mode
-case "$UserInput" in
+# choose folder based on input
+case "$Input01" in
     rem|remote|r) 
-        mode="remote" ;;
+        SubTestFolder="remote" ;;
     l|local|locale|loc) 
-        mode="local" ;;
+        SubTestFolder="local" ;;
     *) 
         echo "❌ Error: Invalid input '$1'. Use remote/rem/r or local/l/loc/locale" >&2
         exit 1 ;;
 esac
 
-# define var from input
-SubTestFolder="$mode"
+# choose tests based on input
+[ -n "$2" ] && TestToPlay="-run Test${2}" || TestToPlay=""
+
 
 # go to test folder
 cd $TestFolderPath
 
 # Run all [function]test in folder 
-echo "playing test for [function]test in folder $SubTestFolder"
-go test -v ./${SubTestFolder}
+# echo "playing test for [function]test in folder $SubTestFolder"
+echo "✅ playing cli > go test -v ./${SubTestFolder} ${TestToPlay} "
+go test -v ./${SubTestFolder} ${TestToPlay}
 # go test -v -run TestRemote

@@ -24,123 +24,192 @@ func runRemoteCommand(t *testing.T, cmd string) (string, error) {
 	return out, err
 }
 
+// Run MvFile function remotely
+// cli = fmt.Sprintf("mv %s %s", srcFile, dstFile)
+// _, err = runRemoteCommand(t, cli)
+// assert.NoError(t, err, "error while moving file remotely")
+
+// _, err = runRemoteCommand(t, cli)
+// assert.NoError(t, err, "creating remote source file") // No error should occur while while doing action remotely
+
 func TestMvFile_Nominal(t *testing.T) {
 	// Define test inputs
-	tmpDir := "/tmp/testmvfile" // remote folder name
+	tmpDir := "/tmp/testmvfile" // remote folder name auto
+	srcContent := "test content"
 	srcFile := filepath.Join(tmpDir, "source.txt")
 	dstFile := filepath.Join(tmpDir, "destination.txt")
 	dstFilePermission := "0644"
 	FileIsRoot := "false"
 
-	// remove previous test artifacts - TODO use Temporary folders
-	cli := fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir)
-	runRemoteCommand(t, cli)
+	// Create test folder
+	cli := fmt.Sprintf("mkdir -p %s", tmpDir)
+	_, err := util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating test folder on remote") // No error should occur while while doing action remotely
 
 	// Create source file on remote
-	content := "test content"
-	cli = fmt.Sprintf("echo '%s' > %s", content, srcFile)
-	_, err := runRemoteCommand(t, cli)
-	assert.NoError(t, err, "creating remote source file") // No error should occur while creating the file remotely
+	cli = fmt.Sprintf("echo '%s' > %s", srcContent, srcFile)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating test src file on remote") // No error should occur while doing action remotely
 
 	// run the code under test
-	// MvFile(srcFilePath, dstFilePath, 0644, false)
 	cli = fmt.Sprintf("luc do MoveFile %s %s %s %s", srcFile, dstFile, dstFilePermission, FileIsRoot)
-	_, err = util.RunCLILocal(cli)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "moving file from remote src to remote dst") // No error should occur while doing action
 
-	// Run MvFile function remotely
-	// cli = fmt.Sprintf("mv %s %s", srcFile, dstFile)
-	// _, err = runRemoteCommand(t, cli)
-	assert.NoError(t, err, "error while moving file remotely")
+	// Check dst file exists
+	cli = fmt.Sprintf("test -f %s", dstFile)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "checking dst file exists on remote")
 
-	// Check destination exists
-	_, err = runRemoteCommand(t, fmt.Sprintf("test -f %s", dstFile))
-	assert.NoError(t, err, "checking remote file existence")
-
-	// Check source no longer exists
-	_, err = runRemoteCommand(t, fmt.Sprintf("test ! -f %s", srcFile))
-	assert.NoError(t, err, "checking file is removed")
-
-	// Clean after test
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+	// Check src file not exists
+	cli = fmt.Sprintf("test ! -f %s", srcFile)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "checking src file no more exists on remote") // No error should occur while doing action
 }
+
+// // Clean after test
+// cli = fmt.Sprintf("rm -rf %s", tmpDir)
+// _, err = util.RunCLILocal(cli)
+// assert.NoError(t, err, "checking test folder is deleted") // No error should occur while doing action
 
 func TestMvFile_SourceFileMissing(t *testing.T) {
 	// Define test inputs
-	tmpDir := "/tmp/testmvfile"                         // a name
-	srcFile := filepath.Join(tmpDir, "nonexistent.txt") // a path name
-	dstFile := filepath.Join(tmpDir, "destination.txt") // a path name
+	tmpDir := "/tmp/testmvfile"                         // remote folder name
+	srcFile := filepath.Join(tmpDir, "nonexistent.txt") // source path
+	dstFile := filepath.Join(tmpDir, "destination.txt") // destination path
+	dstFilePermission := "0644"
+	FileIsRoot := "false"
 
-	// clean remote before test
-	cli := fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir)
-	runRemoteCommand(t, cli)
+	// Create test directory
+	cli := fmt.Sprintf("mkdir -p %s", tmpDir)
+	_, err := util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating test directory on remote") // No error should occur while doing action
 
 	// run the code under test
-	msg, err := util.MvFile(srcFile, dstFile, 0644, false)
+	cli = fmt.Sprintf("luc do MoveFile %s %s %s %s", srcFile, dstFile, dstFilePermission, FileIsRoot)
+	out, err := util.RunCLIRemote(vm, cli)
 	assert.Error(t, err)
-	assert.Equal(t, "false", msg)
+	assert.Equal(t, "false", out)
 
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+	// clean up
+	cli = fmt.Sprintf("rm -rf %s", tmpDir)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "cleaning up test directory on remote") // No error should occur while doing action
 }
 
 func TestMvFile_SourcePathNotAbsolute(t *testing.T) {
-	tmpDir := "/tmp/testmvfile"
-	srcFile := "relative_source.txt" // relative path intentionally
-	dstFile := filepath.Join(tmpDir, "destination.txt")
+	// Define test inputs
+	tmpDir := "/tmp/testmvfile"                         // remote folder name
+	srcFile := "relative_source.txt"                    // relative path intentionally
+	dstFile := filepath.Join(tmpDir, "destination.txt") // destination path
+	dstFilePermission := "0644"
+	FileIsRoot := "false"
 
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
+	// Create test directory
+	cli := fmt.Sprintf("mkdir -p %s", tmpDir)
+	_, err := util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating test directory on remote") // No error should occur while doing action
 
-	msg, err := util.MvFile(srcFile, dstFile, 0644, false)
+	// run the code under test
+	cli = fmt.Sprintf("luc do MoveFile %s %s %s %s", srcFile, dstFile, dstFilePermission, FileIsRoot)
+	out, err := util.RunCLIRemote(vm, cli)
 	assert.Error(t, err)
-	assert.Equal(t, "false", msg)
+	assert.Equal(t, "false", out)
 
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+	// clean up
+	cli = fmt.Sprintf("rm -rf %s", tmpDir)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "cleaning up test directory on remote") // No error should occur while doing action
 }
 
 func TestMvFile_DestinationPathNotAbsolute(t *testing.T) {
-	tmpDir := "/tmp/testmvfile"
-	srcFile := filepath.Join(tmpDir, "source.txt")
-	dstFile := "relative_destination.txt" // relative dest path
+	// Define test inputs
+	tmpDir := "/tmp/testmvfile"                    // remote folder name
+	srcFile := filepath.Join(tmpDir, "source.txt") // source path
+	dstFile := "relative_destination.txt"          // relative destination path intentionally
+	dstFilePermission := "0644"
+	FileIsRoot := "false"
+	srcContent := "test content"
 
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
+	// Create test directory
+	cli := fmt.Sprintf("mkdir -p %s", tmpDir)
+	_, err := util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating test directory on remote") // No error should occur while doing action
 
-	_, err := runRemoteCommand(t, fmt.Sprintf("echo 'test content' > %s", srcFile))
-	assert.NoError(t, err, "create remote source file")
+	// Create source file on remote
+	cli = fmt.Sprintf("echo '%s' > %s", srcContent, srcFile)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating test src file on remote") // No error should occur while doing action
 
-	msg, err := util.MvFile(srcFile, dstFile, 0644, false)
+	// run the code under test
+	cli = fmt.Sprintf("luc do MoveFile %s %s %s %s", srcFile, dstFile, dstFilePermission, FileIsRoot)
+	out, err := util.RunCLIRemote(vm, cli)
 	assert.Error(t, err)
-	assert.Equal(t, "false", msg)
+	assert.Equal(t, "false", out)
 
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+	// clean up
+	cli = fmt.Sprintf("rm -rf %s", tmpDir)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "cleaning up test directory on remote") // No error should occur while doing action
 }
 
 func TestMvFile_DestinationDirMissing(t *testing.T) {
-	tmpDir := "/tmp/testmvfile"
-	srcFile := filepath.Join(tmpDir, "source.txt")
-	dstFile := filepath.Join(tmpDir, "nonexistent_dir", "destination.txt")
+	// Define test inputs
+	tmpDir := "/tmp/testmvfile"                                            // remote folder name
+	srcFile := filepath.Join(tmpDir, "source.txt")                         // source path
+	dstFile := filepath.Join(tmpDir, "nonexistent_dir", "destination.txt") // destination path with missing dir
+	dstFilePermission := "0644"
+	FileIsRoot := "false"
+	srcContent := "test content"
 
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
+	// Create test directory
+	cli := fmt.Sprintf("mkdir -p %s", tmpDir)
+	_, err := util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating test directory on remote") // No error should occur while doing action
 
-	_, err := runRemoteCommand(t, fmt.Sprintf("echo 'test content' > %s", srcFile))
-	assert.NoError(t, err, "create remote source file")
+	// Create source file on remote
+	cli = fmt.Sprintf("echo '%s' > %s", srcContent, srcFile)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating test src file on remote") // No error should occur while doing action
 
-	msg, err := util.MvFile(srcFile, dstFile, 0644, false)
+	// run the code under test
+	cli = fmt.Sprintf("luc do MoveFile %s %s %s %s", srcFile, dstFile, dstFilePermission, FileIsRoot)
+	out, err := util.RunCLIRemote(vm, cli)
 	assert.Error(t, err)
-	assert.Equal(t, "false", msg)
+	assert.Equal(t, "false", out)
 
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+	// clean up
+	cli = fmt.Sprintf("rm -rf %s", tmpDir)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "cleaning up test directory on remote") // No error should occur while doing action
 }
 
 func TestMvFile_SourceNotARegularFile(t *testing.T) {
-	tmpDir := "/tmp/testmvfile"
-	srcDir := filepath.Join(tmpDir, "sourcedir")
-	dstFile := filepath.Join(tmpDir, "destination.txt")
+	// Define test inputs
+	tmpDir := "/tmp/testmvfile"                         // remote folder name
+	srcDir := filepath.Join(tmpDir, "sourcedir")        // source directory path
+	dstFile := filepath.Join(tmpDir, "destination.txt") // destination path
+	dstFilePermission := "0644"
+	FileIsRoot := "false"
 
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s && mkdir -p %s", tmpDir, tmpDir))
-	runRemoteCommand(t, fmt.Sprintf("mkdir -p %s", srcDir))
+	// Create test directory structure
+	cli := fmt.Sprintf("mkdir -p %s", tmpDir)
+	_, err := util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating test directory on remote") // No error should occur while doing action
 
-	msg, err := util.MvFile(srcDir, dstFile, 0644, false)
+	// Create source directory on remote
+	cli = fmt.Sprintf("mkdir -p %s", srcDir)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "creating source directory on remote") // No error should occur while doing action
+
+	// run the code under test
+	cli = fmt.Sprintf("luc do MoveFile %s %s %s %s", srcDir, dstFile, dstFilePermission, FileIsRoot)
+	out, err := util.RunCLIRemote(vm, cli)
 	assert.Error(t, err)
-	assert.Equal(t, "false", msg)
+	assert.Equal(t, "false", out)
 
-	runRemoteCommand(t, fmt.Sprintf("rm -rf %s", tmpDir))
+	// clean up
+	cli = fmt.Sprintf("rm -rf %s", tmpDir)
+	_, err = util.RunCLIRemote(vm, cli)
+	assert.NoError(t, err, "cleaning up test directory on remote") // No error should occur while doing action
 }
