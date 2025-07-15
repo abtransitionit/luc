@@ -38,7 +38,7 @@ var localFlag bool
 func init() {
 	UtilCmd.AddCommand(lineFileCmd)
 	UtilCmd.AddCommand(strFileCmd)
-	UtilCmd.AddCommand(mvfileCmd)
+	// UtilCmd.AddCommand(mvfileCmd)
 	UtilCmd.AddCommand(mvdirCmd)
 	UtilCmd.AddCommand(ovh.OvhCmd)
 	UtilCmd.AddCommand(urlCmd)

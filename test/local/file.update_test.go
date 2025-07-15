@@ -24,11 +24,11 @@ func TestAddLineToFile_Nominal(t *testing.T) {
 	assert.NoError(t, err, "should be able to create temp file") // No error should occur while creating the file
 
 	// run the function under test with a new line
-	msg, err := util.AddLineToFile(testFilePath, "new line")
+	out, err := util.AddLineToFile(testFilePath, "new line")
 
 	// Assertions
 	assert.NoError(t, err)                                       // No error should occur while adding the line
-	assert.Equal(t, "✅ added line to file : "+testFilePath, msg) // compare expected return vs actual return
+	assert.Equal(t, "✅ added line to file : "+testFilePath, out) // compare expected return vs actual return
 
 	// Check if line has been added
 	content, err := os.ReadFile(testFilePath)
@@ -47,11 +47,11 @@ func TestAddLineToFile_LineAlreadyExists(t *testing.T) {
 	assert.NoError(t, err, "should be able to create temp file") // No error should occur while creating the file
 
 	// run the function under test with the same line
-	msg, err := util.AddLineToFile(testFilePath, lineToAdd)
+	out, err := util.AddLineToFile(testFilePath, lineToAdd)
 
 	// Assertions
 	assert.NoError(t, err)                                                             // No error should occur if line already exists
-	assert.Equal(t, "✅ done nothing, line already exists in file: "+testFilePath, msg) // compare expected return vs actual return
+	assert.Equal(t, "✅ done nothing, line already exists in file: "+testFilePath, out) // compare expected return vs actual return
 }
 
 func TestAddLineToFile_FileNotExist(t *testing.T) {
@@ -59,20 +59,20 @@ func TestAddLineToFile_FileNotExist(t *testing.T) {
 	nonExistentFile := "/nonexistent/path.txt"
 
 	// run the function under test
-	msg, err := util.AddLineToFile(nonExistentFile, "some line")
+	out, err := util.AddLineToFile(nonExistentFile, "some line")
 
 	// Assertions
 	assert.Error(t, err) // an error should occur if file does not exist
-	assert.Empty(t, msg) // compare expected return vs actual return (The returned message should be empty)
+	assert.Empty(t, out) // compare expected return vs actual return (The returned message should be empty)
 }
 
 func TestAddLineToFile_EmptyFilePath(t *testing.T) {
 	// run the function under test with empty path
-	msg, err := util.AddLineToFile("", "some line")
+	out, err := util.AddLineToFile("", "some line")
 
 	// Assertions
 	assert.Error(t, err) // an error should occur for empty file path
-	assert.Empty(t, msg) // compare expected return vs actual return (The returned message should be empty)
+	assert.Empty(t, out) // compare expected return vs actual return (The returned message should be empty)
 }
 
 func TestAddLineToFile_EmptyLine(t *testing.T) {
@@ -85,9 +85,9 @@ func TestAddLineToFile_EmptyLine(t *testing.T) {
 	assert.NoError(t, err, "should be able to create temp file") // No error should occur while creating the file
 
 	// run the function under test with empty line
-	msg, err := util.AddLineToFile(testFilePath, "")
+	out, err := util.AddLineToFile(testFilePath, "")
 
 	// Assertions
 	assert.Error(t, err) // an error should occur for empty line
-	assert.Empty(t, msg) // compare expected return vs actual return (The returned message should be empty)
+	assert.Empty(t, out) // compare expected return vs actual return (The returned message should be empty)
 }

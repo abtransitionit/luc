@@ -33,10 +33,20 @@ func AddLineToFile(filePath string, line string) (string, error) {
 	cli := fmt.Sprintf(`grep -Fxq %q %s`, line, filePath)
 	_, err = RunCLILocal(cli)
 
+	// // Check if it's exit code 1 (line not found), continue
+	// var exitErr *exec.ExitError
+	// if errors.As(err, &exitErr) && exitErr.ExitCode() == 1 {
+	// 	// line not found, continue to append
+	// } else {
+	// 	// other error - return it
+	// 	return "", err
+	// }
+
 	// If grep finds the line, do nothing
 	if err == nil {
 		return fmt.Sprintf("✅ done nothing, line already exists in file: %s", filePath), nil
 	}
+
 	// If the file doesn't exist or line not found, continue (grep returns non-zero exit code)
 	// If it's a different kind of error, return it
 	if !strings.Contains(err.Error(), "command failed") {

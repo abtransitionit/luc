@@ -12,8 +12,19 @@ import (
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
+func GeRemotePropertyTest(vm string, property string) string {
+	// get some OS property
+	osfamily, err := util.GetPropertyRemote("osfamily", vm)
+	if err != nil {
+		logx.L.Debugf("❌ output:  %v", osfamily)
+		logx.L.Debugf("❌ error:   %v", err)
+	}
+	return ""
+
+}
+
 // locally create an empty file as current user
-func touchFileLocal(folderPath string, fileName string) error {
+func TouchFileLocal(folderPath string, fileName string) error {
 	filePath := filepath.Join(folderPath, fileName)
 
 	// touch file
@@ -27,7 +38,7 @@ func touchFileLocal(folderPath string, fileName string) error {
 	return nil
 }
 
-func deleteFileLocal(folderPath string, fileName string) error {
+func DeleteFileLocal(folderPath string, fileName string) error {
 	filePath := filepath.Join(folderPath, fileName)
 
 	// delete file
@@ -41,7 +52,7 @@ func deleteFileLocal(folderPath string, fileName string) error {
 	return nil
 }
 
-func touchFileOnRemote(vm string, folderPath string, fileName string) error {
+func TouchFileOnRemote(vm string, folderPath string, fileName string) error {
 	filePath := filepath.Join(folderPath, fileName)
 
 	// touch file
@@ -55,7 +66,7 @@ func touchFileOnRemote(vm string, folderPath string, fileName string) error {
 	return nil
 }
 
-func deleteFileOnRemote(vm string, folderPath string, fileName string) error {
+func DeleteFileOnRemote(vm string, folderPath string, fileName string) error {
 	filePath := filepath.Join(folderPath, fileName)
 
 	// delete
@@ -69,7 +80,7 @@ func deleteFileOnRemote(vm string, folderPath string, fileName string) error {
 	return nil
 }
 
-func checkFileLocalExits(fullPath string) bool {
+func CheckFileLocalExits(fullPath string) bool {
 	// Convert string to slice
 	fnParameters := []string{fullPath}
 	// check file exists
@@ -97,7 +108,7 @@ func checkFileLocalExits(fullPath string) bool {
 	}
 }
 
-func checkFileRemoteExists(vm string, fullPath string) bool {
+func CheckFileRemoteExists(vm string, fullPath string) bool {
 	// Convert string to slice
 	fnParameters := []string{fullPath}
 	// check file exists

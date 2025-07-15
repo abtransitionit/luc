@@ -4,7 +4,8 @@
 set -e # make the script stop at the first failing test:
 
 # define var
-TestFolderPath="$(dirname $(go env GOMOD))/test" # Test folder for this GO project
+TestFolderName="test"
+TestFolderPath="$(dirname $(go env GOMOD))/${TestFolderName}" # Test folder for this GO project
 
 
 # get normalized input

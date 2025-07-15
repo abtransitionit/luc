@@ -456,7 +456,7 @@ func GetPropertyRemote(vm string, property string, params ...string) (string, er
 
 	out, err := RunCLIRemote(vm, cli)
 	if err != nil {
-		return "", err
+		return out, err
 	}
 	return out, nil
 }

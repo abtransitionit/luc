@@ -64,76 +64,145 @@ func CliRemoteExists(name, vm string) (bool, error) {
 	return strings.TrimSpace(output) != "", nil
 }
 
-func RunCLILocal(command string, liveOutput ...bool) (stdout string, err error) {
-	// Set default value (false if not provided)
-	live := false
-	if len(liveOutput) > 0 {
-		live = liveOutput[0]
-	}
-
+func RunCLILocal(command string, liveOutput ...bool) (string, error) {
+	live := len(liveOutput) > 0 && liveOutput[0]
 	cmd := exec.Command("bash", "-c", command)
 
+	// Live output mode
 	if live {
-		// Live output mode - show in terminal
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
-
-		err = cmd.Run()
+		err := cmd.Run()
 		if err != nil {
-			return "", fmt.Errorf("❌ Error: command failed: %v", err)
+			// return "", fmt.Errorf("❌ Error: command failed: %v", err)
+			return "", fmt.Errorf("❌ %v", err)
 		}
-		return "", nil // No captured output in live mode
-	} else {
-		// Silent mode - capture output (original behavior)
-		var out bytes.Buffer
-		cmd.Stdout = &out
-		cmd.Stderr = &out
-
-		err = cmd.Run()
-		stdout = strings.TrimSpace(out.String())
-
-		if err != nil {
-			return stdout, fmt.Errorf("❌ Error: command failed: %v\noutput:\n%s", err, stdout)
-		}
-		return stdout, nil
+		return "", nil
 	}
+
+	// Silent mode
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+
+	err := cmd.Run()
+	output := strings.TrimSpace(out.String())
+	// error
+	if err != nil {
+		// return stdout, fmt.Errorf("❌ Error: command failed: %v\noutput:\n%s", err, stdout)
+		return output, fmt.Errorf("%v", err)
+	}
+	// success
+	return output, nil
 }
 
-func RunCLIRemote(vm string, command string, liveOutput ...bool) (stdout string, err error) {
-	// Set default value for liveOutput
-	live := false
-	if len(liveOutput) > 0 {
-		live = liveOutput[0]
-	}
+// func RunCLILocalOLD(command string, liveOutput ...bool) (stdout string, err error) {
+// 	// Set default value (false if not provided)
+// 	live := false
+// 	if len(liveOutput) > 0 {
+// 		live = liveOutput[0]
+// 	}
 
-	// Format SSH command: ssh user@host "command"
-	// '%s' allow to not expand $XXX to local variable when exist
+// 	cmd := exec.Command("bash", "-c", command)
+
+// 	if live {
+// 		// Live output mode - show in terminal
+// 		cmd.Stdout = os.Stdout
+// 		cmd.Stderr = os.Stderr
+
+// 		err = cmd.Run()
+// 		if err != nil {
+// 			// return "", fmt.Errorf("❌ Error: command failed: %v", err)
+// 			return stdout, fmt.Errorf("❌ %v", err)
+// 		}
+// 		return "", nil // No captured output in live mode
+// 	} else {
+// 		// Silent mode - capture output (original behavior)
+// 		var out bytes.Buffer
+// 		cmd.Stdout = &out
+// 		cmd.Stderr = &out
+
+// 		err = cmd.Run()
+// 		stdout = strings.TrimSpace(out.String())
+
+// 		if err != nil {
+// 			// return stdout, fmt.Errorf("❌ Error: command failed: %v\noutput:\n%s", err, stdout)
+// 			return stdout, fmt.Errorf("❌ %v", err)
+
+// 		}
+// 		return stdout, nil
+// 	}
+// }
+
+func RunCLIRemote(vm, command string, liveOutput ...bool) (string, error) {
+	live := len(liveOutput) > 0 && liveOutput[0]
 	fullCmd := fmt.Sprintf(`ssh %s '%s'`, vm, command)
-
 	cmd := exec.Command("sh", "-c", fullCmd)
 
+	// Live output mode
 	if live {
-		// Live output mode - show in terminal
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
-
-		err = cmd.Run()
-		if err != nil {
-			return "", fmt.Errorf("❌ Error: remote command failed: %v", err)
+		if err := cmd.Run(); err != nil {
+			// return "", fmt.Errorf("❌ Error: remote command failed: %v", err)
+			// return stdout, err                   // // Return original output  + raw error
+			return "", fmt.Errorf("%v", err)
 		}
-		return "", nil // No captured output in live mode
-	} else {
-		// Silent mode - capture output (original behavior)
-		var out bytes.Buffer
-		cmd.Stdout = &out
-		cmd.Stderr = &out
-
-		err = cmd.Run()
-		stdout = strings.TrimSpace(out.String())
-
-		if err != nil {
-			return stdout, fmt.Errorf("❌ Error: remote command failed: %v\noutput:\n%s", err, stdout)
-		}
-		return stdout, nil
+		return "", nil
 	}
+
+	// Silent mode
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+
+	err := cmd.Run()
+	output := strings.TrimSpace(out.String())
+	if err != nil {
+		// return stdout, fmt.Errorf("❌ Error: remote command failed: %v\noutput:\n%s", err, stdout)
+		return output, fmt.Errorf("%v", err)
+	}
+	return output, nil
 }
+
+// func RunCLIRemoteOLD(vm string, command string, liveOutput ...bool) (stdout string, err error) {
+// 	// Set default value for liveOutput
+// 	live := false
+// 	if len(liveOutput) > 0 {
+// 		live = liveOutput[0]
+// 	}
+
+// 	// Format SSH command: ssh user@host "command"
+// 	// '%s' allow to not expand $XXX to local variable when exist
+// 	fullCmd := fmt.Sprintf(`ssh %s '%s'`, vm, command)
+
+// 	cmd := exec.Command("sh", "-c", fullCmd)
+
+// 	if live {
+// 		// Live output mode - show in terminal
+// 		cmd.Stdout = os.Stdout
+// 		cmd.Stderr = os.Stderr
+
+// 		err = cmd.Run()
+// 		if err != nil {
+// 			// return "", fmt.Errorf("❌ Error: remote command failed: %v", err)
+// 			// return stdout, err                   // // Return original output  + raw error
+// 			return stdout, fmt.Errorf("❌ %v", err) // // Return original output  + raw error
+// 		}
+// 		return "", nil // No captured output in live mode
+// 	} else {
+// 		// Silent mode - capture output (original behavior)
+// 		var out bytes.Buffer
+// 		cmd.Stdout = &out
+// 		cmd.Stderr = &out
+
+// 		err = cmd.Run()
+// 		stdout = strings.TrimSpace(out.String())
+
+// 		if err != nil {
+// 			// return stdout, fmt.Errorf("❌ Error: remote command failed: %v\noutput:\n%s", err, stdout)
+// 			return stdout, fmt.Errorf("❌ %v", err)
+// 		}
+// 		return stdout, nil
+// 	}
+// }

@@ -10,8 +10,8 @@ import (
 	"github.com/abtransitionit/luc/cmd/do"
 	"github.com/abtransitionit/luc/cmd/kbe"
 	"github.com/abtransitionit/luc/cmd/kind"
+	"github.com/abtransitionit/luc/cmd/test"
 	"github.com/abtransitionit/luc/cmd/util"
-	"github.com/abtransitionit/luc/test"
 	"github.com/spf13/cobra"
 )
 

@@ -55,6 +55,7 @@ var DoCmd = &cobra.Command{
 
 		// error
 		if err != nil {
+			// fmt.Println(result)
 			return err
 		}
 

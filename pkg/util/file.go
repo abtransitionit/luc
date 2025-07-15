@@ -334,99 +334,37 @@ func UnTgz(srcTgzPath string, destFolder string) error {
 // # Notes
 //
 // The helper function helperMvSudo is used when sudo is required
-func MvFile2(srcFilePath, dstFilePath string, permission os.FileMode, pathIsRoot bool) (bool, error) {
-
-	// check source file path
-	if srcFilePath == "" {
-		return false, fmt.Errorf("❌ Error: source path not provided")
-	}
-	if !filepath.IsAbs(srcFilePath) {
-		return false, fmt.Errorf("❌ Error: source path must be absolute: %s", srcFilePath)
-	}
-	srcInfo, err := os.Stat(srcFilePath)
-	if err != nil {
-		return false, fmt.Errorf("❌ Error: source file does not exist: %w", err)
-	}
-	if !srcInfo.Mode().IsRegular() {
-		return false, fmt.Errorf("❌ Error: source path is not a regular file: %s", srcFilePath)
-	}
-
-	// check destination file path
-	if dstFilePath == "" {
-		return false, fmt.Errorf("❌ Error: destination file path not provided")
-	}
-	if !filepath.IsAbs(dstFilePath) {
-		return false, fmt.Errorf("❌ Error: destination file path must be absolute: %s", dstFilePath)
-	}
-	dstDirPath := filepath.Dir(dstFilePath)
-	dstDirInfo, err := os.Stat(dstDirPath)
-	if err != nil {
-		return false, fmt.Errorf("❌ Error: destination directory does not exist: %w", err)
-	}
-	if !dstDirInfo.IsDir() {
-		return false, fmt.Errorf("❌ Error: destination parent path is not a directory: %s", dstDirPath)
-	}
-
-	// Perform actions as root user
-	if pathIsRoot {
-		// move
-		cli := fmt.Sprintf(`sudo mv "%s" "%s"`, srcFilePath, dstFilePath)
-		if _, err := RunCLILocal(cli); err != nil {
-			return false, err
-		}
-		// set permissions
-		cli = fmt.Sprintf(`sudo chmod "%#o" "%s"`, permission, dstFilePath)
-		if _, err := RunCLILocal(cli); err != nil {
-			return false, err
-		}
-		// success as root
-		return true, nil
-	}
-
-	// Perform actions as non-root user
-
-	// move
-	if err := os.Rename(srcFilePath, dstFilePath); err != nil {
-		return false, fmt.Errorf("failed to move file: %w", err)
-	}
-	// Set permissions
-	if err := os.Chmod(dstFilePath, permission); err != nil {
-		return false, fmt.Errorf("failed to set source file permissions: %w", err)
-	}
-	// success as non-root
-	return true, nil
-}
 func MvFile(srcFilePath, dstFilePath string, permission os.FileMode, pathIsRoot bool) (string, error) {
 
 	// check source file path
 	if srcFilePath == "" {
-		return "false", fmt.Errorf("❌ Error: source path not provided")
+		return "false", fmt.Errorf("source path not provided")
 	}
 	if !filepath.IsAbs(srcFilePath) {
-		return "false", fmt.Errorf("❌ Error: source path must be absolute: %s", srcFilePath)
+		return "false", fmt.Errorf("source path must be absolute: %s", srcFilePath)
 	}
 	srcInfo, err := os.Stat(srcFilePath)
 	if err != nil {
-		return "false", fmt.Errorf("❌ Error: source file does not exist: %w", err)
+		return "false", fmt.Errorf("source file does not exist: %w", err)
 	}
 	if !srcInfo.Mode().IsRegular() {
-		return "false", fmt.Errorf("❌ Error: source path is not a regular file: %s", srcFilePath)
+		return "false", fmt.Errorf("source path is not a regular file: %s", srcFilePath)
 	}
 
 	// check destination file path
 	if dstFilePath == "" {
-		return "false", fmt.Errorf("❌ Error: destination file path not provided")
+		return "false", fmt.Errorf("destination file path not provided")
 	}
 	if !filepath.IsAbs(dstFilePath) {
-		return "false", fmt.Errorf("❌ Error: destination file path must be absolute: %s", dstFilePath)
+		return "false", fmt.Errorf("destination file path must be absolute: %s", dstFilePath)
 	}
 	dstDirPath := filepath.Dir(dstFilePath)
 	dstDirInfo, err := os.Stat(dstDirPath)
 	if err != nil {
-		return "false", fmt.Errorf("❌ Error: destination directory does not exist: %w", err)
+		return "false", fmt.Errorf("destination directory does not exist: %w", err)
 	}
 	if !dstDirInfo.IsDir() {
-		return "false", fmt.Errorf("❌ Error: destination parent path is not a directory: %s", dstDirPath)
+		return "false", fmt.Errorf("destination parent path is not a directory: %s", dstDirPath)
 	}
 
 	// Perform actions as root user
