@@ -24,7 +24,7 @@ func RunPipeline(vmList string, packages []string) (string, error) {
 	ch03 := make(chan PipelineData)
 	chOutLast := ch03
 
-	// aync stage (i.e running concurrently/in parallel)
+	// stage running async/concurrently/in parallel
 	go source(ch01, vms, packages) // define instances to send to the pipeline
 	go remoteInstall(ch01, ch02, nbVm, vms, packages)
 	go remoteReboot(ch02, ch03, nbVm)

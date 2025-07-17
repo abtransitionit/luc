@@ -141,7 +141,7 @@ func RunCLIRemote(vm, command string, liveOutput ...bool) (string, error) {
 	encodedCmd := base64.StdEncoding.EncodeToString([]byte(command))
 	fullCmd := fmt.Sprintf(`ssh %s "echo '%s' | base64 --decode | sh"`, vm, encodedCmd)
 	cmd := exec.Command("sh", "-c", fullCmd)
-	// logx.L.Debugf("⚠️⚠️ Running cli: %s", fullCmd)
+	// logx.L.Debugf("⚠️⚠️ Running on remote cli: %s", command)
 
 	// Live output mode
 	if live {

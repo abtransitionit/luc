@@ -58,7 +58,7 @@ var unitCmd = &cobra.Command{
 		// play cli
 		logx.L.Infof("play bash script run test: %s", bashScriptPath)
 		cli = fmt.Sprintf(`%s %s`, bashScriptPath, scriptParams)
-		out, err := util.RunCLILocal(cli)
+		out, err := util.RunCLILocal(cli, true)
 
 		// error
 		if err != nil {

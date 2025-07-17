@@ -25,8 +25,8 @@ var remoteFlag string
 var localFlag bool
 
 func init() {
-	OsServiceCmd.AddCommand(lingerCmd)
-	OsServiceCmd.AddCommand(cFileCmd)
+	// OsServiceCmd.AddCommand(lingerCmd)
+	// OsServiceCmd.AddCommand(cFileCmd)
 	OsServiceCmd.AddCommand(startCmd)
 	OsServiceCmd.AddCommand(statusCmd)
 	OsServiceCmd.AddCommand(stopCmd)

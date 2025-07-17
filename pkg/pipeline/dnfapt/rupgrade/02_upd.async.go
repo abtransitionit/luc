@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package rupgrade
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/abtransitionit/luc/pkg/logx"
@@ -43,7 +44,7 @@ func rUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) {
 			logx.L.Debugf("[%s] getting reboot status", vm)
 			rebootStatus, err := util.GetPropertyRemote(vm, "rebootstatus")
 			if err != nil {
-				data.Err = err
+				data.Err = fmt.Errorf("%v, %s", err, rebootStatus)
 				logx.L.Debugf("[%s] ❌ Error detected 2", vm)
 			}
 			logx.L.Debugf("[%s] got reboot status : %s", vm, rebootStatus)

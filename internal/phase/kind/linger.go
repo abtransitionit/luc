@@ -19,11 +19,3 @@ func linger(arg ...string) (string, error) {
 	}
 	return "", nil
 }
-
-// // Enable lingering for the user
-// logx.L.Debugf("enabling lingering for user %s", osUser)
-// if err := util.EnableUserService(osUser); err != nil {
-// 	logx.L.Debugf("❌ Error detected 6")
-// 	return "", err
-// }
-// // logx.L.Infof("lingering enabled for user %-5s", osUser)

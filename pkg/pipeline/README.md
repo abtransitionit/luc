@@ -1,5 +1,12 @@
+# What does this folder contains
+- Each folder denotes a **pipeline** with:
+  - black boxes each denoting a process involved in the pipeline
+  - a set of instance data flowing from **output** of box (n-1) to **input** of box (n)
+
+- The pipeline itself can be seen as a reusable **black box** that needed specific inputs.  
+
 # How it works
-Each `leaf` folder denotes a set of process involved in a pipeline and contains the following files:
+Each folder contains the following files:
   |name|description|
   |-|-|
   |`00_run.go`|contains the function `RunPipeline()` that launches the pipeline|
@@ -13,8 +20,8 @@ Each `leaf` folder denotes a set of process involved in a pipeline and contains 
 # The `RunPipeline()` function
 - defines the pipeline stages order
 # The `source` stage
-- Usualy defines the structure of the instance that will be pipelined
-- Initiate all the instance structure to piut in the pipeleine
+- Defines the the set of instances (from a data structure defined in file `types.go`)
+- Send each instance into the pipeline
 
 # The `first` stage
 - The first stage running immediatly after the `source` stage
@@ -25,4 +32,4 @@ Each `leaf` folder denotes a set of process involved in a pipeline and contains 
 - Often indicates, for each instance, if it's OK or KO
 
 # The `types` files
-- Often defines, the structure of the pipelined data
+- Defines the structure of the data instance to be pipelined

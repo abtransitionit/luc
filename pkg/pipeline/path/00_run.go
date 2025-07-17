@@ -22,7 +22,7 @@ func RunPipeline(vmList string, pathFile string) (string, error) {
 	ch02 := make(chan PipelineData)
 	chOutLast := ch02
 
-	// aync stage (i.e running concurrently/in parallel)
+	// stage running async/concurrently/in parallel
 	go source(ch01, vms, pathFile) // define instances to send to the pipeline
 	go getPath(ch01, ch02)         // define instances to send to the pipeline
 

@@ -29,6 +29,7 @@ var FnActionMap = map[string]FnActionHandler{
 	"TouchFile":             {Fn: TouchFileFn, NbParams: 1},
 	"AddLineToFile":         {Fn: AddLineToFileFn, NbParams: 2},
 	"SaveStringToFile":      {Fn: SaveStringToFileFn, NbParams: 3},
+	"GetStringFromFile":     {Fn: GetStringFromFileFn, NbParams: 2},
 	"CheckFileExists":       {Fn: CheckFileExistsFn, NbParams: 1},
 	"MoveFile":              {Fn: MoveFileFn, NbParams: 4},
 	"DeleteFile":            {Fn: DeleteFileFn, NbParams: 1},
@@ -36,6 +37,13 @@ var FnActionMap = map[string]FnActionHandler{
 	"ServiceEnableLinger":   {Fn: ServiceEnableLingerFn, NbParams: 0},
 }
 
+func GetStringFromFileFn(fnParameters []string) (string, error) {
+
+	// get input
+	srcFilePath := fnParameters[0]
+
+	return GetStringFromFile(srcFilePath, false)
+}
 func ServiceCreateUnitFileFn(fnParameters []string) (string, error) {
 
 	// get input
