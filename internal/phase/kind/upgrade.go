@@ -17,6 +17,5 @@ func upgrade(arg ...string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	// on SUCCESS
 	return "", nil
 }

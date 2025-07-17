@@ -13,11 +13,9 @@ const UpgradeDescription = "provision OS nodes with latest dnfapt packages and r
 
 func upgrade(arg ...string) (string, error) {
 	logx.L.Info(UpgradeDescription)
-	// launch this pipeline
 	_, err := rupgrade.RunPipeline(config.KbeListNode)
 	if err != nil {
 		return "", err
 	}
-	// on SUCCESS
 	return "", nil
 }

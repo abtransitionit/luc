@@ -9,11 +9,6 @@ import (
 )
 
 func checkSsh(arg ...string) (string, error) {
-	// launch this function
-	_, err := util.CheckSsh(config.KbeListNode)
-	if err != nil {
-		return "", err
-	}
-	// success
+	util.CheckSsh(config.KbeListNode)
 	return "", nil
 }

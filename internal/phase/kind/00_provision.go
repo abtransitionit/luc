@@ -20,7 +20,7 @@ var ProvisionPhases = []phase.Phase{
 	phase.SetPhase("linger", linger, LingerDescription),
 	phase.SetPhase("path", path, PathDescription),
 	phase.SetPhase("rc", rc, RcDescription),
-	phase.SetPhase("rcc", rcc, RccDescription),
+	// phase.SetPhase("rcc", rcc, RccDescription),
 	// phase.SetPhase("create", create, CreateDescription),
 	// phase.SetPhase("check", check, CheckDescription),
 }

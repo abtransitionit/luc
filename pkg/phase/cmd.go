@@ -165,7 +165,7 @@ func handleSinglePhase(cmd *cobra.Command, phaseName string, phases []Phase) (bo
 				return true, err
 			}
 			// handle applogic SUCCESS
-			logx.L.Infof("✅ Phase %s succeeded.", phase.Name)
+			logx.L.Infof("✅ End Phase : %s", phase.Name)
 			return true, nil
 		}
 	}

@@ -11,17 +11,17 @@ import (
 	"github.com/jedib0t/go-pretty/table"
 )
 
-// Structure used to holds the cluster node informations.
+const DisplayDescription = "display the desired KIND Cluster's configuration."
+
+// Structure used to holds the informations.
 type ClusterConfig struct {
 	VmName string
 }
 
-// 1 instance of the structure for the cluster
+// 1 instance of the structure
 var CurrentClusterConfig = ClusterConfig{
 	VmName: config.KindVm,
 }
-
-const DisplayDescription = "display the desired KIND Cluster's configuration."
 
 func show(arg ...string) (string, error) {
 	logx.L.Info(DisplayDescription)

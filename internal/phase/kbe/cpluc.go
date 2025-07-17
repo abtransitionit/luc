@@ -13,12 +13,10 @@ const CpLucDescription = "provision LUC CLI"
 
 func cpLuc(arg ...string) (string, error) {
 	logx.L.Info(CpLucDescription)
-	// launch this pipeline
 	_, err := cpluc.RunPipeline(config.KbeListNode)
 	if err != nil {
 		logx.L.Debugf("%s", err)
 		return "", err
 	}
-	// success
 	return "", nil
 }

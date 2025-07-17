@@ -11,21 +11,21 @@ import (
 	"github.com/jedib0t/go-pretty/table"
 )
 
-// Structure used to holds the cluster node informations.
+const DisplayDescription = "display the desired KBE Cluster's configuration."
+
+// Structure used to holds the informations.
 type ClusterConfig struct {
 	KbeListNode       string
 	KbeListNodeWorker string
 	KbeListNodeCplane string
 }
 
-// 1 instance of the structure for the cluster
+// 1 instance of the structure
 var CurrentClusterConfig = ClusterConfig{
 	KbeListNode:       config.KbeListNode,
 	KbeListNodeWorker: config.KbeListNodeWorker,
 	KbeListNodeCplane: config.KbeListNodeWorker,
 }
-
-const DisplayDescription = "display the desired KBE Cluster's configuration."
 
 func show(arg ...string) (string, error) {
 	logx.L.Info(DisplayDescription)
