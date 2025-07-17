@@ -21,7 +21,7 @@ type PipelineData struct {
 func (obj PipelineData) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
-	t.SetTitle("VM dnfapt insta Status")
+	t.SetTitle("VM dnfapt provision Status")
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{

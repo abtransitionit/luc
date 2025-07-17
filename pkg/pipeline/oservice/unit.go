@@ -27,8 +27,8 @@ func createUnit(in <-chan PipelineData, out chan<- PipelineData) {
 
 		// error
 		if err != nil {
-			logx.L.Debugf("[%s][%s] ❌ Error detected 1", data.Config.Name, data.HostName)
 			data.Err = err
+			logx.L.Debugf("[%s][%s] ❌ Error detected 1", data.Config.Name, data.HostName)
 			out <- data
 			continue
 		}

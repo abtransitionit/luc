@@ -4,11 +4,10 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package kbe
 
 import (
-	"strings"
-
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/pipeline/dnfapt/packagex"
+	"github.com/abtransitionit/luc/pkg/util"
 )
 
 const DaPackDescription = "provision Dnfapt package(s)"
@@ -16,12 +15,8 @@ const DaPackDescription = "provision Dnfapt package(s)"
 func daPack(arg ...string) (string, error) {
 	logx.L.Info(DaPackDescription)
 
-	// Build StringList of packages
-	listPackage := ""
-	for key := range config.KbeDnfaptCliConfigMap {
-		listPackage += key + " "
-	}
-	listPackage = strings.TrimSpace(listPackage)
+	// get all Map:key as []string
+	listPackage := util.GetMapKeys(config.KbeDnfaptCliConfigMap)
 
 	// launch this pipeline
 	_, err := packagex.RunPipeline(config.KbeListNode, listPackage)

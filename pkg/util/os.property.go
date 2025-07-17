@@ -447,11 +447,11 @@ func GetPropertyLocal(property string, params ...string) (string, error) {
 }
 
 func GetPropertyRemote(vm string, property string, params ...string) (string, error) {
-	cli := fmt.Sprintf(`luc util getprop %s`, property)
+	cli := fmt.Sprintf(`luc do getprop %s`, property)
 
 	// Append optional params if any
 	if len(params) > 0 {
-		cli = fmt.Sprintf(`luc util getprop %s %s`, property, strings.Join(params, " "))
+		cli = fmt.Sprintf(`luc do getprop %s %s`, property, strings.Join(params, " "))
 	}
 
 	out, err := RunCLIRemote(vm, cli)

@@ -21,7 +21,8 @@ var draftCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Info(draftSDesc)
 
-		test.GeRemotePropertyTest("o1u", "osfamily")
+		out := test.GeRemotePropertyTest("o1u", "osfamily")
+		logx.L.Info("yo in test : %s", out)
 		// local function tested
 		// test.TouchFileLocal("/tmp", "titi")
 		// test.CheckFileLocalExits("/tmp/test.txt")

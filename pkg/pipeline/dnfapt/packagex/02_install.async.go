@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package packagex
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/abtransitionit/luc/pkg/logx"
@@ -20,6 +21,7 @@ func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int, vm
 	worker := func() {
 		defer wg.Done()
 		for data := range in {
+			vm := data.HostName
 			if data.Err != nil {
 				out <- data
 				logx.L.Debugf("❌ Previous error detected")
@@ -29,42 +31,42 @@ func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int, vm
 			// ------------------------
 
 			// remote install dnfapt packages
-			logx.L.Debugf("[%s] remote installing packages", data.HostName)
+			logx.L.Debugf("[%s] remote installing packages", vm)
 			for _, pkgName := range data.PackageList {
 				// --- CHECK CONDITION ---
 				if pkgName == "uidmap" && data.OsFamily != "debian" {
-					logx.L.Debugf("[%s] [%s] Skipping package : OS family is %s, not 'debian'.", data.HostName, pkgName, data.OsFamily)
+					logx.L.Debugf("[%s] [%s] Skipping package : OS family is %s, not 'debian'.", vm, pkgName, data.OsFamily)
 					continue
 				}
 				// ------------------------
-				logx.L.Debugf("[%s] [%s] remote installing package", data.HostName, pkgName)
-				_, err := dnfapt.RInstallP(data.HostName, data.OsFamily, pkgName)
+				logx.L.Debugf("[%s] [%s] remote installing package", vm, pkgName)
+				_, err := dnfapt.RInstallP(vm, data.OsFamily, pkgName)
 				if err != nil {
 					data.Err = err
-					logx.L.Debugf("[%s] ❌ error detected 1", data.HostName)
+					logx.L.Debugf("[%s] ❌ error detected 1", vm)
 					out <- data
 					continue
 				}
 			}
-			logx.L.Debugf("[%s] remote installed packages", data.HostName)
+			logx.L.Debugf("[%s] remote installed packages", vm)
 
 			// set reboot status
-			logx.L.Debugf("[%s] getting reboot status", data.HostName)
-			rebootStatus, err := util.GetPropertyRemote(data.HostName, "rebootstatus")
+			logx.L.Debugf("[%s] getting reboot status", vm)
+			rebootStatus, err := util.GetPropertyRemote(vm, "rebootstatus")
 			if err != nil {
 				data.Err = err
-				logx.L.Debugf("[%s] ❌ Error detected 2", data.HostName)
+				logx.L.Debugf("[%s] ❌ Error detected 2", vm)
 			}
-			logx.L.Debugf("[%s] got reboot status : %s", data.HostName, rebootStatus)
+			logx.L.Debugf("[%s] got reboot status : %s", vm, rebootStatus)
 
 			// set instance property
 			data.RebootStatus = rebootStatus
 
 			// get property
-			kernelVersion, err := util.GetPropertyRemote(data.HostName, "oskversion")
+			kernelVersion, err := util.GetPropertyRemote(vm, "oskversion")
 			if err != nil {
-				data.Err = err
-				logx.L.Debugf("[%s] ❌ Error detected 3", data.HostName)
+				data.Err = fmt.Errorf("❌ Error: %v, %s", err, kernelVersion)
+				logx.L.Debugf("[%s] ❌ Error detected 3", vm)
 				out <- data
 				continue
 			}

@@ -30,7 +30,6 @@ func RunPipeline(vmList string, cliMap config.CustomCLIConfigMap) (string, error
 	ch04 := make(chan PipelineData)
 	ch05 := make(chan PipelineData)
 	ch06 := make(chan PipelineData)
-	// ch07 := make(chan PipelineData)
 	chOutLast := ch06
 
 	// log
@@ -41,8 +40,8 @@ func RunPipeline(vmList string, cliMap config.CustomCLIConfigMap) (string, error
 	go setUrlSpec(ch01, ch02)
 	go setArtifact(ch02, ch03)
 	go getArtifact(ch03, ch04, nbWorker) // get artifact
-	go unTgz(ch04, ch05, nbWorker)
-	go Move(ch05, ch06, nbWorker) // move to final destination
+	go unTgz(ch04, ch05, nbWorker)       // untgz artifact (if needed)
+	go Move(ch05, ch06, nbWorker)        // move to final destination
 
 	// final sequential step. collects all instances in the pipeline and build a sumary
 	err := lastStep(chOutLast, vms)

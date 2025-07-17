@@ -14,12 +14,12 @@ import (
 
 func GeRemotePropertyTest(vm string, property string) string {
 	// get some OS property
-	osfamily, err := util.GetPropertyRemote("osfamily", vm)
+	osfamily, err := util.GetPropertyRemote(vm, "osfamily")
 	if err != nil {
 		logx.L.Debugf("❌ output:  %v", osfamily)
 		logx.L.Debugf("❌ error:   %v", err)
 	}
-	return ""
+	return osfamily
 
 }
 

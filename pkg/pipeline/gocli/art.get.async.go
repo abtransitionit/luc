@@ -57,12 +57,12 @@ func helperExeTgz(data PipelineData) PipelineData {
 
 	// play code
 	cli := fmt.Sprintf("luc util url get %s %s --local", data.HostUrl, data.ArtPath1)
-	_, err := util.RunCLIRemote(data.HostName, cli)
+	out, err := util.RunCLIRemote(data.HostName, cli)
 
 	// error
 	if err != nil {
+		data.Err = fmt.Errorf("❌ Error: %v, %s", err, out)
 		logx.L.Debugf("[%s] [%s] ❌ Error detected during download", data.Config.Name, data.HostName)
-		data.Err = err
 		return data
 	}
 

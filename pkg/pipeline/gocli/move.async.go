@@ -23,6 +23,7 @@ func Move(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) {
 		defer wg.Done()
 
 		for data := range in {
+
 			if data.Err != nil {
 				out <- data
 				logx.L.Debugf("❌ Previous error detected")
@@ -59,11 +60,11 @@ func helperMvExe(data PipelineData) PipelineData {
 	logx.L.Debugf("[%s] Moving '%s' to '%s'", data.Config.Name, data.ArtPath1, dstPath)
 
 	// play code
-	cli := fmt.Sprintf("luc util mvfile %s %s %o %t --local", data.ArtPath1, dstPath, 0755, true)
-	_, err := util.RunCLIRemote(data.HostName, cli)
+	cli := fmt.Sprintf("luc do MoveFile %s %s %o %t --local", data.ArtPath1, dstPath, 0755, true)
+	out, err := util.RunCLIRemote(data.HostName, cli)
 	if err != nil {
+		data.Err = fmt.Errorf("❌ Error: %v, %s", err, out)
 		logx.L.Debugf("[%s][%s] ❌ Error detected 1", data.Config.Name, data.HostName)
-		data.Err = err
 		return data
 	}
 
@@ -82,10 +83,10 @@ func helperMvTgz(data PipelineData) PipelineData {
 
 	// play code
 	cli := fmt.Sprintf("luc util mvdir %s %s %o %t %t --local", data.ArtPath2, dstPath, 0755, true, true)
-	_, err := util.RunCLIRemote(data.HostName, cli)
+	out, err := util.RunCLIRemote(data.HostName, cli)
 	if err != nil {
+		data.Err = fmt.Errorf("❌ Error: %v, %s", err, out)
 		logx.L.Debugf("[%s][%s] ❌ Error detected 2", data.Config.Name, data.HostName)
-		data.Err = err
 		return data
 	}
 

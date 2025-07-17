@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package rupgrade
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/abtransitionit/luc/pkg/logx"
@@ -30,33 +31,33 @@ func source(out chan<- PipelineData, vms []string) {
 		data := PipelineData{}
 
 		// get some OS property
-		osFamily, err := util.GetPropertyRemote("osfamily", vm)
+		osFamily, err := util.GetPropertyRemote(vm, "osfamily")
 		if err != nil {
-			data.Err = err
+			data.Err = fmt.Errorf("❌ Error: %v, %s", err, osFamily)
 			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
 		}
 
-		osDistro, err := util.GetPropertyRemote("osdistro", vm)
+		osDistro, err := util.GetPropertyRemote(vm, "osdistro")
 		if err != nil {
-			data.Err = err
+			data.Err = fmt.Errorf("❌ Error: %v, %s", err, osDistro)
 			logx.L.Debugf("[%s] ❌ Error detected 2", vm)
 		}
 
-		hostType, err := util.GetPropertyRemote("host", vm)
+		hostType, err := util.GetPropertyRemote(vm, "host")
 		if err != nil {
-			data.Err = err
+			data.Err = fmt.Errorf("❌ Error: %v, %s", err, hostType)
 			logx.L.Debugf("[%s] ❌ Error detected 3", vm)
 		}
 
-		osVersion, err := util.GetPropertyRemote("osversion", vm)
+		osVersion, err := util.GetPropertyRemote(vm, "osversion")
 		if err != nil {
-			data.Err = err
+			data.Err = fmt.Errorf("❌ Error: %v, %s", err, osVersion)
 			logx.L.Debugf("[%s] ❌ Error detected 4", vm)
 		}
 
-		kernelVersion, err := util.GetPropertyRemote("oskversion", vm)
+		kernelVersion, err := util.GetPropertyRemote(vm, "oskversion")
 		if err != nil {
-			data.Err = err
+			data.Err = fmt.Errorf("❌ Error: %v, %s", err, kernelVersion)
 			logx.L.Debugf("[%s] ❌ Error detected 5", vm)
 		}
 

@@ -33,14 +33,15 @@ func source(out chan<- PipelineData, vms []string, cliMap config.CustomCLIConfig
 
 	// loop over each CLI
 	for _, item := range cliMap {
+		cliName := item.Name
 		// create an instance per item
 		data := PipelineData{}
 
 		// Fetch the shared public config for this CLI
-		cliConfig, ok := config.GetCLIConfig(item.Name)
+		cliConfig, ok := config.GetCLIConfig(cliName)
 		if !ok {
-			data.Err = fmt.Errorf("[%s] ❌ CLI not found in config map", item.Name)
-			logx.L.Debugf("[%s] ❌ Error detected", item.Name)
+			data.Err = fmt.Errorf("[%s] ❌ CLI not found in config map", cliName)
+			logx.L.Debugf("[%s] ❌ Error detected", cliName)
 			out <- data
 			continue
 		}
@@ -57,7 +58,7 @@ func source(out chan<- PipelineData, vms []string, cliMap config.CustomCLIConfig
 			data.DstFolder = item.DstFolder
 			data.GenericUrl = cliConfig.Url
 			// log information
-			logx.L.Debugf("[%s] [%s] Loaded CLI config. Sending instance to the pipeline", item.Name, vm)
+			logx.L.Debugf("[%s] [%s] Loaded CLI config. Sending instance to the pipeline", cliName, vm)
 			// sen this instance to the channel
 			out <- data
 		}

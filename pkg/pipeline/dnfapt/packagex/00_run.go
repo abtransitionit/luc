@@ -9,15 +9,14 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "install OS dnfapt packages on VMs."
+const RunPipelineDescription = "provision OS dnfapt package(s) on VM(s)."
 
-func RunPipeline(vmList string, packageList string) (string, error) {
+func RunPipeline(vmList string, packages []string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
 
 	// define var
 	vms := strings.Fields(vmList) // convert ListAsString to slice ([]string)
 	nbVm := len(vms)
-	packages := strings.Fields(packageList) // convert ListAsString to slice ([]string)
 
 	// Define the pipeline channels
 	ch01 := make(chan PipelineData)
@@ -38,3 +37,5 @@ func RunPipeline(vmList string, packageList string) (string, error) {
 	// success
 	return "", nil
 }
+
+// packages := strings.Fields(packageList) // convert ListAsString to slice ([]string)
