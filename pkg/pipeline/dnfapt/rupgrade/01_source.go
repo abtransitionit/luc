@@ -33,31 +33,31 @@ func source(out chan<- PipelineData, vms []string) {
 		// get some OS property
 		osFamily, err := util.GetPropertyRemote(vm, "osfamily")
 		if err != nil {
-			data.Err = fmt.Errorf("❌ Error: %v, %s", err, osFamily)
+			data.Err = fmt.Errorf("%v, %s", err, osFamily)
 			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
 		}
 
 		osDistro, err := util.GetPropertyRemote(vm, "osdistro")
 		if err != nil {
-			data.Err = fmt.Errorf("❌ Error: %v, %s", err, osDistro)
+			data.Err = fmt.Errorf("%v, %s", err, osDistro)
 			logx.L.Debugf("[%s] ❌ Error detected 2", vm)
 		}
 
 		hostType, err := util.GetPropertyRemote(vm, "host")
 		if err != nil {
-			data.Err = fmt.Errorf("❌ Error: %v, %s", err, hostType)
+			data.Err = fmt.Errorf("%v, %s", err, hostType)
 			logx.L.Debugf("[%s] ❌ Error detected 3", vm)
 		}
 
 		osVersion, err := util.GetPropertyRemote(vm, "osversion")
 		if err != nil {
-			data.Err = fmt.Errorf("❌ Error: %v, %s", err, osVersion)
+			data.Err = fmt.Errorf("%v, %s", err, osVersion)
 			logx.L.Debugf("[%s] ❌ Error detected 4", vm)
 		}
 
 		kernelVersion, err := util.GetPropertyRemote(vm, "oskversion")
 		if err != nil {
-			data.Err = fmt.Errorf("❌ Error: %v, %s", err, kernelVersion)
+			data.Err = fmt.Errorf("%v, %s", err, kernelVersion)
 			logx.L.Debugf("[%s] ❌ Error detected 5", vm)
 		}
 

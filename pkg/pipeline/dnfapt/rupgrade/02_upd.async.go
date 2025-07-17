@@ -21,20 +21,22 @@ func rUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) {
 		defer wg.Done()
 		for data := range in {
 
-			vm := data.HostName
-
 			if data.Err != nil {
 				out <- data
 				logx.L.Debugf("❌ Previous error detected")
 				continue
 			}
 
+			// get instance property
+			vm := data.HostName
+			osFamily := data.OsFamily
+
 			// remote upgrade
 			logx.L.Debugf("[%s] remote upgrading", vm)
-			_, err := dnfapt.RUpgrade(vm, data.OsFamily)
+			_, err := dnfapt.RUpgrade(vm, osFamily)
 			if err != nil {
 				data.Err = err
-				logx.L.Debugf("[%s] ❌ error detected 1", vm)
+				logx.L.Debugf("❌ [%s] error detected 1", vm)
 				out <- data
 				continue
 			}
@@ -45,7 +47,7 @@ func rUpgrade(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) {
 			rebootStatus, err := util.GetPropertyRemote(vm, "rebootstatus")
 			if err != nil {
 				data.Err = fmt.Errorf("%v, %s", err, rebootStatus)
-				logx.L.Debugf("[%s] ❌ Error detected 2", vm)
+				logx.L.Debugf("❌  [%s] Error detected 2", vm)
 			}
 			logx.L.Debugf("[%s] got reboot status : %s", vm, rebootStatus)
 

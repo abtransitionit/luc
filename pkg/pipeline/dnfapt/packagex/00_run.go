@@ -9,7 +9,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "provision OS dnfapt package(s) on VM(s)."
+const RunPipelineDescription = "provision OS dnfapt packages on VMs."
 
 func RunPipeline(vmList string, packages []string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)

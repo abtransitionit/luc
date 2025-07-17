@@ -18,10 +18,10 @@ func RUpgrade(vm string, osFamily string) (bool, error) {
 	var cli = ""
 	// check arg
 	if vm == "" {
-		return false, fmt.Errorf("❌ Error: vm is empty")
+		return false, fmt.Errorf("vm is not provided")
 	}
 	if osFamily == "" {
-		return false, fmt.Errorf("❌ Error: osFamily is empty")
+		return false, fmt.Errorf("osFamily is not provided")
 	}
 	//
 	switch strings.TrimSpace(osFamily) {
@@ -30,12 +30,12 @@ func RUpgrade(vm string, osFamily string) (bool, error) {
 	case "rhel", "fedora":
 		cli = "sudo dnf update -q -y > /dev/null && sudo dnf upgrade -q -y  > /dev/null && sudo dnf clean all > /dev/null"
 	default:
-		return false, fmt.Errorf("❌ Error/Warning: unsupported Linux OS Family: %s", osFamily)
+		return false, fmt.Errorf("unsupported Linux OS Family: %s", osFamily)
 	}
 	// Play CLI
-	_, err := util.RunCLIRemote(vm, cli)
+	outp, err := util.RunCLIRemote(vm, cli)
 	if err != nil {
-		return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
+		return false, fmt.Errorf("%v : %s", err, outp)
 	}
 
 	// on SUCCESS

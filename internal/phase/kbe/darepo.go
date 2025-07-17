@@ -10,10 +10,10 @@ import (
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-const DaPackDescription = "provision dnfapt packages"
+const DaRepoDescription = "provision dnfapt repositories"
 
-func daPack(arg ...string) (string, error) {
-	logx.L.Info(DaPackDescription)
+func daRepo(arg ...string) (string, error) {
+	logx.L.Info(DaRepoDescription)
 
 	// get all Map:key as []string
 	listPackage := util.GetMapKeys(config.KbeDnfaptCliConfigMap)
