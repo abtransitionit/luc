@@ -70,7 +70,7 @@ func source(out chan<- PipelineData, vms []string) {
 		data.OskernelVersionBefore = kernelVersion
 
 		// log information
-		logx.L.Debugf("[%s] send instance to the pipeline", vm)
+		logx.L.Debugf("[%s] sending instance to the pipeline", vm)
 		// sen this instance to the channel
 		out <- data
 

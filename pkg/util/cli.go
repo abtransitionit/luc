@@ -6,6 +6,7 @@ package util
 
 import (
 	"bytes"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"os"
@@ -136,16 +137,21 @@ func RunCLILocal(command string, liveOutput ...bool) (string, error) {
 
 func RunCLIRemote(vm, command string, liveOutput ...bool) (string, error) {
 	live := len(liveOutput) > 0 && liveOutput[0]
-	fullCmd := fmt.Sprintf(`ssh %s '%s'`, vm, command)
+	// fullCmd := fmt.Sprintf(`ssh %s '%s'`, vm, command)
+	encodedCmd := base64.StdEncoding.EncodeToString([]byte(command))
+	fullCmd := fmt.Sprintf(`ssh %s "echo '%s' | base64 --decode | sh"`, vm, encodedCmd)
 	cmd := exec.Command("sh", "-c", fullCmd)
+	// logx.L.Debugf("⚠️⚠️ Running cli: %s", fullCmd)
 
 	// Live output mode
 	if live {
+		// var stderr bytes.Buffer
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+		// cmd.Stderr = io.MultiWriter(os.Stderr, &stderr) // capture + print
+
 		if err := cmd.Run(); err != nil {
-			// return "", fmt.Errorf("❌ Error: remote command failed: %v", err)
-			// return stdout, err                   // // Return original output  + raw error
+			// return "", fmt.Errorf("%v:%s", err, stderr.String())
 			return "", fmt.Errorf("%v", err)
 		}
 		return "", nil

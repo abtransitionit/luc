@@ -10,7 +10,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "Create Linux OS service(s) unit files on VMs."
+const RunPipelineDescription = "Create 1..n Linux OS service unit file(s) on 1..n VMS."
 
 func RunPipeline(vmList string, osServiceMap config.OsServiceConfigMap) (string, error) {
 	logx.L.Debug(RunPipelineDescription)

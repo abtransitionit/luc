@@ -23,7 +23,7 @@ func lastStep(in <-chan PipelineData, vms []string) error {
 	// common loop
 	for data := range in {
 		if data.Err != nil {
-			logx.L.Debugf("[%s] Pipeline error : %v", data.Config.Name, data.Err)
+			logx.L.Debugf("❌ [%s] Pipeline error : %v", data.Config.Name, data.Err)
 			continue
 		}
 		logx.L.Infof("[%s] [%S] Received Pipeline Data", data.Config.Name, data.HostName)

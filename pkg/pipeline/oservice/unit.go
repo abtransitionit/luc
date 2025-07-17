@@ -14,6 +14,7 @@ func createUnit(in <-chan PipelineData, out chan<- PipelineData) {
 	defer close(out)
 
 	for data := range in {
+		vm := data.HostName
 		if data.Err != nil {
 			out <- data
 			logx.L.Debugf("❌ Previous error detected")
@@ -21,20 +22,21 @@ func createUnit(in <-chan PipelineData, out chan<- PipelineData) {
 		}
 
 		// remote create service file
-		logx.L.Debugf("[%s] [%s] create service file", data.HostName, data.Config.Name)
-		cli := fmt.Sprintf(`luc util oservice cfile '%s' %s --local --force`, data.Config.Content, data.Config.Path)
-		_, err := util.RunCLIRemote(data.HostName, cli)
+		logx.L.Debugf("[%s] [%s] creating service file", vm, data.Config.Name)
+		// cli := fmt.Sprintf(`luc do ServiceCreateUnitFile '%s' %s --force`, data.Config.Content, data.Config.Path)
+		cli := fmt.Sprintf(`luc do ServiceCreateUnitFile '%s' %s`, data.Config.Content, data.Config.Path)
+		outp, err := util.RunCLIRemote(vm, cli)
 
 		// error
 		if err != nil {
-			data.Err = err
-			logx.L.Debugf("[%s][%s] ❌ Error detected 1", data.Config.Name, data.HostName)
+			data.Err = fmt.Errorf("%v, %s", err, outp)
+			logx.L.Debugf("❌ [%s][%s] Error detected 1", data.Config.Name, vm)
 			out <- data
 			continue
 		}
 
 		// success
-		logx.L.Debugf("[%s] [%s] created service file", data.HostName, data.Config.Name)
+		logx.L.Debugf("[%s] [%s] created service file", vm, data.Config.Name)
 		out <- data
 	}
 }

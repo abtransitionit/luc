@@ -60,7 +60,7 @@ func helperMvExe(data PipelineData) PipelineData {
 	logx.L.Debugf("[%s] Moving '%s' to '%s'", data.Config.Name, data.ArtPath1, dstPath)
 
 	// play code
-	cli := fmt.Sprintf("luc do MoveFile %s %s %o %t --local", data.ArtPath1, dstPath, 0755, true)
+	cli := fmt.Sprintf("luc do MoveFile %s %s %o %t", data.ArtPath1, dstPath, 0755, true)
 	out, err := util.RunCLIRemote(data.HostName, cli)
 	if err != nil {
 		data.Err = fmt.Errorf("❌ Error: %v, %s", err, out)

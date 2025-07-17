@@ -31,9 +31,9 @@ func scpLuc(in <-chan PipelineData, out chan<- PipelineData, vmList string) {
 			// scp luc from local to remote VM
 			logx.L.Debugf("[%s] coping LUC from local to remote", data.VmName)
 			cli := fmt.Sprintf("scp %s %s:%s", data.localOutXptf, data.VmName, data.remoteTmpPath)
-			_, err := util.RunCLILocal(cli)
+			outp, err := util.RunCLILocal(cli)
 			if err != nil {
-				data.Err = err
+				data.Err = fmt.Errorf("❌ Error: %v, %s", err, outp)
 				logx.L.Debugf("[%s] ❌ error detected", data.VmName)
 				out <- data
 				continue
@@ -43,9 +43,9 @@ func scpLuc(in <-chan PipelineData, out chan<- PipelineData, vmList string) {
 			// remote mv luc from temp to final folder
 			logx.L.Debugf("[%s] remote moving LUC from tmp to final path", data.VmName)
 			cli = fmt.Sprintf("sudo mv  %s %s", data.remoteTmpPath, data.remoteExePath)
-			_, err = util.RunCLIRemote(data.VmName, cli)
+			outp, err = util.RunCLIRemote(data.VmName, cli)
 			if err != nil {
-				data.Err = err
+				data.Err = fmt.Errorf("❌ Error: %v, %s", err, outp)
 				logx.L.Debugf("[%s] ❌ error detected", data.VmName)
 				out <- data
 				continue

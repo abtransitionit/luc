@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package oservice
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/abtransitionit/luc/pkg/config"
@@ -38,34 +39,34 @@ func source(out chan<- PipelineData, vms []string, osServiceMap config.OsService
 			}
 
 			// get some OS property
-			oSFamily, err := util.GetPropertyRemote(vm, "osfamily")
+			osFamily, err := util.GetPropertyRemote(vm, "osfamily")
 			if err != nil {
-				data.Err = err
+				data.Err = fmt.Errorf("❌ Error: %v, %s", err, osFamily)
 				logx.L.Debugf("[%s] ❌ Error detected 1", vm)
 			}
-			oSType, err := util.GetPropertyRemote(vm, "ostype")
+			osType, err := util.GetPropertyRemote(vm, "ostype")
 			if err != nil {
-				data.Err = err
+				data.Err = fmt.Errorf("❌ Error: %v, %s", err, osType)
 				logx.L.Debugf("[%s] ❌ Error detected 1", vm)
 			}
 
 			// avoid creating instance for Os type not manage
-			if strings.ToLower(strings.TrimSpace(oSType)) != "linux" {
+			if strings.ToLower(strings.TrimSpace(osType)) != "linux" {
 				continue
 			}
 
 			// avoid creating instance for services not manage by this OS family
-			if isExcluded, err := ServiceIsExcluded(oSFamily, data.Config.Name); err != nil {
-				logx.L.Errorf("%s", err)
+			if isExcluded, err := ServiceIsExcluded(osFamily, data.Config.Name); err != nil {
+				logx.L.Debugf("❌ Error :%v", err)
 			} else if isExcluded {
-				logx.L.Debugf("[%s] [%s] Service excluded, skipping...", osServiceConfig.Name, vm)
+				logx.L.Debugf("[%s] [%s] Service excluded, skipping...", vm, osServiceConfig.Name)
 				continue
 			}
 
 			// define instance property - 1 per VmxService
 			data.HostName = vm
 			data.Config = osServiceConfig
-			data.OsFamily = oSFamily
+			data.OsFamily = osFamily
 
 			// log information
 			logx.L.Debugf("[%s] [%s] Loaded service config. Sending instance to the pipeline", item.Name, vm)

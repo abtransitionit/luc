@@ -4,6 +4,8 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package linger
 
 import (
+	"fmt"
+
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 )
@@ -23,10 +25,11 @@ func enableLinger(in <-chan PipelineData, out chan<- PipelineData) {
 
 		// TODO: weird: explicit the user. remote enable linger for current user (aka. sudo user)
 		logx.L.Debugf("[%s] [%s] enabling linger for user ", vm, user)
-		cli := `luc util oservice linger --local --force`
-		if _, err := util.RunCLIRemote(vm, cli); err != nil {
-			logx.L.Debugf("[%s][%s] ❌ Error detected 1", vm, user)
-			data.Err = err
+		// cli := `luc util oservice linger --local --force`
+		cli := `luc do ServiceEnableLinger`
+		if outp, err := util.RunCLIRemote(vm, cli); err != nil {
+			data.Err = fmt.Errorf("%v, %s", err, outp)
+			logx.L.Debugf("[%s] [%s] ❌ Error detected 1", vm, user)
 			out <- data
 			continue
 		}
@@ -34,8 +37,8 @@ func enableLinger(in <-chan PipelineData, out chan<- PipelineData) {
 		// get property
 		lingerStatus, err := util.GetPropertyRemote(vm, "userlinger", user)
 		if err != nil {
+			data.Err = fmt.Errorf("%v, %s", err, lingerStatus)
 			logx.L.Debugf("[%s][%s] ❌ Error detected 2", vm, user)
-			data.Err = err
 			out <- data
 			continue
 		}

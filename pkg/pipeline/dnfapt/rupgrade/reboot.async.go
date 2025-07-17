@@ -46,7 +46,7 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbWorker int)
 				for {
 					isReachable, err := util.IsSshConfiguredVmSshReachable(vm)
 					if err != nil {
-						data.Err = fmt.Errorf("❌ Error: %v, %v", err, isReachable)
+						data.Err = fmt.Errorf("%v, %v", err, isReachable)
 						logx.L.Debugf("[%s] ❌ error detected 2", vm)
 						out <- data
 						continue
@@ -67,7 +67,7 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbWorker int)
 			// get property
 			kernelVersion, err := util.GetPropertyRemote(vm, "oskversion")
 			if err != nil {
-				data.Err = fmt.Errorf("❌ Error: %v, %s", err, kernelVersion)
+				data.Err = fmt.Errorf("%v, %s", err, kernelVersion)
 				logx.L.Debugf("[%s] ❌ Error detected 3", vm)
 				out <- data
 				continue

@@ -152,14 +152,13 @@ func handleRunAllFlag(cmd *cobra.Command, phases []Phase) (bool, error) {
 //   - (true, error) if the matching phase failed during execution
 func handleSinglePhase(cmd *cobra.Command, phaseName string, phases []Phase) (bool, error) {
 	cmdName := cmd.Name()
-	logx.L.Debugf("cmd '%s' description is : %s", cmdName, cmd.Short)
-	logx.L.Debugf("cmd '%s' argument is    : %s", cmdName, phaseName)
+	logx.L.Debugf("👉    cmd '%s' : %s", cmdName, cmd.Short)
+	// logx.L.Debugf("argument is '%s' :", phaseName)
 
 	// play the code of the single phase provided as argument
 	for _, phase := range phases {
 		if phase.Name == phaseName {
-			// logx.L.Infof("👉 Running phase: '%s', that '%s'", phase.Name, phase.Description)
-			logx.L.Infof("👉 Running phase: '%s'", phase.Name)
+			logx.L.Infof("👉 👉 Running phase: '%s'", phase.Name)
 			if _, err := phase.Func(cmdName); err != nil {
 				// handle system FAILURE
 				logx.L.Debugf("❌ Phase '%s': %v", phase.Name, err)

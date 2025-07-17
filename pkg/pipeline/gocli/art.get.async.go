@@ -34,7 +34,7 @@ func getArtifact(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) 
 			case config.UrlGit:
 				// TODO
 			default:
-				data.Err = fmt.Errorf("[%s] ❌ Unsupported or not yet managed UrlType :  '%s'", data.Config.Name, data.Config.UrlType)
+				data.Err = fmt.Errorf("[%s] Unsupported or not yet managed UrlType :  '%s'", data.Config.Name, data.Config.UrlType)
 				logx.L.Debugf("[%s] ❌ Error detected 2", data.Config.Name)
 			}
 
@@ -61,7 +61,7 @@ func helperExeTgz(data PipelineData) PipelineData {
 
 	// error
 	if err != nil {
-		data.Err = fmt.Errorf("❌ Error: %v, %s", err, out)
+		data.Err = fmt.Errorf("%v, %s", err, out)
 		logx.L.Debugf("[%s] [%s] ❌ Error detected during download", data.Config.Name, data.HostName)
 		return data
 	}

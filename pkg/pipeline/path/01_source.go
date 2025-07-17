@@ -4,6 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package path
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/abtransitionit/luc/pkg/logx"
@@ -33,7 +34,7 @@ func source(out chan<- PipelineData, vms []string, pathFile string) {
 
 		PathTree, err := util.GetPropertyRemote(vm, "pathtree", "/usr/local/bin")
 		if err != nil {
-			data.Err = err
+			data.Err = fmt.Errorf("%v, %s", err, PathTree)
 			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
 		}
 
@@ -43,7 +44,7 @@ func source(out chan<- PipelineData, vms []string, pathFile string) {
 		data.TmpFilePath = pathFile
 
 		// log and send
-		logx.L.Debugf("[%s] send instance to the pipeline", vm)
+		logx.L.Debugf("[%s] sending instance to the pipeline", vm)
 		out <- data
 	}
 

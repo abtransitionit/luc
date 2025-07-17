@@ -26,12 +26,28 @@ type FnActionHandler struct {
 }
 
 var FnActionMap = map[string]FnActionHandler{
-	"AddLineToFile":    {Fn: AddLineToFileFn, NbParams: 2},
-	"CheckFileExists":  {Fn: CheckFileExistsFn, NbParams: 1},
-	"MoveFile":         {Fn: MoveFileFn, NbParams: 4},
-	"SaveStringToFile": {Fn: SaveStringToFileFn, NbParams: 3},
-	"TouchFile":        {Fn: TouchFileFn, NbParams: 1},
-	"DeleteFile":       {Fn: DeleteFileFn, NbParams: 1},
+	"TouchFile":             {Fn: TouchFileFn, NbParams: 1},
+	"AddLineToFile":         {Fn: AddLineToFileFn, NbParams: 2},
+	"SaveStringToFile":      {Fn: SaveStringToFileFn, NbParams: 3},
+	"CheckFileExists":       {Fn: CheckFileExistsFn, NbParams: 1},
+	"MoveFile":              {Fn: MoveFileFn, NbParams: 4},
+	"DeleteFile":            {Fn: DeleteFileFn, NbParams: 1},
+	"ServiceCreateUnitFile": {Fn: ServiceCreateUnitFileFn, NbParams: 2},
+	"ServiceEnableLinger":   {Fn: ServiceEnableLingerFn, NbParams: 0},
+}
+
+func ServiceCreateUnitFileFn(fnParameters []string) (string, error) {
+
+	// get input
+	serviceName := fnParameters[0]
+	unitFilePath := fnParameters[1]
+
+	return CreateServiceUniteFile(serviceName, unitFilePath)
+}
+
+func ServiceEnableLingerFn(fnParameters []string) (string, error) {
+
+	return EnableLinger()
 }
 
 func TouchFileFn(fnParameters []string) (string, error) {
@@ -151,12 +167,13 @@ func logAndCheckParams(nbRequired int, fnParameters []string) (int, error) {
 	for _, p := range fnParameters {
 		// skip empty parameters
 		if strings.TrimSpace(p) != "" {
-			// logx.L.Debugf("param: %s", p)
+			// logx.L.Debugf("⚠️⚠️ param: %s", p)
 			nbParams++
 		}
 	}
+	// logx.L.Debugf("⚠️⚠️ nbParams: %d", nbParams)
 	if nbParams < nbRequired {
-		return nbParams, fmt.Errorf("❌ Error: %d parameter(s) required", nbRequired)
+		return nbParams, fmt.Errorf("%d parameter(s) required", nbRequired)
 	}
 	return nbParams, nil
 }

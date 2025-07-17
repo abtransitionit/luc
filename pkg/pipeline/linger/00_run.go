@@ -9,7 +9,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "Create Linux OS service(s) unit files on VMs."
+const RunPipelineDescription = "Allow non root user to run OS services."
 
 func RunPipeline(vmList string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)

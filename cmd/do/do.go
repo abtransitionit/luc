@@ -6,6 +6,7 @@ package do
 import (
 	"fmt"
 
+	"github.com/abtransitionit/luc/cmd/do/oservice"
 	"github.com/abtransitionit/luc/pkg/util"
 	"github.com/spf13/cobra"
 )
@@ -36,10 +37,17 @@ var DoCmd = &cobra.Command{
 			return nil
 		}
 
-		// define var
+		// define var from input
 		vmName, _ := cmd.Flags().GetString("remote")
+
+		// define var
 		action := args[0]
 		parameters := args[1:] // Pass all elements except the first one
+
+		// does action exits
+		if _, ok := util.FnActionMap[action]; !ok {
+			return fmt.Errorf("❌ Error : action does not exist : %s", action)
+		}
 
 		// Play cli
 		var result string
@@ -69,7 +77,7 @@ func init() {
 	DoCmd.SilenceUsage = true // do not show usage on error
 	// DoCmd.SilenceErrors = true
 	DoCmd.AddCommand(getpropCmd)
+	DoCmd.AddCommand(oservice.OsServiceCmd)
 	DoCmd.Flags().BoolP("show", "s", false, "List available property name")
 	DoCmd.Flags().StringP("remote", "r", "", "Remote VM name")
-
 }

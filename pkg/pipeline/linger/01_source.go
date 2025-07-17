@@ -65,7 +65,7 @@ func source(out chan<- PipelineData, vms []string) {
 		data.LingerStatus = UserLinger
 
 		// log and send
-		logx.L.Debugf("[%s] send instance to the pipeline", vm)
+		logx.L.Debugf("[%s] sending instance to the pipeline", vm)
 		out <- data
 	}
 

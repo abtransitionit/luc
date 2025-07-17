@@ -13,7 +13,7 @@ func ReloadAndApplyService(action string, listServiceName ...string) error {
 	// get property
 	osType, err := GetPropertyLocal("ostype")
 	if err != nil {
-		return err
+		return fmt.Errorf("❌ Error: %v, %s", err, osType)
 	}
 
 	// manage linux only
@@ -63,7 +63,7 @@ func StatusListService(listServiceName ...string) (map[string]string, error) {
 	// get property
 	osType, err := GetPropertyLocal("ostype")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("❌ Error: %v, %s", err, osType)
 	}
 
 	// manage linux only
@@ -91,7 +91,7 @@ func StatusService(serviceName string) (string, error) {
 	// get property
 	osType, err := GetPropertyLocal("ostype")
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("❌ Error: %v, %s", err, osType)
 	}
 
 	// manage linux only
@@ -111,31 +111,31 @@ func StatusService(serviceName string) (string, error) {
 	return out, nil
 }
 
-func CreateServiceFile(stringContent string, filePath string) error {
+func CreateServiceUniteFile(stringContent string, filePath string) (string, error) {
 
 	// get property
 	osType, err := GetPropertyLocal("ostype")
 	if err != nil {
-		return err
+		return "", fmt.Errorf("❌ Error: %v, %s", err, osType)
 	}
 
 	// manage only linux
 	if osType != "linux" {
-		return fmt.Errorf("unsupported OS type: %s (only linux is supported)", osType)
+		return "", fmt.Errorf("unsupported OS type: %s (only linux is supported)", osType)
 	}
 
 	_, err = SaveStringToFile(stringContent, filePath, true)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return filePath, nil
 }
 func CreateUserServiceFile(stringContent string, filePath string) error {
 
 	// get property
 	osType, err := GetPropertyLocal("ostype")
 	if err != nil {
-		return err
+		return fmt.Errorf("❌ Error: %v, %s", err, osType)
 	}
 
 	// manage only linux
@@ -151,19 +151,19 @@ func CreateUserServiceFile(stringContent string, filePath string) error {
 }
 
 // Enable for the current user services to runs after a logout
-func EnableLinger() error {
+func EnableLinger() (string, error) {
 	cli := "loginctl enable-linger"
-	if _, err := RunCLILocal(cli); err != nil {
-		return err
+	if outp, err := RunCLILocal(cli); err != nil {
+		return "", fmt.Errorf("❌ Error: %v, %s", err, outp)
 	}
-	return nil
+	return "", nil
 }
 
 // Disable for the current user services to runs after a logout
-func DissableLinger() error {
+func DissableLinger() (string, error) {
 	cli := "loginctl disable-linger"
-	if _, err := RunCLILocal(cli); err != nil {
-		return err
+	if outp, err := RunCLILocal(cli); err != nil {
+		return "", fmt.Errorf("❌ Error: %v, %s", err, outp)
 	}
-	return nil
+	return "", nil
 }

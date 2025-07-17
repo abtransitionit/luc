@@ -40,9 +40,9 @@ func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int, vm
 				}
 				// ------------------------
 				logx.L.Debugf("[%s] [%s] remote installing package", vm, pkgName)
-				_, err := dnfapt.RInstallP(vm, data.OsFamily, pkgName)
+				output, err := dnfapt.RInstallP(vm, data.OsFamily, pkgName)
 				if err != nil {
-					data.Err = err
+					data.Err = fmt.Errorf("%v, %v", err, output)
 					logx.L.Debugf("[%s] ❌ error detected 1", vm)
 					out <- data
 					continue
@@ -54,7 +54,7 @@ func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int, vm
 			logx.L.Debugf("[%s] getting reboot status", vm)
 			rebootStatus, err := util.GetPropertyRemote(vm, "rebootstatus")
 			if err != nil {
-				data.Err = err
+				data.Err = fmt.Errorf("%v, %s", err, rebootStatus)
 				logx.L.Debugf("[%s] ❌ Error detected 2", vm)
 			}
 			logx.L.Debugf("[%s] got reboot status : %s", vm, rebootStatus)
@@ -65,7 +65,7 @@ func remoteInstall(in <-chan PipelineData, out chan<- PipelineData, nbVm int, vm
 			// get property
 			kernelVersion, err := util.GetPropertyRemote(vm, "oskversion")
 			if err != nil {
-				data.Err = fmt.Errorf("❌ Error: %v, %s", err, kernelVersion)
+				data.Err = fmt.Errorf("%v, %s", err, kernelVersion)
 				logx.L.Debugf("[%s] ❌ Error detected 3", vm)
 				out <- data
 				continue

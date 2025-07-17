@@ -93,9 +93,10 @@ func RInstallP(vm string, osFamily string, packageName string) (bool, error) {
 		return false, fmt.Errorf("❌ Error/Warning: unsupported Linux OS Family: %s", osFamily)
 	}
 	// Play CLI
-	_, err := util.RunCLIRemote(vm, cli)
+	out, err := util.RunCLIRemote(vm, cli)
 	if err != nil {
-		return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
+		// return false, fmt.Errorf(" ❌ play cli > %s : %v", cli, err)
+		return false, fmt.Errorf("%v > %s", err, out)
 	}
 
 	// on SUCCESS
