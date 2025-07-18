@@ -35,7 +35,7 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbWorker int)
 				err := util.RemoteReboot(vm)
 				if err != nil {
 					data.Err = err
-					logx.L.Debugf("[%s] ❌ error detected 1", vm)
+					logx.L.Debugf("❌ [%s] error detected 1", vm)
 					out <- data
 					continue
 				}
@@ -47,7 +47,7 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbWorker int)
 					isReachable, err := util.IsSshConfiguredVmSshReachable(vm)
 					if err != nil {
 						data.Err = fmt.Errorf("%v, %v", err, isReachable)
-						logx.L.Debugf("[%s] ❌ error detected 2", vm)
+						logx.L.Debugf("❌ [%s] error detected 2", vm)
 						out <- data
 						continue
 					}
