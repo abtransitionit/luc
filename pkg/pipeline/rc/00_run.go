@@ -15,7 +15,7 @@ func RunPipeline(vmList string, stringLine string, rcFilePath string) (string, e
 	logx.L.Debug(RunPipelineDescription)
 
 	// define var
-	vms := strings.Fields(vmList) // convert ListAsString to slice ([]string)
+	vms := strings.Fields(vmList) // convert ListAsString to []string (ie. go slice)
 
 	// Define the pipeline channels
 	ch01 := make(chan PipelineData)

@@ -12,7 +12,21 @@ import (
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
-func GeRemotePropertyTest(vm string, property string) string {
+func GetPackage1(vm string, cli string) (string, error) {
+	logx.L.Debugf("GePackage for cli : %s on linux distro : default", cli)
+
+	return "", nil
+}
+func CheckCliExits(cli string) (string, error) {
+	logx.L.Debugf("Check cli : %s exists", cli)
+
+	return "", nil
+}
+func GetPackage2(vm string, osDistro string, cli string) (string, error) {
+	logx.L.Debugf("GePackage for cli : %s on linux distro : %s", cli, osDistro)
+	return "", nil
+}
+func GeRemoteProperty(vm string, property string) string {
 	// get some OS property
 	osfamily, err := util.GetPropertyRemote(vm, "osfamily")
 	if err != nil {
@@ -109,14 +123,16 @@ func CheckFileLocalExits(fullPath string) bool {
 }
 
 func CheckFileRemoteExists(vm string, fullPath string) bool {
+
 	// Convert string to slice
 	fnParameters := []string{fullPath}
-	// check file exists
+
+	// do the check
 	result, err := util.PlayFnOnRemote(vm, "CheckFileExists", fnParameters)
 
 	// error
 	if err != nil {
-		logx.L.Debugf("%s", err)
+		logx.L.Debugf("%v : %s", err, result)
 		return false
 	}
 
@@ -125,13 +141,82 @@ func CheckFileRemoteExists(vm string, fullPath string) bool {
 
 	switch res {
 	case "false":
-		logx.L.Debugf("❌ remote file does not exist: %s", fullPath)
+		logx.L.Debugf("❌ [%s] [%s] remote file does not exist", vm, fullPath)
 		return false
 	case "true":
-		logx.L.Debugf("✅ remote file exists: %s", fullPath)
+		logx.L.Debugf("✅ [%s] [%s] remote cli exists", vm, fullPath)
 		return true
 	default:
-		logx.L.Infof("⚠️ ⚠️ Impossible to say, result unknown: -%s-", result)
+		logx.L.Infof("⚠️ ⚠️ [%s] [%s] Impossible to say, result unknown: -%s-", vm, fullPath, result)
+		return false
+	}
+}
+
+func CheckCliExistsOnremote(vm string, cliName string) bool {
+
+	// Convert string to slice
+	fnParameters := []string{cliName}
+
+	// check vm is ssh reachable
+	result, err := util.GetPropertyLocal("sshreachability", vm)
+	if err != nil {
+		logx.L.Debugf("%v : %s", err, result)
+		return false
+	} else if result != "true" {
+		logx.L.Debugf("❌ [%s] : %s", vm, "not reachable")
+		return false
+	}
+
+	// do the check
+	// logx.L.Infof("[%s] [%s] Checking cli exists", vm, cliName)
+	result, err = util.PlayFnOnRemote(vm, "CheckCliExists", fnParameters)
+
+	// error
+	if err != nil {
+		logx.L.Debugf("%v : %s", err, result)
+		return false
+	}
+
+	// normalize result
+	res := strings.ToLower(strings.TrimSpace(result))
+
+	switch res {
+	case "false":
+		logx.L.Debugf("❌ [%s] [%s] : %s", vm, cliName, result)
+		return false
+	case "true":
+		logx.L.Debugf("✅ [%s] [%s] : %s", vm, cliName, result)
+		return true
+	default:
+		logx.L.Infof("⚠️ ⚠️ [%s] [%s] : %s", vm, cliName, result)
+		return false
+	}
+}
+
+func CheckVmIsSshReachable(vm string) bool {
+
+	// do the check
+	// logx.L.Infof("[%s] Checking vm is ssh reachable", vm)
+	result, err := util.GetPropertyLocal("sshreachability", vm)
+
+	// error
+	if err != nil {
+		logx.L.Debugf("%v : %s", err, result)
+		return false
+	}
+
+	// normalize result
+	res := strings.ToLower(strings.TrimSpace(result))
+
+	switch res {
+	case "false":
+		logx.L.Debugf("❌ [%s] :%s", vm, result)
+		return false
+	case "true":
+		logx.L.Debugf("✅ [%s] : %s", vm, result)
+		return true
+	default:
+		logx.L.Infof("⚠️ ⚠️ [%s] [%s] Impossible to say", vm, result)
 		return false
 	}
 }

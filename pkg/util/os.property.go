@@ -23,36 +23,66 @@ type PropertyHandler func(...string) (string, error)
 
 // map a string to a function
 var OsPropertyMap = map[string]PropertyHandler{
-	"cpu":            getCpu,
-	"cgroup":         getCgroupVersion,
-	"init":           getInitSystem,
-	"host":           getHost,
-	"userlinger":     getLinger,
-	"netip":          getNetIp,
-	"netgateway":     getNetGateway,
-	"osuser":         getOsUser,
-	"ostype":         getOsType, // e.g. linux, windows, darwin
-	"osarch":         getOsArch,
-	"osversion":      getOsVersion,
-	"osdistro":       getOsDistro,
-	"oskversion":     getOsKernelVersion,
-	"osfamily":       getOsFamily,
-	"osinfos":        getOsInfos,
-	"path":           getPath,
-	"pathext":        getPathExtend,
-	"pathtree":       getPathTree,
-	"ram":            getRam,
-	"selstatus":      getSelinuxStatus,
-	"selmode":        getSelinuxMode,
-	"selinfos":       getSelinuxInfos,
-	"serviceStatus":  getServiceStatus,
-	"serviceEnabled": getServiceEnabled,
-	"serviceinfos":   getServiceInfos,
-	"rebootstatus":   getReboot,
-	"uuid":           getUuid,
-	"uname":          getUnameM,
+	"cpu":             getCpu,
+	"cgroup":          getCgroupVersion,
+	"clipackage":      getPackage,
+	"init":            getInitSystem,
+	"host":            getHost,
+	"userlinger":      getLinger,
+	"netip":           getNetIp,
+	"netgateway":      getNetGateway,
+	"osuser":          getOsUser,
+	"ostype":          getOsType, // e.g. linux, windows, darwin
+	"osarch":          getOsArch,
+	"osversion":       getOsVersion,
+	"osdistro":        getOsDistro,
+	"oskversion":      getOsKernelVersion,
+	"osfamily":        getOsFamily,
+	"osinfos":         getOsInfos,
+	"path":            getPath,
+	"pathext":         getPathExtend,
+	"pathtree":        getPathTree,
+	"ram":             getRam,
+	"selstatus":       getSelinuxStatus,
+	"selmode":         getSelinuxMode,
+	"selinfos":        getSelinuxInfos,
+	"serviceStatus":   getServiceStatus,
+	"serviceEnabled":  getServiceEnabled,
+	"serviceinfos":    getServiceInfos,
+	"sshreachability": getSshReachability,
+	"rebootstatus":    getReboot,
+	"uuid":            getUuid,
+	"uname":           getUnameM,
 }
 
+func getPackage(params ...string) (string, error) {
+
+	// manage argument
+	if len(params) < 1 {
+		return "", fmt.Errorf("cli name required")
+	}
+
+	// get input
+	cliName := params[0]
+
+	// get os:type
+	osType, err := getOsType()
+	if err != nil {
+		return "", err
+	}
+	// get os:arch
+	osfamily, err := getOsFamily()
+	if err != nil {
+		return "", err
+	}
+
+	// manage linux only
+	if strings.TrimSpace(strings.ToLower(osType)) != "linux" {
+		return "", fmt.Errorf("os:type not manage: [%s]", osType)
+	}
+
+	return osfamily + " " + cliName, nil
+}
 func getLinger(params ...string) (string, error) {
 	if len(params) < 1 {
 		return "", fmt.Errorf("user name required")
@@ -109,6 +139,21 @@ func getServiceEnabled(params ...string) (string, error) {
 	return RunCLILocal(cli)
 }
 
+func getSshReachability(params ...string) (string, error) {
+	// manage argument
+	if len(params) < 1 {
+		return "", fmt.Errorf("vm name required")
+	}
+
+	// get service name
+	vm := params[0]
+
+	// play cli
+	if _, cli := IsVmSshReachable(vm); cli != nil {
+		return "false", nil
+	}
+	return "true", nil
+}
 func getServiceStatus(params ...string) (string, error) {
 
 	// manage argument

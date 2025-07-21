@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package rupgrade
+package upgrade
 
 import (
 	"fmt"
@@ -21,7 +21,9 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbWorker int)
 	worker := func() {
 		defer wg.Done()
 		for data := range in {
+
 			vm := data.HostName
+
 			if data.Err != nil {
 				out <- data
 				logx.L.Debugf("❌ Previous error detected")
@@ -30,6 +32,7 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbWorker int)
 
 			// remote reboot if needed
 			if strings.ToLower(strings.TrimSpace(data.RebootStatus)) == "true" {
+
 				// reboot
 				logx.L.Debugf("[%s] remote rebooting", vm)
 				err := util.RemoteReboot(vm)
@@ -41,28 +44,26 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbWorker int)
 				}
 				logx.L.Debugf("[%s] remote rebooted", vm)
 
-				// wait ssh reachable
+				// wait ssh to become reachable
 				logx.L.Debugf("[%s] getting ssh reachability", vm)
 				for {
-					isReachable, err := util.IsSshConfiguredVmSshReachable(vm)
-					if err != nil {
-						data.Err = fmt.Errorf("%v, %v", err, isReachable)
-						logx.L.Debugf("❌ [%s] error detected 2", vm)
-						out <- data
-						continue
-					}
-					if err == nil && isReachable {
+					// get reachability
+					isReachable, err := util.GetPropertyLocal("sshreachability", vm)
+
+					// exit for loop if vm is reachable
+					if err == nil && isReachable == "true" {
 						break
 					}
+
+					// repeat for code if vm is not reachable
+					logx.L.Debugf("[%s] ssh not reachable, waiting ..", vm)
 					time.Sleep(2 * time.Second)
-				}
-				// log end wait
-				logx.L.Debugf("[%s] got ssh reachability", vm)
+				} // end for loop
 
 				// set instance property
 				data.RebootStatus = "false"
 
-			}
+			} // if
 
 			// get property
 			kernelVersion, err := util.GetPropertyRemote(vm, "oskversion")
@@ -89,3 +90,19 @@ func remoteReboot(in <-chan PipelineData, out chan<- PipelineData, nbWorker int)
 
 	wg.Wait()
 }
+
+// for {
+// 	isReachable, err := util.IsSshConfiguredVmSshReachable(vm)
+// 	if err != nil {
+// 		data.Err = fmt.Errorf("%v, %v", err, isReachable)
+// 		logx.L.Debugf("❌ [%s] error detected 2", vm)
+// 		out <- data
+// 		continue
+// 	}
+// 	if err == nil && isReachable {
+// 		break
+// 	}
+// 	time.Sleep(2 * time.Second)
+// }
+// log end wait
+// logx.L.Debugf("[%s] got ssh reachability", vm)

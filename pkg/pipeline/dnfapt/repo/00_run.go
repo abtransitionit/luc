@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package packagex
+package repo
 
 import (
 	"strings"
@@ -9,24 +9,23 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "install OS dnfapt packages on VMs."
+const RunPipelineDescription = "provision OS dnfapt repositories on VMs."
 
-func RunPipeline(vmList string, packageList string) (string, error) {
+func RunPipeline(vmList string, repositories []string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
+
 	// define var
-	vms := strings.Fields(vmList) // convert ListAsString to slice ([]string)
-	nbVm := len(vms)
-	packages := strings.Fields(packageList) // convert ListAsString to slice ([]string)
+	vms := strings.Fields(vmList) // convert ListAsString to []string (ie. go slice)
+	// nbVm := len(vms)
+
 	// Define the pipeline channels
 	ch01 := make(chan PipelineData)
-	ch02 := make(chan PipelineData)
-	ch03 := make(chan PipelineData)
-	chOutLast := ch03
+	// ch02 := make(chan PipelineData)
+	// ch03 := make(chan PipelineData)
+	chOutLast := ch01
 
-	// aync stage
-	go source(ch01, vms, packages) // define instances to send to the pipeline
-	go remoteInstall(ch01, ch02, nbVm, vms, packages)
-	go remoteReboot(ch02, ch03, nbVm)
+	// stage running async/concurrently/in parallel
+	go source(ch01, vms, repositories) // define data instances to send to the pipeline
 
 	// final sequential step. collects all instances in the pipeline and build a sumary
 	err := lastStep(chOutLast)
@@ -36,3 +35,5 @@ func RunPipeline(vmList string, packageList string) (string, error) {
 	// success
 	return "", nil
 }
+
+// packages := strings.Fields(packageList) // convert ListAsString to []string (ie. go slice)

@@ -16,7 +16,7 @@ func RunPipeline(vmList string, osServiceMap config.OsServiceConfigMap) (string,
 	logx.L.Debug(RunPipelineDescription)
 
 	// define var
-	vms := strings.Fields(vmList) // convert ListAsString to slice ([]string)
+	vms := strings.Fields(vmList) // convert ListAsString to []string (ie. go slice)
 
 	// Define the pipeline channels
 	ch01 := make(chan PipelineData)

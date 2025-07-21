@@ -62,3 +62,7 @@ func GetStringfromSlice(ListString []string, separator string) string {
 func GetStringfromSliceWithSpace(ListString []string) string {
 	return GetStringfromSlice(ListString, " ")
 }
+
+func GetSlicefromStringWithSpace(ListAsString string) []string {
+	return strings.Fields(ListAsString)
+}

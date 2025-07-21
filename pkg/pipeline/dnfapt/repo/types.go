@@ -1,10 +1,10 @@
-package packagex
+package repo
 
 import "github.com/jedib0t/go-pretty/table"
 
 type PipelineData struct {
 	HostName              string   // The VM name
-	PackageList           []string // The list of packages to install.
+	RepositoryList        []string // The list of packages to install.
 	HostType              string   // Vm or container
 	OsDistro              string
 	OsFamily              string // Rhel, Debian, fedora
@@ -21,7 +21,7 @@ type PipelineData struct {
 func (obj PipelineData) String() string {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleLight)
-	t.SetTitle("VM dnfapt insta Status")
+	t.SetTitle("VM dnfapt repository provisioning Status")
 	t.AppendHeader(table.Row{"Field", "Value"})
 
 	t.AppendRows([]table.Row{
@@ -29,7 +29,7 @@ func (obj PipelineData) String() string {
 		{"Host Type", obj.HostType},
 		{"OS Family", obj.OsFamily},
 		{"OS Distro", obj.OsDistro},
-		{"Package List", obj.PackageList},
+		{"Repository List", obj.RepositoryList},
 		{"Kerner version (before)", obj.OskernelVersionBefore},
 		{"Kerner version (after)", obj.OskernelVersionAfter},
 		{"Reboot status", obj.RebootStatus},

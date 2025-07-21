@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package rupgrade
+package upgrade
 
 import (
 	"fmt"
@@ -21,12 +21,27 @@ func source(out chan<- PipelineData, vms []string) {
 	// closing it make it available for next stage, because it is defined outside
 	defer close(out)
 
-	logx.L.Debugf("defining instances to be pipelined : %d VM(s) : %s", len(vms), vms)
+	logx.L.Debugf("defining instances to be pipelined")
+	logx.L.Debugf("Vms        to provision.    : %d : %s", len(vms), vms)
+
 	for _, vm := range vms {
+
 		vm = strings.TrimSpace(vm)
+
 		if vm == "" {
 			continue
 		}
+
+		// avoid creating instance for non SSH reachable VMs
+		vmReachabiliy, err := util.GetPropertyLocal("sshreachability", vm)
+		if err != nil {
+			logx.L.Debugf("⚠️ %v : %s : %s", err, vmReachabiliy, "skipping data instance for it")
+			continue
+		} else if strings.ToLower(strings.TrimSpace(vmReachabiliy)) == "false" {
+			logx.L.Debugf("⚠️ [%s] remote vm is not reachable, skipping data instance for it", vm)
+			continue
+		}
+
 		// define one per item
 		data := PipelineData{}
 
@@ -61,7 +76,7 @@ func source(out chan<- PipelineData, vms []string) {
 			logx.L.Debugf("[%s] ❌ Error detected 5", vm)
 		}
 
-		// set this instance properties
+		// set instance properties
 		data.HostName = vm
 		data.OsFamily = osFamily
 		data.OsDistro = osDistro

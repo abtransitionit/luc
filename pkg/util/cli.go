@@ -42,6 +42,16 @@ func CliExists(name string) (bool, error) {
 	}
 	return true, nil
 }
+func CheckCliExists(name string) (string, error) {
+	_, err := exec.LookPath(name)
+	if err != nil {
+		if errors.Is(err, exec.ErrNotFound) {
+			return "false", nil // Tool is not installed (normal case)
+		}
+		return "false", err // Unexpected error (e.g., permission issue)
+	}
+	return "true", nil
+}
 
 // # Purpose
 //

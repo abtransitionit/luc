@@ -31,6 +31,7 @@ var FnActionMap = map[string]FnActionHandler{
 	"SaveStringToFile":      {Fn: SaveStringToFileFn, NbParams: 3},
 	"GetStringFromFile":     {Fn: GetStringFromFileFn, NbParams: 2},
 	"CheckFileExists":       {Fn: CheckFileExistsFn, NbParams: 1},
+	"CheckCliExists":        {Fn: CheckCliExistsFn, NbParams: 1},
 	"MoveFile":              {Fn: MoveFileFn, NbParams: 4},
 	"DeleteFile":            {Fn: DeleteFileFn, NbParams: 1},
 	"ServiceCreateUnitFile": {Fn: ServiceCreateUnitFileFn, NbParams: 2},
@@ -80,6 +81,13 @@ func CheckFileExistsFn(fnParameters []string) (string, error) {
 	srcFilePath := fnParameters[0]
 
 	return CheckFileExists(srcFilePath)
+}
+func CheckCliExistsFn(fnParameters []string) (string, error) {
+
+	// get input
+	cliName := fnParameters[0]
+
+	return CheckCliExists(cliName)
 }
 
 func MoveFileFn(fnParameters []string) (string, error) {

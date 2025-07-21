@@ -15,16 +15,8 @@ import (
 	"go.uber.org/zap"
 )
 
+// The Structures
 type UrlType string
-
-const (
-	UrlExe UrlType = "exe"
-	UrlTgz UrlType = "tgz"
-	UrlGit UrlType = "git"
-	UrlGo  UrlType = "go"
-	UrlOth UrlType = "oth"
-	// etc.
-)
 
 type OsServiceConfig struct {
 	Name    string
@@ -32,8 +24,6 @@ type OsServiceConfig struct {
 	Content string
 	Path    string
 }
-
-type OsServiceConfigMap map[string]OsServiceConfig
 
 type CLIConfig struct {
 	Name    string
@@ -49,8 +39,33 @@ type CustomCLIConfig struct {
 	Version   string
 	DstFolder string
 }
+type CustomDnfaptRepoConfig struct {
+	Name    string
+	CName   string
+	Version string
+}
 
+type DnfaptRepoConfig struct {
+	Name    string
+	Version string
+	UrlRepo string
+	UrlGpg  string
+}
+
+const (
+	UrlExe UrlType = "exe"
+	UrlTgz UrlType = "tgz"
+	UrlGit UrlType = "git"
+	UrlGo  UrlType = "go"
+	UrlOth UrlType = "oth"
+	// etc.
+)
+
+// The Maps
+type OsServiceConfigMap map[string]OsServiceConfig
 type CustomCLIConfigMap map[string]CustomCLIConfig
+type CustomDnfaptRepoConfigMap map[string]CustomDnfaptRepoConfig
+type DnfaptRepoConfigMap map[string]DnfaptRepoConfig
 type CLIConfigMap map[string]CLIConfig
 
 // # Purpose

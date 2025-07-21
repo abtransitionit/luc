@@ -14,6 +14,7 @@ var ProvisionPhases = []phase.Phase{
 	phase.SetPhase("checkssh", checkSsh, util.CheckSshDescription),
 	phase.SetPhase("cpluc", cpLuc, CpLucDescription),
 	phase.SetPhase("upgrade", upgrade, UpgradeDescription),
+	phase.SetPhase("dapack1", daPackStd, DaPackStdDescription),
 	phase.SetPhase("darepo", daRepo, DaRepoDescription),
 	// phase.SetPhase("dapack", daPack, DaPackDescription),
 	// phase.SetPhase("gocli", goCli, GoCliDescription),

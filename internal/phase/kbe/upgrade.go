@@ -6,14 +6,14 @@ package kbe
 import (
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/pipeline/dnfapt/rupgrade"
+	upgradep "github.com/abtransitionit/luc/pkg/pipeline/dnfapt/upgrade"
 )
 
 const UpgradeDescription = "provision OS nodes with latest dnfapt packages and repositories."
 
 func upgrade(arg ...string) (string, error) {
 	logx.L.Info(UpgradeDescription)
-	_, err := rupgrade.RunPipeline(config.KbeListNode)
+	_, err := upgradep.RunPipeline(config.KbeListNode)
 	if err != nil {
 		return "", err
 	}

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
@@ -136,4 +137,10 @@ func RInstallR(vm string, osFamily string, packageName string) (bool, error) {
 
 	// on SUCCESS
 	return true, nil
+}
+
+func GetPackage(cli string) (string, error) {
+	logx.L.Infof("GetPackage > %s", cli)
+	logx.L.Infof("GetPackage > return the package that hold the CLI")
+	return "", nil
 }

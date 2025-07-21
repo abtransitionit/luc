@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
-package repo
+package packagex
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ func lastStep(in <-chan PipelineData) error {
 	for data := range in {
 		// if an error exits
 		if data.Err != nil {
-			logx.L.Debugf("❌ Pipeline error: %v", data.Err)
+			logx.L.Debugf("Pipeline error: %v", data.Err)
 			continue
 		}
 		// if no error exits : log information - one per structure

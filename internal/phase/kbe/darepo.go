@@ -6,7 +6,7 @@ package kbe
 import (
 	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/pipeline/dnfapt/packagex"
+	"github.com/abtransitionit/luc/pkg/pipeline/dnfapt/repo"
 	"github.com/abtransitionit/luc/pkg/util"
 )
 
@@ -16,10 +16,10 @@ func daRepo(arg ...string) (string, error) {
 	logx.L.Info(DaRepoDescription)
 
 	// get all Map:key as []string
-	listPackage := util.GetMapKeys(config.KbeDnfaptCliConfigMap)
+	listRepository := util.GetMapKeys(config.KbeDnfaptRepoConfigMap)
 
 	// launch this pipeline
-	_, err := packagex.RunPipeline(config.KbeListNode, listPackage)
+	_, err := repo.RunPipeline(config.KbeListNode, listRepository)
 	if err != nil {
 		logx.L.Debugf("%s", err)
 		return "", err

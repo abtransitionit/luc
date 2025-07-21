@@ -61,7 +61,7 @@ var NodeSshStatusMap = SshStatusMap{}
 
 func IsSshConfiguredVmSshReachable(vmName string) (bool, error) {
 
-	// prerequisit: VM is configured in ~/.ssh/config.d/
+	// check VM is configured in ~/.ssh/config.d/
 	configured, err := IsVmSshConfigured(vmName)
 	if err != nil {
 		return false, fmt.Errorf("%v : %v", err, configured)
@@ -69,7 +69,7 @@ func IsSshConfiguredVmSshReachable(vmName string) (bool, error) {
 		return false, fmt.Errorf("❌ Error: VM %s is not configured in ~/.ssh/config.d/", vmName)
 	}
 
-	// Play CLI
+	// VM is configured : Play CLI
 	cli := fmt.Sprintf("ssh %s true", vmName)
 	outp, err := RunCLILocal(cli)
 	if err != nil {
@@ -83,6 +83,24 @@ func IsSshConfiguredVmSshReachable(vmName string) (bool, error) {
 
 	// hostname := strings.TrimSpace(out.String())
 	// logx.L.Debugf("✅ vm %s is configured in ssh config and is ssh reachable : %v", vmName, hostname)
+	return true, nil
+}
+func IsVmSshReachable(vmName string) (bool, error) {
+
+	// check VM is configured in ~/.ssh/config.d/
+	configured, err := IsVmSshConfigured(vmName)
+	if err != nil {
+		return false, fmt.Errorf("%v : %v", err, configured)
+	} else if !configured {
+		return false, fmt.Errorf("❌ Error: VM %s is not configured in ~/.ssh/config.d/", vmName)
+	}
+
+	// VM is configured : Play CLI
+	cli := fmt.Sprintf("ssh %s true", vmName)
+	outp, err := RunCLILocal(cli)
+	if err != nil {
+		return false, fmt.Errorf("%v : %v", err, outp)
+	}
 	return true, nil
 }
 
@@ -144,7 +162,20 @@ const CheckSshDescription = "check VMs are SSH reachable."
 // # Purpose
 //
 // Check if one are more VMs are SSH reachable.
-func CheckSsh(arg ...string) (string, error) {
+// func CheckSshV2(listVm []string) (string, error) {
+
+// 	// manage argument
+// 	if len(listVm) == 0 {
+// 		return "", fmt.Errorf("❌ Error : List of VMs is empty")
+// 	}
+
+// 	// do the check
+// 	for _, vm := range listVm {
+// 		test.CheckVmIsSshReachable(vm)
+// 	}
+
+// }
+func CheckSshV1(arg ...string) (string, error) {
 	logx.L.Info(CheckSshDescription)
 
 	// initialize the map
@@ -154,7 +185,7 @@ func CheckSsh(arg ...string) (string, error) {
 	var SliceNodes []string
 
 	if len(arg) == 1 && strings.Contains(arg[0], " ") {
-		SliceNodes = strings.Fields(arg[0]) // convert ListAsString to slice ([]string)
+		SliceNodes = strings.Fields(arg[0]) // convert ListAsString to []string (ie. go slice)
 	} else {
 		// Already a slice of node names
 		SliceNodes = arg

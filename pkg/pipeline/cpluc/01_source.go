@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
 )
 
 // # Purpose
@@ -21,11 +22,26 @@ func source(out chan<- PipelineData, dtpip PipelineData, vmList string) {
 	vms := strings.Fields(vmList) // convert ListAsString to slice
 
 	logx.L.Debugf("defining instances to be pipelined")
+	logx.L.Debugf("Vms        to provision.    : %d : %s", len(vms), vms)
+
 	for _, vm := range vms {
+
 		vm = strings.TrimSpace(vm)
+
 		if vm == "" {
 			continue
 		}
+
+		// avoid creating instance for non SSH reachable VMs
+		result, err := util.GetPropertyLocal("sshreachability", vm)
+		if err != nil {
+			logx.L.Debugf("⚠️ %v : %s : %s", err, result, "skipping data instance for it")
+			continue
+		} else if strings.ToLower(strings.TrimSpace(result)) == "false" {
+			logx.L.Debugf("⚠️ [%s] remote vm is not reachable, skipping data instance for it", vm)
+			continue
+		}
+
 		// define one per item
 		data := PipelineData{}
 

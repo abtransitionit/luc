@@ -52,6 +52,7 @@ func source(out chan<- PipelineData, vms []string, osServiceMap config.OsService
 
 			// avoid creating instance for Os type not manage
 			if strings.ToLower(strings.TrimSpace(osType)) != "linux" {
+				logx.L.Debugf("[%s] [%s] ⚠️ Os type not managed", vm, osType)
 				continue
 			}
 

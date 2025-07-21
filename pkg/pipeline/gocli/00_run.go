@@ -16,7 +16,7 @@ func RunPipeline(vmList string, cliMap config.CustomCLIConfigMap) (string, error
 	logx.L.Debug(RunPipelineDescription)
 
 	// define var
-	vms := strings.Fields(vmList) // convert ListAsString to slice ([]string)
+	vms := strings.Fields(vmList) // convert ListAsString to []string (ie. go slice)
 	// nbVm := len(vms)
 	nbWorker := len(vms)
 

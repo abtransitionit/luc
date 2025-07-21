@@ -4,7 +4,9 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package test
 
 import (
+	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
 	"github.com/abtransitionit/luc/test"
 	"github.com/spf13/cobra"
 )
@@ -21,14 +23,39 @@ var draftCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		logx.L.Info(draftSDesc)
 
-		out := test.GeRemotePropertyTest("o1u", "osfamily")
-		logx.L.Info("yo in test : %s", out)
+		// test.CheckCliExits("gpg")
+		// // out := test.GeRemoteProperty("o1u", "osfamily")
+		// out, err := test.GetPackage1("o1u", "gpg")
+		// if err != nil {
+		// 	logx.L.Error("%v : %s", err, out)
+		// 	return
+		// }
+		// logx.L.Infof("yo in test : %s", out)
 		// local function tested
 		// test.TouchFileLocal("/tmp", "titi")
 		// test.CheckFileLocalExits("/tmp/test.txt")
 		// remote function tested
 		// test.TouchFileOnRemote("o1u", "/tmp", "toto")
 		// test.CheckFileRemoteExists("o1u", "/tmp/toto")
+
+		for _, vm := range util.GetSlicefromStringWithSpace(config.KbeListNode) {
+			cliName := "gpg"
+			test.CheckCliExistsOnremote(vm, cliName)
+		}
+
+		// for _, vm := range util.GetSlicefromStringWithSpace(config.KbeListNode) {
+		// 	test.CheckVmIsSshReachable(vm)
+		// }
+
+		// vms := util.GetSlicefromStringWithSpace(config.KbeListNode) // get slice from string
+		// for _, vm := range vms {
+		// 	result, err := util.GetPropertyLocal("sshreachability", vm)
+		// 	if err != nil {
+		// 		logx.L.Debugf("%v : %s", err, result)
+		// 		return
+		// 	}
+		// 	logx.L.Infof("sshreachability: %s", result)
+		// }
 
 		// TODO
 
