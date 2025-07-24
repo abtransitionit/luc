@@ -94,6 +94,10 @@ func GetCLIConfig(cliName string) (CLIConfig, bool) {
 	c, ok := SharedCliConfigMap[cliName]
 	return c, ok
 }
+func GetDnfapteRepoConfig(repoName string) (DnfaptRepoConfig, bool) {
+	c, ok := SharedDnfaptRepoConfigMap[repoName]
+	return c, ok
+}
 
 func GetOsServiceConfig(serviceName string, serviceMap OsServiceConfigMap) (OsServiceConfig, bool) {
 	c, ok := serviceMap[serviceName]

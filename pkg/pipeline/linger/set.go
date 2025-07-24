@@ -25,7 +25,6 @@ func enableLinger(in <-chan PipelineData, out chan<- PipelineData) {
 
 		// TODO: weird: explicit the user. remote enable linger for current user (aka. sudo user)
 		logx.L.Debugf("[%s] [%s] enabling linger for user ", vm, user)
-		// cli := `luc util oservice linger --local --force`
 		cli := `luc do ServiceEnableLinger`
 		if outp, err := util.RunCLIRemote(vm, cli); err != nil {
 			data.Err = fmt.Errorf("%v, %s", err, outp)

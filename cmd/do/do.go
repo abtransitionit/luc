@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/abtransitionit/luc/cmd/do/oservice"
-	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/abtransitionit/luc/pkg/action"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +27,7 @@ var DoCmd = &cobra.Command{
 		// Handle --show flag
 		showFlag, _ := cmd.Flags().GetBool("show")
 		if showFlag {
-			util.ShowFnActionMap()
+			action.ShowFnActionMap()
 			return nil
 		}
 
@@ -41,12 +41,12 @@ var DoCmd = &cobra.Command{
 		vmName, _ := cmd.Flags().GetString("remote")
 
 		// define var
-		action := args[0]
+		theAction := args[0]
 		parameters := args[1:] // Pass all elements except the first one
 
-		// does action exits
-		if _, ok := util.FnActionMap[action]; !ok {
-			return fmt.Errorf("❌ Error : action does not exist : %s", action)
+		// does theAction exits
+		if _, ok := action.FnActionMap[theAction]; !ok {
+			return fmt.Errorf("❌ Error : theAction does not exist : %s", theAction)
 		}
 
 		// Play cli
@@ -55,10 +55,10 @@ var DoCmd = &cobra.Command{
 
 		if vmName != "" {
 			// Remote execution
-			result, err = util.PlayFnOnRemote(vmName, action, parameters)
+			result, err = action.PlayFnOnRemote(vmName, theAction, parameters)
 		} else {
 			// Local execution
-			result, err = util.PlayFnLocally(action, parameters)
+			result, err = action.PlayFnLocally(theAction, parameters)
 		}
 
 		// error

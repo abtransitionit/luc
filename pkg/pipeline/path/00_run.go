@@ -9,7 +9,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "Create Temporary file with envar PATH."
+const RunPipelineDescription = "create a temporary file with envar PATH"
 
 func RunPipeline(vmList string, pathFile string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)

@@ -21,10 +21,11 @@ func createUnit(in <-chan PipelineData, out chan<- PipelineData) {
 			continue
 		}
 
-		// remote create service file
+		// remote create file:service
+		stringContent := data.Config.Content
+		filePath := data.Config.Path
 		logx.L.Debugf("[%s] [%s] creating service file", vm, data.Config.Name)
-		// cli := fmt.Sprintf(`luc do ServiceCreateUnitFile '%s' %s --force`, data.Config.Content, data.Config.Path)
-		cli := fmt.Sprintf(`luc do ServiceCreateUnitFile '%s' %s`, data.Config.Content, data.Config.Path)
+		cli := fmt.Sprintf(`luc do ServiceCreateUnitFile '%s' %s`, stringContent, filePath)
 		outp, err := util.RunCLIRemote(vm, cli)
 
 		// error

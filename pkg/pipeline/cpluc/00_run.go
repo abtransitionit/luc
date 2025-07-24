@@ -7,7 +7,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "build and provision LUC."
+const RunPipelineDescription = "build and provision CLI:go:LUC"
 
 func RunPipeline(vmList string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)

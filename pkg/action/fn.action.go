@@ -2,7 +2,7 @@
 Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 */
 
-package util
+package action
 
 import (
 	"fmt"
@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/abtransitionit/luc/pkg/util/dnfapt"
 	"github.com/jedib0t/go-pretty/table"
 )
 
@@ -28,8 +30,10 @@ type FnActionHandler struct {
 var FnActionMap = map[string]FnActionHandler{
 	"TouchFile":             {Fn: TouchFileFn, NbParams: 1},
 	"AddLineToFile":         {Fn: AddLineToFileFn, NbParams: 2},
+	"DaAddRepo":             {Fn: DaAddRepoFn, NbParams: 1},
 	"SaveStringToFile":      {Fn: SaveStringToFileFn, NbParams: 3},
 	"GetStringFromFile":     {Fn: GetStringFromFileFn, NbParams: 2},
+	"GetGpgFromUrl":         {Fn: GetGpgFromUrlFn, NbParams: 3},
 	"CheckFileExists":       {Fn: CheckFileExistsFn, NbParams: 1},
 	"CheckCliExists":        {Fn: CheckCliExistsFn, NbParams: 1},
 	"MoveFile":              {Fn: MoveFileFn, NbParams: 4},
@@ -38,12 +42,28 @@ var FnActionMap = map[string]FnActionHandler{
 	"ServiceEnableLinger":   {Fn: ServiceEnableLingerFn, NbParams: 0},
 }
 
+func GetGpgFromUrlFn(fnParameters []string) (string, error) {
+
+	// get input
+	url := fnParameters[0]
+	path := fnParameters[1]
+	isRootPath := strings.ToLower(fnParameters[2]) == "true"
+
+	return util.GetGpgFromUrl(url, path, isRootPath)
+}
+func DaAddRepoFn(fnParameters []string) (string, error) {
+
+	// get input
+	repoUrl := fnParameters[0]
+
+	return dnfapt.AddRepo(repoUrl)
+}
 func GetStringFromFileFn(fnParameters []string) (string, error) {
 
 	// get input
 	srcFilePath := fnParameters[0]
 
-	return GetStringFromFile(srcFilePath, false)
+	return util.GetStringFromFile(srcFilePath, false)
 }
 func ServiceCreateUnitFileFn(fnParameters []string) (string, error) {
 
@@ -51,12 +71,12 @@ func ServiceCreateUnitFileFn(fnParameters []string) (string, error) {
 	serviceName := fnParameters[0]
 	unitFilePath := fnParameters[1]
 
-	return CreateServiceUniteFile(serviceName, unitFilePath)
+	return util.CreateServiceUniteFile(serviceName, unitFilePath)
 }
 
 func ServiceEnableLingerFn(fnParameters []string) (string, error) {
 
-	return EnableLinger()
+	return util.EnableLinger()
 }
 
 func TouchFileFn(fnParameters []string) (string, error) {
@@ -64,7 +84,7 @@ func TouchFileFn(fnParameters []string) (string, error) {
 	// get input
 	srcFilePath := fnParameters[0]
 
-	return TouchFile(srcFilePath)
+	return util.TouchFile(srcFilePath)
 }
 
 func DeleteFileFn(fnParameters []string) (string, error) {
@@ -72,7 +92,7 @@ func DeleteFileFn(fnParameters []string) (string, error) {
 	// get input
 	srcFilePath := fnParameters[0]
 
-	return DeleteFile(srcFilePath)
+	return util.DeleteFile(srcFilePath)
 }
 
 func CheckFileExistsFn(fnParameters []string) (string, error) {
@@ -80,14 +100,14 @@ func CheckFileExistsFn(fnParameters []string) (string, error) {
 	// get input
 	srcFilePath := fnParameters[0]
 
-	return CheckFileExists(srcFilePath)
+	return util.CheckFileExists(srcFilePath)
 }
 func CheckCliExistsFn(fnParameters []string) (string, error) {
 
 	// get input
 	cliName := fnParameters[0]
 
-	return CheckCliExists(cliName)
+	return util.CheckCliExists(cliName)
 }
 
 func MoveFileFn(fnParameters []string) (string, error) {
@@ -105,7 +125,7 @@ func MoveFileFn(fnParameters []string) (string, error) {
 	}
 	filePermission := os.FileMode(permUint64)
 
-	return MvFile(srcFilePath, dstFilePath, filePermission, isRootFile)
+	return util.MvFile(srcFilePath, dstFilePath, filePermission, isRootFile)
 
 }
 
@@ -116,7 +136,7 @@ func SaveStringToFileFn(fnParameters []string) (string, error) {
 	path := fnParameters[1]
 	isRootPath := strings.ToLower(fnParameters[2]) == "true"
 
-	return SaveStringToFile(data, path, isRootPath)
+	return util.SaveStringToFile(data, path, isRootPath)
 }
 
 func AddLineToFileFn(fnParameters []string) (string, error) {
@@ -125,7 +145,7 @@ func AddLineToFileFn(fnParameters []string) (string, error) {
 	filepath := fnParameters[0]
 	line := fnParameters[1]
 
-	return AddLineToFile(filepath, line)
+	return util.AddLineToFile(filepath, line)
 }
 
 func PlayFnLocally(fnKey string, fnParameters []string) (string, error) {
@@ -175,7 +195,7 @@ func PlayFnOnRemote(vm string, fnKey string, fnParameters []string) (string, err
 	// logx.L.Debugf("[%s] Running on remote CLI: %s", vm, cli)
 
 	// execute the function remotely
-	return RunCLIRemote(vm, cli)
+	return util.RunCLIRemote(vm, cli)
 }
 
 func logAndCheckParams(nbRequired int, fnParameters []string) (int, error) {

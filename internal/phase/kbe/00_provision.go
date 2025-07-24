@@ -11,7 +11,7 @@ import (
 
 var ProvisionPhases = []phase.Phase{
 	phase.SetPhase("show", show, DisplayDescription),
-	phase.SetPhase("checkssh", checkSsh, util.CheckSshDescription),
+	phase.SetPhase("checklist", checkList, util.CheckListDescription),
 	phase.SetPhase("cpluc", cpLuc, CpLucDescription),
 	phase.SetPhase("upgrade", upgrade, UpgradeDescription),
 	phase.SetPhase("dapack1", daPackStd, DaPackStdDescription),

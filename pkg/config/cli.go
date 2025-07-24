@@ -146,7 +146,7 @@ var SharedCliConfigMap = CLIConfigMap{
 	},
 }
 
-var SharedDnfaptConfigMap = DnfaptRepoConfigMap{
+var SharedDnfaptRepoConfigMap = DnfaptRepoConfigMap{
 	"crio": {
 		Name:    "crio",
 		UrlRepo: "https://download.opensuse.org/repositories/isv:/cri-o:/stable:/$TAG/$PACK/",
@@ -158,14 +158,3 @@ var SharedDnfaptConfigMap = DnfaptRepoConfigMap{
 		UrlGpg:  "https://pkgs.k8s.io/core:/stable:/$TAG/$PACK/$GPG",
 	},
 }
-
-// $PACK
-// rhel   => rpm
-// debian => deb
-
-// $GPG
-// rhel   => repodata/repomd.xml.key
-// debian => Release.key
-
-// $TAG
-// rhel, debian    => $TAG = CrioVersionDnfapt or  K8sVersionDnfapt

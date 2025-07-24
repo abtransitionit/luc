@@ -158,6 +158,7 @@ func IsVmSshConfigured(vmName string) (bool, error) {
 }
 
 const CheckSshDescription = "check VMs are SSH reachable."
+const CheckListDescription = "basics checks."
 
 // # Purpose
 //

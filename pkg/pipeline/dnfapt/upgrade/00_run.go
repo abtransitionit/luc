@@ -9,7 +9,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "remote upgrade OS package and repositories to version latest."
+const RunPipelineDescription = "upgrade OS repositories and packages to version latest"
 
 func RunPipeline(vmList string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)

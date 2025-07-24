@@ -121,3 +121,17 @@ func GetFile(url string, path string) (string, error) {
 	// success
 	return path, nil
 }
+
+func GetGpgFromUrl(url string, filePath string, isRootPath bool) (string, error) {
+	sudoPrefix := ""
+	if isRootPath {
+		sudoPrefix = "sudo "
+	}
+
+	cli := fmt.Sprintf(`curl -fsSL %s | gpg --dearmor | %stee %s`, url, sudoPrefix, filePath)
+	out, err := RunCLILocal(cli)
+	if err != nil {
+		return filePath, fmt.Errorf("%v, %s", err, out)
+	}
+	return filePath, nil
+}

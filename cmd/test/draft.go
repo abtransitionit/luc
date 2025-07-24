@@ -4,9 +4,7 @@ Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
 package test
 
 import (
-	"github.com/abtransitionit/luc/internal/config"
 	"github.com/abtransitionit/luc/pkg/logx"
-	"github.com/abtransitionit/luc/pkg/util"
 	"github.com/abtransitionit/luc/test"
 	"github.com/spf13/cobra"
 )
@@ -38,26 +36,17 @@ var draftCmd = &cobra.Command{
 		// test.TouchFileOnRemote("o1u", "/tmp", "toto")
 		// test.CheckFileRemoteExists("o1u", "/tmp/toto")
 
-		for _, vm := range util.GetSlicefromStringWithSpace(config.KbeListNode) {
-			cliName := "gpg"
-			test.CheckCliExistsOnremote(vm, cliName)
-		}
+		// test.TestCheckCliExistsOnremote(config.KbeListNode, "gpg")
+		// test.TestCheckCliExistsOnremote(config.KbeListNode, "curl")
 
-		// for _, vm := range util.GetSlicefromStringWithSpace(config.KbeListNode) {
-		// 	test.CheckVmIsSshReachable(vm)
-		// }
+		url := "https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key"
+		path := "/etc/apt/sources.list.d/kbe-k8s-apt-keyring.gpg"
+		vm := "o1u"
+		test.TestRemoteGetGpgFromUrl(vm, url, path, true)
+		// test.TestGetGpgFromUrl(url, path, true)
 
-		// vms := util.GetSlicefromStringWithSpace(config.KbeListNode) // get slice from string
-		// for _, vm := range vms {
-		// 	result, err := util.GetPropertyLocal("sshreachability", vm)
-		// 	if err != nil {
-		// 		logx.L.Debugf("%v : %s", err, result)
-		// 		return
-		// 	}
-		// 	logx.L.Infof("sshreachability: %s", result)
-		// }
-
-		// TODO
+		// test.TestVmAreSshReachable(config.KbeListNode)
+		// test.DaAddRepoLocal("kbe-k8s")
 
 		// createFileLocal()
 		// touchFileRemote("o1u")

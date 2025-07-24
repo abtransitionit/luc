@@ -19,6 +19,8 @@ const (
 	// KbeListNode = "o1u o2a o3r o5d o6f" // o6f generate error
 	KbeListNode = "o1u o2a o3r o4f o5d"
 	// KbeListNode = "o1u o2a"
+	// KbeListNode = "o1u o5d"
+	// KbeListNode = "o2a"
 	// KbeListNode       = "o1u"
 	KbeListNodeCplane = "o1u"
 	KbeListNodeWorker = "o1u"

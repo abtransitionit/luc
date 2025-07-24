@@ -28,8 +28,8 @@ func source(out chan<- PipelineData, vms []string, cliMap config.CustomCLIConfig
 
 	// log
 	logx.L.Debugf("defining instances to be pipelined")
-	logx.L.Debugf("Vms        to provision:  %d : %s", nbVm, vms)
-	logx.L.Debugf("CLI(s) to install per VM: %d : %s", nbCli, util.GetMapKeys(cliMap))
+	logx.L.Debugf("VM to provision      : %2d : %s", nbVm, vms)
+	logx.L.Debugf("CLI to install per VM: %2d : %s", nbCli, util.GetMapKeys(cliMap))
 
 	// loop over each CLI
 	for _, item := range cliMap {
@@ -45,6 +45,7 @@ func source(out chan<- PipelineData, vms []string, cliMap config.CustomCLIConfig
 			out <- data
 			continue
 		}
+
 		// loop over each VM
 		for _, vm := range vms {
 			vm = strings.TrimSpace(vm)

@@ -10,14 +10,13 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "install GO CLIs on VMs."
+const RunPipelineDescription = "provision 1..n GO CLI on VMs."
 
 func RunPipeline(vmList string, cliMap config.CustomCLIConfigMap) (string, error) {
 	logx.L.Debug(RunPipelineDescription)
 
 	// define var
 	vms := strings.Fields(vmList) // convert ListAsString to []string (ie. go slice)
-	// nbVm := len(vms)
 	nbWorker := len(vms)
 
 	// // Count and log the number of CLI args
@@ -37,7 +36,7 @@ func RunPipeline(vmList string, cliMap config.CustomCLIConfigMap) (string, error
 
 	// aync stage (i.e running concurrently/in parallel)
 	go source(ch01, vms, cliMap) // define instances to send to the pipeline
-	go setUrlSpec(ch01, ch02)
+	go setUrlSpec(ch01, ch02)    // define artifact url
 	go setArtifact(ch02, ch03)
 	go getArtifact(ch03, ch04, nbWorker) // get artifact
 	go unTgz(ch04, ch05, nbWorker)       // untgz artifact (if needed)

@@ -14,7 +14,7 @@ import (
 	"github.com/abtransitionit/luc/test"
 )
 
-const DaPackStdDescription = "provision standard/required/missing OS dnfapt cli (via packages)."
+const DaPackStdDescription = "provision standard/required/missing OS CLI (via dnfapt  packages)."
 
 func daPackStd(arg ...string) (string, error) {
 	logx.L.Info(DaPackStdDescription)
@@ -40,7 +40,7 @@ func daPackStd(arg ...string) (string, error) {
 			return "", err
 		}
 
-		// define dnfapt packages depending on os:distro
+		// define dnfapt packages depending on os:distro - cliList is used to check package provisioning
 		var packageList, cliList string
 		switch strings.TrimSpace(osDistro) {
 		case "debian":
@@ -48,6 +48,7 @@ func daPackStd(arg ...string) (string, error) {
 			cliList = "gpg"
 		}
 
+		// add packages only if packageList is not empty for this VM
 		if packageList != "" {
 			// provision dnfapt packages
 			_, err = packagex.RunPipeline(vm, strings.Fields(packageList))
@@ -56,19 +57,12 @@ func daPackStd(arg ...string) (string, error) {
 				return "", err
 			}
 
-			// check cli existence before install
+			// check cli exists after install
 			for _, cliName := range strings.Fields(cliList) {
 				test.CheckCliExistsOnremote(vm, cliName)
 			}
 		} // if
 	} // for
-
-	// // check cli existence for all vms
-	// for _, vm := range vms {
-	// 	for _, cliName := range strings.Fields(packageList) {
-	// 		test.CheckCliExistsOnremote(vm, cliName)
-	// 	}
-	// // }
 
 	// success
 	return "", nil

@@ -8,8 +8,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/abtransitionit/luc/pkg/action"
 	"github.com/abtransitionit/luc/pkg/logx"
 	"github.com/abtransitionit/luc/pkg/util"
+	"github.com/abtransitionit/luc/pkg/util/dnfapt"
 )
 
 func GetPackage1(vm string, cli string) (string, error) {
@@ -95,10 +97,12 @@ func DeleteFileOnRemote(vm string, folderPath string, fileName string) error {
 }
 
 func CheckFileLocalExits(fullPath string) bool {
+
 	// Convert string to slice
 	fnParameters := []string{fullPath}
+
 	// check file exists
-	result, err := util.PlayFnLocally("CheckFileExists", fnParameters)
+	result, err := action.PlayFnLocally("CheckFileExists", fnParameters)
 
 	// error
 	if err != nil {
@@ -128,7 +132,7 @@ func CheckFileRemoteExists(vm string, fullPath string) bool {
 	fnParameters := []string{fullPath}
 
 	// do the check
-	result, err := util.PlayFnOnRemote(vm, "CheckFileExists", fnParameters)
+	result, err := action.PlayFnOnRemote(vm, "CheckFileExists", fnParameters)
 
 	// error
 	if err != nil {
@@ -152,6 +156,15 @@ func CheckFileRemoteExists(vm string, fullPath string) bool {
 	}
 }
 
+func DaAddRepoLocal(repoName string) bool {
+	result, err := dnfapt.AddRepo(repoName)
+	if err != nil {
+		logx.L.Debugf("%v : %s", err, result)
+		return false
+	}
+	return true
+}
+
 func CheckCliExistsOnremote(vm string, cliName string) bool {
 
 	// Convert string to slice
@@ -169,7 +182,7 @@ func CheckCliExistsOnremote(vm string, cliName string) bool {
 
 	// do the check
 	// logx.L.Infof("[%s] [%s] Checking cli exists", vm, cliName)
-	result, err = util.PlayFnOnRemote(vm, "CheckCliExists", fnParameters)
+	result, err = action.PlayFnOnRemote(vm, "CheckCliExists", fnParameters)
 
 	// error
 	if err != nil {
@@ -219,6 +232,42 @@ func CheckVmIsSshReachable(vm string) bool {
 		logx.L.Infof("⚠️ ⚠️ [%s] [%s] Impossible to say", vm, result)
 		return false
 	}
+}
+
+func TestCheckCliExistsOnremote(listVmAsString string, cliName string) {
+	for _, vm := range util.GetSlicefromStringWithSpace(listVmAsString) {
+		CheckCliExistsOnremote(vm, cliName)
+	}
+}
+func TestVmAreSshReachable(listVmAsString string) {
+	for _, vm := range util.GetSlicefromStringWithSpace(listVmAsString) {
+		result, err := util.GetPropertyLocal("sshreachability", vm)
+		if err != nil {
+			logx.L.Debugf("%v : %s", err, result)
+			return
+		}
+		logx.L.Infof("[%s] is ssh reachable: %s", vm, result)
+	}
+
+}
+
+func TestGetGpgFromUrl(url string, filePath string, isRootPath bool) {
+	savedPath, err := util.GetGpgFromUrl(url, filePath, isRootPath)
+	if err != nil {
+		logx.L.Debugf("Failed to save GPG key to %s: %v", savedPath, err)
+		return
+	}
+	logx.L.Debugf("GPG key successfully saved to %s", savedPath)
+}
+
+func TestRemoteGetGpgFromUrl(vm string, url string, filePath string, isRootPath bool) {
+	cli := fmt.Sprintf(`luc do GetGpgFromUrl %s %s %v`, url, filePath, isRootPath)
+	savedPath, err := util.RunCLIRemote(vm, cli)
+	if err != nil {
+		logx.L.Debugf("Failed to save GPG key to %s: %v", filePath, err)
+		return
+	}
+	logx.L.Debugf("GPG key successfully saved to %s", savedPath)
 }
 
 // func touchFileRemote(vm string) bool {

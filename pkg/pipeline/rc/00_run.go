@@ -9,7 +9,7 @@ import (
 	"github.com/abtransitionit/luc/pkg/logx"
 )
 
-const RunPipelineDescription = "Add one line to RC file only if not exists."
+const RunPipelineDescription = "add 1..1 line to RC file only if not exists"
 
 func RunPipeline(vmList string, stringLine string, rcFilePath string) (string, error) {
 	logx.L.Debug(RunPipelineDescription)

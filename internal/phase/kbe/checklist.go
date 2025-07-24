@@ -9,13 +9,21 @@ import (
 	"github.com/abtransitionit/luc/test"
 )
 
-func checkSsh(arg ...string) (string, error) {
+func checkList(arg ...string) (string, error) {
 	// // method
 	// util.CheckSshV1(config.KindVm)
 
 	// method
 	for _, vm := range util.GetSlicefromStringWithSpace(config.KbeListNode) {
 		test.CheckVmIsSshReachable(vm)
+	}
+	for _, vm := range util.GetSlicefromStringWithSpace(config.KbeListNode) {
+		test.CheckCliExistsOnremote(vm, "gpg")
+
+	}
+	for _, vm := range util.GetSlicefromStringWithSpace(config.KbeListNode) {
+		test.CheckCliExistsOnremote(vm, "curl")
+
 	}
 
 	// success

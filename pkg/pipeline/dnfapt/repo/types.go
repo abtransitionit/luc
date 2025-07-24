@@ -1,18 +1,30 @@
 package repo
 
-import "github.com/jedib0t/go-pretty/table"
+import (
+	"github.com/abtransitionit/luc/pkg/config"
+	"github.com/jedib0t/go-pretty/table"
+)
 
 type PipelineData struct {
-	HostName              string   // The VM name
+	HostName              string                  // The VM name
+	Config                config.DnfaptRepoConfig // Full config (e.g., luc, helm, etc.)
+	CName                 string
 	RepositoryList        []string // The list of packages to install.
 	HostType              string   // Vm or container
 	OsDistro              string
 	OsFamily              string // Rhel, Debian, fedora
 	OsVersion             string
-	OskernelVersionBefore string //
-	OskernelVersionAfter  string //
-	RebootStatus          string //
-	Err                   error  // error if any
+	OskernelVersionBefore string
+	OskernelVersionAfter  string
+	RebootStatus          string
+	GenericUrlRepo        string
+	GenericUrlGpg         string
+	UrlRepo               string
+	UrlGpg                string
+	RepoFilePath          string
+	GpgFilePath           string
+	Version               string
+	Err                   error // error if any
 }
 
 // # Pupose
@@ -29,7 +41,15 @@ func (obj PipelineData) String() string {
 		{"Host Type", obj.HostType},
 		{"OS Family", obj.OsFamily},
 		{"OS Distro", obj.OsDistro},
-		{"Repository List", obj.RepositoryList},
+		{"Repo NAME", obj.Config.Name},
+		{"Repo CNAME", obj.CName},
+		{"Repo version", obj.Version},
+		{"Repo Url", obj.GenericUrlRepo},
+		{"Repo Url", obj.UrlRepo},
+		{"Repo file path", obj.RepoFilePath},
+		{"Gpg Url", obj.GenericUrlGpg},
+		{"Gpg Url", obj.UrlGpg},
+		{"Gpg file path", obj.GpgFilePath},
 		{"Kerner version (before)", obj.OskernelVersionBefore},
 		{"Kerner version (after)", obj.OskernelVersionAfter},
 		{"Reboot status", obj.RebootStatus},

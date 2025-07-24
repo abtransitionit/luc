@@ -139,6 +139,37 @@ func RInstallR(vm string, osFamily string, packageName string) (bool, error) {
 	return true, nil
 }
 
+func AddRepo(RepoName string) (string, error) {
+
+	// get Os:family
+	osType, err := util.GetPropertyLocal("ostype")
+	if err != nil {
+		return "", fmt.Errorf("%v : %s", err, osType)
+	}
+
+	// get Os:family
+	osFamily, err := util.GetPropertyLocal("osfamily")
+	if err != nil {
+		return "", fmt.Errorf("%v : %s", err, osFamily)
+	}
+
+	// install only if linux type
+	if osType != "linux" {
+		return "", fmt.Errorf("unsupported OS type: %s (only linux is supported)", osType)
+	}
+
+	switch strings.TrimSpace(strings.ToLower(osFamily)) {
+	case "debian":
+		// TODO
+	case "rhel", "fedora":
+		// TODO
+	}
+
+	logx.L.Infof("[%s] AddRepo > for osType/osFamily: %s/%s", RepoName, osType, osFamily)
+	// on SUCCESS
+	return RepoName, nil
+}
+
 func GetPackage(cli string) (string, error) {
 	logx.L.Infof("GetPackage > %s", cli)
 	logx.L.Infof("GetPackage > return the package that hold the CLI")

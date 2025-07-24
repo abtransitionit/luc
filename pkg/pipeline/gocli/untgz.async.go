@@ -23,6 +23,7 @@ func unTgz(in <-chan PipelineData, out chan<- PipelineData, nbWorker int) {
 		defer wg.Done()
 
 		for data := range in {
+
 			if data.Err != nil {
 				out <- data
 				logx.L.Debugf("[%s] [%s] ❌ Previous error detected", data.Config.Name, data.HostName)

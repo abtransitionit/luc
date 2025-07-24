@@ -1,0 +1,51 @@
+/*
+Copyright © 2025 AB TRANSITION IT abtransitionit@hotmail.com
+*/
+package repo
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/abtransitionit/luc/pkg/logx"
+	"github.com/abtransitionit/luc/pkg/util"
+)
+
+func saveGpgFile(in <-chan PipelineData, out chan<- PipelineData) {
+	defer close(out)
+
+	for data := range in {
+
+		vm := data.HostName
+		repoName := data.Config.Name
+
+		if data.Err != nil {
+			out <- data
+			logx.L.Debugf("❌ Previous error detected")
+			continue
+		}
+
+		// skip if Os:family not debian
+		if strings.ToLower(strings.TrimSpace(data.OsFamily)) != "debian" {
+			logx.L.Debugf("[%s] [%s] ⚠️ skipping : gpg url defined in repo file", vm, data.OsFamily)
+			out <- data
+			continue
+		}
+
+		// remote create file:gpg
+		logx.L.Debugf("[%s] [%s] creating gpg file", vm, repoName)
+		cli := fmt.Sprintf(`luc do GetGpgFromUrl %s %s %v`, data.UrlGpg, data.GpgFilePath, true)
+		outp, err := util.RunCLIRemote(vm, cli)
+		if err != nil {
+			data.Err = fmt.Errorf("❌ Error: %v, %s", err, outp)
+			logx.L.Debugf("[%s] ❌ Error detected 1", vm)
+			out <- data
+			continue
+
+		}
+
+		// success
+		logx.L.Debugf("[%s] [%s] created gpg file", vm, repoName)
+		out <- data
+	}
+}
